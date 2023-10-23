@@ -201,75 +201,34 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Election Announcement</h1>
+                    <h1 class="h3 mb-0 text-gray-800">View Election</h1>
+
+                    <!-- Election Information Section -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Election Information</h6>
+                            <button class="btn btn-danger float-right">Delete</button>
+                        </div>
+                        <div class="card-body">
+                            <p>Election Name: Dummy Election</p>
+                            <p>Number of Votes per Student: 2</p>
+                            <p>Start Time: 09:00 AM</p>
+                            <p>End Time: 05:00 PM</p>
+                            <p>Date: 2023-05-01</p>
+                            <p>Rules: Dummy rules for the dummy election.</p>
+                            <p>Manual: Dummy manual for the dummy election.</p>
+                        </div>
                     </div>
 
-                    <!-- Election Form -->
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Election Details</h6>
-                                </div>
-                                <div class="card-body">
-                                    <form>
-                                        <div class="form-group">
-                                            <label for="electionName">Election Name</label>
-                                            <input type="text" class="form-control" id="electionName" placeholder="Enter Election Name">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="voteCount">Number of Votes per Student</label>
-                                            <input type="number" class="form-control" id="voteCount" placeholder="Enter Number of Votes per Student">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="startTime">Start Time</label>
-                                            <input type="time" class="form-control" id="startTime">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="endTime">End Time</label>
-                                            <input type="time" class="form-control" id="endTime">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="date">Date</label>
-                                            <input type="date" class="form-control" id="date">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="rules">Rules</label>
-                                            <textarea class="form-control" id="rules" rows="3"></textarea>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="manual">Manual</label>
-                                            <textarea class="form-control" id="manual" rows="3"></textarea>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">Create</button>
-                                    </form>
-                                </div>
-                            </div>
+                    <!-- Winner Announcement Section -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Winner Announcement</h6>
+                            <button class="btn btn-danger float-right">Delete</button>
                         </div>
-
-                        <!-- Election Announcement -->
-                        <div class="col-lg-6">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Election Winner Announcement</h6>
-                                </div>
-                                <div class="card-body">
-                                    <form>
-                                        <div class="form-group">
-                                            <label for="candidateName">Candidate Name</label>
-                                            <select multiple class="form-control" id="candidateName">
-                                                <!-- Candidate names will be inserted here dynamically -->
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="shortInfo">Short Info</label>
-                                            <textarea class="form-control" id="shortInfo" rows="3"></textarea>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">Announce</button>
-                                    </form>
-                                </div>
-                            </div>
+                        <div class="card-body">
+                            <p>Winner: Dummy Candidate</p>
+                            <p>Short Info: Dummy Candidate won the dummy election.</p>
                         </div>
                     </div>
 
