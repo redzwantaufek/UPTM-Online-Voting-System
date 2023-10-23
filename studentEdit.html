@@ -9,7 +9,7 @@
     <meta name="Uptm Voting System" content="">
     <meta name="Redzwan" content="">
 
-    <title>Candidate - UPTM VOTING SYSTEM</title>
+    <title>Student - UPTM VOTING SYSTEM</title>
 
     <!-- Custom fonts-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
@@ -217,63 +217,66 @@
                  <!-- Begin Page Content -->
                  <div class="container-fluid">
 
-                     <!-- Page Heading -->
-                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                         <h1 class="h3 mb-0 text-gray-800">Create Candidate</h1>
-                     </div>
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Student Profile</h1>
+                    </div>
 
-                     <!-- Content Row -->
-                     <div class="row">
+                    <!-- Content Row -->
+                    <div class="row">
 
-                         <!-- Admin Create Form -->
-                         <div class="col-xl-12 col-md-12 mb-4">
-                             <div class="card border-0 shadow h-100 py-2 rounded-lg">
-                                 <div class="card-body">
-                                     <form>
-                                         <div class="form-group">
-                                             <label for="profilePicture">Profile Picture</label>
-                                             <input type="file" class="form-control-file" id="profilePicture">
-                                         </div>
-                                         <div class="form-group">
-                                             <label for="name">Name</label>
-                                             <input type="text" class="form-control" id="name" placeholder="Enter name">
-                                         </div>
-                                         <div class="form-group">
-                                             <label for="email">Email Address</label>
-                                             <input type="email" class="form-control" id="email" placeholder="Enter email">
-                                         </div>
-                                         <div class="form-group">
-                                             <label for="contact">Contact</label>
-                                             <input type="text" class="form-control" id="contact" placeholder="Enter contact number">
-                                         </div>
-                                         <div class="form-group">
-                                            <label for="text">Course</label>
-                                            <input type="text" class="form-control" id="course" placeholder="Course name">
+                        <!-- Candidate Profile Card -->
+                        <div class="col-xl-12 col-md-12 mb-4">
+                            <div class="card border-0 shadow h-100 py-2 rounded-lg">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col-12 text-center mb-4">
+                                            <img class="img-profile rounded-circle border-primary" title="profile images"
+                                                src="img/pic1.jpg" style="width:100px;height:100px;">
                                         </div>
-                                        <div class="form-group">
-                                            <label for="text">Faculty</label>
-                                            <input type="text" class="form-control" id="faculty" placeholder="Faculty name">
+                                        <div class="col-12">
+                                            <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                <label for="profilePicture">Profile Picture</label>
+                                                <input type="file" class="form-control-file" id="profilePicture">
+                                            </div>
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Name</div>
+                                            <input type="text" class="form-control" id="name" value="Ali bin Abu">
+                                            <hr class="sidebar-divider my-1">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Email</div>
+                                            <input type="email" class="form-control" id="email" value="ali@uptm.com">
+                                            <hr class="sidebar-divider my-1">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Contact</div>
+                                            <input type="text" class="form-control" id="contact" value="+60123456789">
+                                            <hr class="sidebar-divider my-1">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Course</div>
+                                            <input type="text" class="form-control" id="course" value="CC101 - Computer Science">
+                                            <hr class="sidebar-divider my-1">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Faculty</div>
+                                            <input type="text" class="form-control" id="faculty" value="FCOM">
+                                            <hr class="sidebar-divider my-1">
                                         </div>
-                                         <div class="form-group">
-                                             <label for="position">Manifesto</label>
-                                             <input type="text" class="form-control" id="position" placeholder="Enter manifesto">
-                                         </div>
-                                        <div class="form-group">
-                                            <label for="position">Link</label>
-                                            <input type="text" class="form-control" id="link" placeholder="https://example.com">
-                                        </div>
-                                         <button type="submit" class="btn btn-primary">Create</button>
-                                     </form>
-                                 </div>
-                             </div>
-                         </div>
-                     </div>
+                                    </div>
+                                    <button class="btn btn-primary mt-3 rounded-pill" title="save" type="button">
+                                        Save
+                                    </button>
+                                    <button class="btn btn-danger mt-3 rounded-pill" title="delete" type="button">
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                 </div>
-                 <!-- /.container-fluid -->
+                </div>
+                <!-- /.container-fluid -->
 
-             </div>
-             <!-- End of Main Content -->
+            </div>
+            <!-- End of Main Content -->
 
 
             <!-- Footer -->
