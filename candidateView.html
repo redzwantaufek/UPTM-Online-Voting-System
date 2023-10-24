@@ -162,39 +162,94 @@
                     <!-- Content Row -->
                     <div class="row">
 
-                        <!-- Candidates Table -->
+                        <!-- Candidates Cards -->
                         <div class="col-lg-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold text-primary">Candidates List</h6>
                                 </div>
                                 <div class="card-body">
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control" placeholder="Search by name" id="searchInput">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-outline-secondary" type="button" id="searchButton">Search</button>
+                                    <div class="row">
+                                        <!-- Candidate Card 1 -->
+                                        <div class="col-lg-12 mb-4">
+                                            <div class="card">
+                                                <img src="img/undraw_profile.svg" class="card-img-top" alt="Candidate 1" style="max-width: 100px;">
+                                                <div class="card-body">
+                                                    <!-- Candidate 1 details -->
+                                                    <h5 class="card-title">Candidate 1</h5>
+                                                    <p class="card-text">Email: candidate1@example.com</p>
+                                                    <p class="card-text">Contact: 1234567890</p>
+                                                    <p class="card-text">Course: Computer Science</p>
+                                                    <p class="card-text">Faculty: Engineering</p>
+                                                    <p class="card-text">Manifesto: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                                                    <p class="card-text">Social Link: <a href="#">Facebook</a></p>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                            <thead>
-                                                <tr>
-                                                    <th>Picture</th>
-                                                    <th>Name</th>
-                                                    <th>Email</th>
-                                                    <th>Contact</th>
-                                                    <th>Course</th>
-                                                    <th>Faculty</th>
-                                                    <th>Manifesto</th>
-                                                    <th>Link</th>
-                                                    <th>Edit</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <!-- Data will be inserted here dynamically -->
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                        <!-- Candidate Card 2 -->
+                                        <div class="col-lg-12 mb-4">
+                                            <div class="card">
+                                                <img src="img/undraw_profile.svg" class="card-img-top" alt="Candidate 1" style="max-width: 100px;">
+                                                <div class="card-body">
+                                                    <!-- Candidate 2 details -->
+                                                    <h5 class="card-title">Candidate 2</h5>
+                                                    <p class="card-text">Email: candidate2@example.com</p>
+                                                    <p class="card-text">Contact: 9876543210</p>
+                                                    <p class="card-text">Course: Business Administration</p>
+                                                    <p class="card-text">Faculty: Business</p>
+                                                    <p class="card-text">Manifesto: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                                                    <p class="card-text">Social Link: <a href="#">Twitter</a></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Candidate Card 3 -->
+                                        <div class="col-lg-12 mb-4">
+                                            <div class="card">
+                                                <img src="img/undraw_profile.svg" class="card-img-top" alt="Candidate 1" style="max-width: 100px;">
+                                                <div class="card-body">
+                                                    <!-- Candidate 3 details -->
+                                                    <h5 class="card-title">Candidate 3</h5>
+                                                    <p class="card-text">Email: candidate3@example.com</p>
+                                                    <p class="card-text">Contact: 5555555555</p>
+                                                    <p class="card-text">Course: Psychology</p>
+                                                    <p class="card-text">Faculty: Social Sciences</p>
+                                                    <p class="card-text">Manifesto: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                                                    <p class="card-text">Social Link: <a href="#">Instagram</a></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Candidate Card 4 -->
+                                        <div class="col-lg-12 mb-4">
+                                            <div class="card">
+                                                <img src="img/undraw_profile.svg" class="card-img-top" alt="Candidate 1" style="max-width: 100px;">
+                                                <div class="card-body">
+                                                    <!-- Candidate 4 details -->
+                                                    <h5 class="card-title">Candidate 4</h5>
+                                                    <p class="card-text">Email: candidate4@example.com</p>
+                                                    <p class="card-text">Contact: 1111111111</p>
+                                                    <p class="card-text">Course: Biology</p>
+                                                    <p class="card-text">Faculty: Science</p>
+                                                    <p class="card-text">Manifesto: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                                                    <p class="card-text">Social Link: <a href="#">LinkedIn</a></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Candidate Card 5 -->
+                                        <div class="col-lg-12 mb-4">
+                                            <div class="card">
+                                                <img src="img/undraw_profile.svg" class="card-img-top" alt="Candidate 1" style="max-width: 100px;">
+                                                <div class="card-body">
+                                                    <!-- Candidate 5 details -->
+                                                    <h5 class="card-title">Candidate 5</h5>
+                                                    <p class="card-text">Email: {{candidate5.email}}</p>
+                                                    <p class="card-text">Contact: {{candidate5.contact}}</p>
+                                                    <p class="card-text">Course: {{candidate5.course}}</p>
+                                                    <p class="card-text">Faculty: {{candidate5.faculty}}</p>
+                                                    <p class="card-text">Manifesto: {{candidate5.manifesto}}</p>
+                                                    <p class="card-text">Social Link: <a href="{{candidate5.socialLink}}">{{candidate5.socialLinkText}}</a></p>
+                                                </div>
+                                            </div>
+                                        </div>
                                 </div>
                             </div>
                         </div>
