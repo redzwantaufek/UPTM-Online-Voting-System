@@ -25,16 +25,31 @@
         exit();
     }
 
-    // Update admin information if form is submitted
+    // Update admin information and profile picture if form is submitted
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $adminName = $_POST['adminName'];
         $email = $_POST['email'];
         $contact = $_POST['contact'];
         $position = $_POST['position'];
         
-        $sql = "UPDATE admin SET adminName = ?, email = ?, contact = ?, position = ? WHERE adminID = ?";
+        // Check if file was uploaded
+        if (isset($_FILES['pic']) && $_FILES['pic']['error'] === UPLOAD_ERR_OK) {
+            // Convert image to blob
+            $pic = addslashes(file_get_contents($_FILES['pic']['tmp_name']));
+        } else {
+            // If no file was uploaded, use the existing image
+            $sql = "SELECT pic FROM admin WHERE adminID = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $_SESSION['admin_id']);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $admin = $result->fetch_assoc();
+            $pic = $admin['pic'];
+        }
+        
+        $sql = "UPDATE admin SET adminName = ?, email = ?, contact = ?, position = ?, pic = ? WHERE adminID = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssi", $adminName, $email, $contact, $position, $_SESSION['admin_id']);
+        $stmt->bind_param("ssssbi", $adminName, $email, $contact, $position, $pic, $_SESSION['admin_id']);
         $stmt->execute();
 
         echo "Profile updated successfully!";
@@ -220,7 +235,7 @@
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['user_name']; ?></span>
                                 <img class="img-profile rounded-circle" title="profile images"
-                                    src="img/undraw_profile.svg">
+                                    src="../img/no_profile.webp">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -259,18 +274,18 @@
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col-12 text-center mb-4">
-                                            <img src="data:image/jpeg;base64,<?php echo $imageData; ?>" class="img-profile rounded-circle border-secondary img-fluid border p-3 bg-light" title="profile images" style="max-width: 200px;" onerror="this.onerror=null; this.src='img/undraw_profile.svg'">    
+                                            <img src="data:image/jpeg;base64,<?php echo $imageData; ?>" class="img-profile rounded-circle border-secondary img-fluid border p-3 bg-light" title="profile images" style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">    
                                         </div>
                                         <div class="col-12">
-                                            <form action="updateAdmin.php" method="post" enctype="multipart/form-data">
+                                            <form action="adminUpdate.php" method="post" enctype="multipart/form-data">
                                                 <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                     <label for="profilePicture">Profile Picture</label>
-                                                    <input type="file" class="form-control-file" id="profilePicture" name="profilePicture">
+                                                    <input type="file" class="form-control-file" id="profilePicture" name="pic">
                                                 </div>
                                                 
                                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                     Name</div>
-                                                <input type="text" class="form-control" id="name" name="name" value="<?php echo $admin['adminName']; ?>">
+                                                <input type="text" class="form-control" id="adminName" name="adminName" value="<?php echo $admin['adminName']; ?>">
                                                 <hr class="sidebar-divider my-1">
                                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                     Email</div>
