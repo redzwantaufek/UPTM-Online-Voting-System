@@ -196,7 +196,7 @@ if (!isset($_SESSION['admin_id']) && !isset($_SESSION['student_id'])) {
                                 </a>
                                 
                                 <div class="dropdown-divider"></div>
-                                <a class="btn btn-primary" href="logout.php">Logout</a>
+                                <a class="dropdown-item" href="logout.php">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
