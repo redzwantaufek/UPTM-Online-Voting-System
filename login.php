@@ -43,20 +43,24 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">UPTM ONLINE VOTING SYSTEM</h1>
                                     </div>
-                                    <form class="user">
+                                    <form class="user" method="POST" action="login.php">
                                         <div class="form-group">
                                             <input type="email" class="form-control form-control-user"
-                                                id="exampleInputEmail" aria-describedby="emailHelp"
-                                                placeholder="Enter Email Address...">
+                                                id="InputEmail" aria-describedby="emailHelp"
+                                                placeholder="Enter Email Address..." name="InputEmail">
                                         </div>
                                         <div class="form-group">
                                             <input type="password" class="form-control form-control-user"
-                                                id="exampleInputPassword" placeholder="Password">
+                                                id="InputPassword" placeholder="Password" name="InputPassword">
                                         </div>
-                                        <a href="index.html" class="btn btn-primary btn-user btn-block">
+                                        <div id="loginError" class="form-group" style="display: none;">
+                                            <div class="alert alert-danger" role="alert">
+                                                Invalid email or password.
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-user btn-block">
                                             Login
-                                        </a>
-                                       
+                                        </button>
                                     </form>
                                     <hr>
                                 </div>
@@ -83,32 +87,35 @@
 
     <?php
 
-        $username = $_POST['username'];
-        $password = $_POST['password'];
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $email = $_POST['InputEmail'];
+            $password = $_POST['InputPassword'];
 
-        // Connect to the database
-        $db = new PDO('mysql:host=localhost;dbname=ovs', 'root', '');
+            // Connect to the database
+            $db = new PDO('mysql:host=localhost;dbname=ovs', 'root', '');
 
-        // Prepare the SQL statement to check the user's credentials
-        $sql = "SELECT * FROM users WHERE username = :username AND password = :password";
-        $stmt = $db->prepare($sql);
-        $stmt->bindParam(':username', $username);
-        $stmt->bindParam(':password', $password);
-        $stmt->execute();
+            // Prepare the SQL statement to check the user's credentials
+            $sql = "SELECT * FROM student WHERE email = :email AND password = :password";
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':password', $password);
+            $stmt->execute();
 
-        // If the user's credentials are valid, create a session for them
-        if ($stmt->rowCount() > 0) {
-        session_start();
-        $_SESSION['user_id'] = $stmt->fetch()['id'];
+            // If the user's credentials are valid, create a session for them
+            if ($stmt->rowCount() > 0) {
+                session_start();
+                $_SESSION['student_id'] = $stmt->fetch()['studentId'];
 
-        // Redirect the user to the homepage
-        header('Location: index.php');
-        } else {
-        // Display an error message to the user
-        echo 'Invalid username or password.';
+                // Redirect the user to the homepage
+                header('Location: index.html');
+                exit();
+            } else {
+                // Display an error message to the user
+                echo '<script type="text/javascript">document.getElementById("loginError").style.display = "block";</script>';
+            }
+
+            $db = null;
         }
-
-        $db = null;
     ?>
 
 </body>

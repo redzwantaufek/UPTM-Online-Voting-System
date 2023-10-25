@@ -46,17 +46,21 @@
                                     <form class="user" method="POST" action="login.php">
                                         <div class="form-group">
                                             <input type="email" class="form-control form-control-user"
-                                                id="exampleInputEmail" aria-describedby="emailHelp"
-                                                placeholder="Enter Email Address..." name="exampleInputEmail">
+                                                id="InputEmail" aria-describedby="emailHelp"
+                                                placeholder="Enter Email Address" name="InputEmail">
                                         </div>
                                         <div class="form-group">
                                             <input type="password" class="form-control form-control-user"
-                                                id="exampleInputPassword" placeholder="Password" name="exampleInputPassword">
+                                                id="InputPassword" placeholder="Password" name="InputPassword">
+                                        </div>
+                                        <div id="loginError" class="form-group" style="display: none;">
+                                            <div class="alert alert-danger" role="alert">
+                                                Invalid email or password.
+                                            </div>
                                         </div>
                                         <button type="submit" class="btn btn-primary btn-user btn-block">
                                             Login
                                         </button>
-                                       
                                     </form>
                                     <hr>
                                 </div>
@@ -74,8 +78,8 @@
     <?php
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $email = $_POST['exampleInputEmail'];
-            $password = $_POST['exampleInputPassword'];
+            $email = $_POST['InputEmail'];
+            $password = $_POST['InputPassword'];
 
             // Connect to the database
             $db = new PDO('mysql:host=localhost;dbname=ovs', 'root', '');
@@ -97,7 +101,7 @@
                 exit();
             } else {
                 // Display an error message to the admin
-                echo 'Invalid email or password.';
+                echo '<script type="text/javascript">document.getElementById("loginError").style.display = "block";</script>';
             }
 
             $db = null;
