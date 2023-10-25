@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 25, 2023 at 08:51 AM
+-- Generation Time: Oct 25, 2023 at 09:10 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -35,6 +35,19 @@ CREATE TABLE `admin` (
   `contact` int(255) NOT NULL,
   `position` varchar(255) NOT NULL,
   `pic` blob NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `analytic`
+--
+
+CREATE TABLE `analytic` (
+  `analyticId` int(11) NOT NULL,
+  `date` datetime NOT NULL,
+  `metric` varchar(255) NOT NULL,
+  `value` int(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -125,6 +138,12 @@ ALTER TABLE `admin`
   ADD PRIMARY KEY (`adminID`);
 
 --
+-- Indexes for table `analytic`
+--
+ALTER TABLE `analytic`
+  ADD PRIMARY KEY (`analyticId`);
+
+--
 -- Indexes for table `announcement`
 --
 ALTER TABLE `announcement`
@@ -165,6 +184,12 @@ ALTER TABLE `vote`
 --
 ALTER TABLE `admin`
   MODIFY `adminID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `analytic`
+--
+ALTER TABLE `analytic`
+  MODIFY `analyticId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `announcement`
