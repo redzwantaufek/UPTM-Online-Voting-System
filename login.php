@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>UPTM Voting Administration System - Login</title>
+    <title>UPTM Voting System - Login</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -47,7 +47,7 @@
                                         <div class="form-group">
                                             <input type="email" class="form-control form-control-user"
                                                 id="InputEmail" aria-describedby="emailHelp"
-                                                placeholder="Enter Email Address..." name="InputEmail">
+                                                placeholder="Enter Email Address" name="InputEmail">
                                         </div>
                                         <div class="form-group">
                                             <input type="password" class="form-control form-control-user"
@@ -75,6 +75,52 @@
 
     </div>
 
+    <?php
+    session_start();
+    if (isset($_SESSION['admin_id']) || isset($_SESSION['student_id'])) {
+        session_destroy();
+    }
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $email = $_POST['InputEmail'];
+        $password = $_POST['InputPassword'];
+
+        // Connect to the database
+        $db = new PDO('mysql:host=localhost;dbname=ovs', 'root', '');
+
+        // Prepare the SQL statement to check the admin's credentials
+        $sql = "SELECT * FROM admin WHERE email = :email AND password = :password";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':password', $password);
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0) {
+            $_SESSION['admin_id'] = $stmt->fetch()['adminID'];
+            $_SESSION['user_type'] = 'admin';
+            header('Location: Admin/index.php');
+            exit();
+        } else {
+            // If not found in admin, check in student table
+            $sql = "SELECT * FROM student WHERE email = :email AND password = :password";
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':password', $password);
+            $stmt->execute();
+
+            if ($stmt->rowCount() > 0) {
+                $_SESSION['student_id'] = $stmt->fetch()['studentID'];
+                $_SESSION['user_type'] = 'student';
+                header('Location: index.php');
+                exit();
+            } else {
+                echo '<script type="text/javascript">document.getElementById("loginError").style.display = "block";</script>';
+            }
+        }
+
+        $db = null;
+    }
+?>
+
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -84,39 +130,6 @@
 
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
-
-    <?php
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $email = $_POST['InputEmail'];
-            $password = $_POST['InputPassword'];
-
-            // Connect to the database
-            $db = new PDO('mysql:host=localhost;dbname=ovs', 'root', '');
-
-            // Prepare the SQL statement to check the user's credentials
-            $sql = "SELECT * FROM student WHERE email = :email AND password = :password";
-            $stmt = $db->prepare($sql);
-            $stmt->bindParam(':email', $email);
-            $stmt->bindParam(':password', $password);
-            $stmt->execute();
-
-            // If the user's credentials are valid, create a session for them
-            if ($stmt->rowCount() > 0) {
-                session_start();
-                $_SESSION['student_id'] = $stmt->fetch()['studentId'];
-
-                // Redirect the user to the homepage
-                header('Location: index.html');
-                exit();
-            } else {
-                // Display an error message to the user
-                echo '<script type="text/javascript">document.getElementById("loginError").style.display = "block";</script>';
-            }
-
-            $db = null;
-        }
-    ?>
 
 </body>
 
