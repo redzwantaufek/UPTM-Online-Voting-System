@@ -51,6 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Close the database connection
 $conn->close();
 
-//header('Location: adminProfiles.php');
+header('Location: adminProfiles.php');
 exit();
 ?>
