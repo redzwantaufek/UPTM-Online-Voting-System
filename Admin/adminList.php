@@ -9,46 +9,9 @@
         exit();
     }
 
-    // Query to select the admin details from the database using the admin ID from the session
-    $sql = "SELECT * FROM admin WHERE adminID = '".$_SESSION['admin_id']."'";
-    // Execute the query
+    // Query to select all admins from the database
+    $sql = "SELECT * FROM admin";
     $result = $conn->query($sql);
-
-    // If the query returns more than 0 rows, fetch the admin details
-    if ($result->num_rows > 0) {
-        $admin = $result->fetch_assoc();
-        // Convert the BLOB data to base64
-        $imageData = base64_encode($admin['pic']);
-    } else {
-        // If no admin details are found, display an error message and exit the script
-        echo "No admin found";
-        exit();
-    }
-
-    // Update admin information, profile picture and password if form is submitted
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $adminName = $_POST['adminName'];
-        $email = $_POST['email'];
-        $contact = $_POST['contact'];
-        $position = $_POST['position'];
-        $password = $_POST['password']; // Added password
-        
-        // Check if file was uploaded
-        if (isset($_FILES['pic']) && $_FILES['pic']['error'] === UPLOAD_ERR_OK) {
-            // Convert image to blob
-            $pic = addslashes(file_get_contents($_FILES['pic']['tmp_name']));
-        } else {
-            // If no file was uploaded, use the default image
-            $pic = file_get_contents('../img/no_profile.webp');
-        }
-        
-        $sql = "INSERT INTO admin (adminName, email, contact, position, password, pic) VALUES (?, ?, ?, ?, ?, ?)"; // Added password
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssssb", $adminName, $email, $contact, $position, $password, $pic); // Added password
-        $stmt->execute();
-
-        $_SESSION['success_msg'] = "Admin created successfully!";
-    }
 
     // Close the database connection
     $conn->close();
@@ -72,6 +35,9 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <!-- Custom styles-->
     <link href="css/sb-admin-2.css" rel="stylesheet">
+    <!-- Bootstrap Table styles-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
 
 </head>
 
@@ -219,9 +185,10 @@
                     <!-- UPTM Logo -->
                         <div class="navbar-brand" href="#">
                             <img src="img/uptm.jpg" alt="" class="img-fluid logo-img" style="max-width: 100px; max-height: 100px;">
-                        </div>          
+                        </div>                  
 
-                        <ul class="navbar-nav ml-auto">
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
                         
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
@@ -255,59 +222,47 @@
                  <div class="container-fluid">
 
                      <!-- Page Heading -->
-                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                         <h1 class="h3 mb-0 text-gray-800">Create Admin</h1>
+                     <h1 class="h3 mb-0 text-gray-800">Admin List</h1>
+                     <div class="input-group mb-3 mt-3">
+                         <input type="text" class="form-control" placeholder="Search by name" id="searchAdmin">
+                         <div class="input-group-append">
+                             <button class="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
+                         </div>
                      </div>
-
-                      <!-- Success Message -->
-                        <?php if (isset($_SESSION['success_msg'])): ?>
-                            <div class="alert alert-success" role="alert">
-                                <?php 
-                                    echo $_SESSION['success_msg']; 
-                                    unset($_SESSION['success_msg']);
-                                ?>
-                            </div>
-                        <?php endif; ?>
 
                      <!-- Content Row -->
                      <div class="row">
 
-                         <!-- Admin Create Form -->
+                         <!-- Admin List Table -->
                          <div class="col-xl-12 col-md-12 mb-4">
                              <div class="card border-0 shadow h-100 py-2 rounded-lg">
                                  <div class="card-body">
-                                     <form action="adminCreate.php" method="post" enctype="multipart/form-data">
-                                         <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                            <label for="profilePicture">Profile Picture</label>
-                                            <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="profilePicture" name="pic" onchange="updateFileName(this)">
-                                                <label class="custom-file-label" for="profilePicture">Choose file</label>
-                                            </div>
-                                        </div>
-
-
-                                         <div class="form-group">
-                                             <label for="name">Name</label>
-                                             <input type="text" class="form-control" id="name" name="adminName" placeholder="Enter name">
-                                         </div>
-                                         <div class="form-group">
-                                             <label for="email">Email Address</label>
-                                             <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
-                                         </div>
-                                         <div class="form-group">
-                                             <label for="contact">Contact</label>
-                                             <input type="text" class="form-control" id="contact" name="contact" placeholder="Enter contact number">
-                                         </div>
-                                         <div class="form-group">
-                                             <label for="position">Position</label>
-                                             <input type="text" class="form-control" id="position" name="position" placeholder="Enter position">
-                                         </div>
-                                         <div class="form-group">
-                                             <label for="password">Password</label>
-                                             <input type="password" class="form-control" id="password" name="password" placeholder="Password">
-                                         </div>
-                                         <button type="submit" class="btn btn-primary">Save</button>
-                                     </form>
+                                     <div class="table-responsive">
+                                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                             <thead>
+                                                 <tr>
+                                                     <th>Name</th>
+                                                     <th>Email</th>
+                                                     <th>Contact</th>
+                                                     <th>Position</th>
+                                                     <th>Actions</th>
+                                                 </tr>
+                                             </thead>
+                                             <tbody>
+                                                <?php while($admin = $result->fetch_assoc()): ?>
+                                                    <tr>
+                                                        <td><?php echo $admin['adminName']; ?></td>
+                                                        <td><?php echo $admin['email']; ?></td>
+                                                        <td><?php echo $admin['contact']; ?></td>
+                                                        <td><?php echo $admin['position']; ?></td>
+                                                        <td>
+                                                            <!-- Add action buttons here -->
+                                                        </td>
+                                                    </tr>
+                                                <?php endwhile; ?>
+                                             </tbody>
+                                         </table>
+                                     </div>
                                  </div>
                              </div>
                          </div>
@@ -316,8 +271,8 @@
                  </div>
                  <!-- /.container-fluid -->
 
-             </div>
-             <!-- End of Main Content -->
+            </div>
+            <!-- End of Main Content -->
 
 
             <!-- Footer -->
@@ -341,26 +296,6 @@
         <i class="fas fa-angle-up"></i>
     </a>
 
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.php">Logout</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -378,6 +313,7 @@
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
 
+    
     <!-- This script updates the file name when a new file is selected -->
     <script>
         function updateFileName(inputElement) {

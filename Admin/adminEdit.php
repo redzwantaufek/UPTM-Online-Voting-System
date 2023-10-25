@@ -234,7 +234,8 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['user_name']; ?></span>
-                                <img src="data:image/jpeg;base64,<?php echo $imageData; ?>" class="img-profile rounded-circle img-fluid" title="profile images" style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">
+                                <img src="data:image/jpeg;base64,<?php echo $imageData; ?>" class="img-profile rounded-circle img-fluid" title="profile images" 
+                                style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
