@@ -234,8 +234,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['user_name']; ?></span>
-                                <img class="img-profile rounded-circle" title="profile images"
-                                    src="../img/no_profile.webp">
+                                <img src="data:image/jpeg;base64,<?php echo $imageData; ?>" class="img-profile rounded-circle img-fluid" title="profile images" style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -280,8 +279,12 @@
                                             <form action="adminUpdate.php" method="post" enctype="multipart/form-data">
                                                 <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                     <label for="profilePicture">Profile Picture</label>
-                                                    <input type="file" class="form-control-file" id="profilePicture" name="pic">
+                                                    <div class="custom-file">
+                                                        <input type="file" class="custom-file-input" id="profilePicture" name="pic" onchange="updateFileName(this)">
+                                                        <label class="custom-file-label" for="profilePicture">Choose file</label>
+                                                    </div>
                                                 </div>
+                                                
                                                 
                                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                     Name</div>
@@ -352,6 +355,14 @@
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
+
+    
+    <!-- This script updates the file name when a new file is selected -->
+    <script>
+        function updateFileName(inputElement) {
+            var fileName = inputElement.files[0].name; inputElement.nextElementSibling.textContent = fileName;
+        }
+    </script>
     
 
 </body>
