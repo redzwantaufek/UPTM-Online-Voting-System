@@ -1,12 +1,32 @@
 <?php
-session_start();
+    include '../Database/connect.php';
+    session_start();
 
-// Check if user is logged in
-if (!isset($_SESSION['admin_id']) && !isset($_SESSION['student_id'])) {
-    // If not, redirect to login page
-    header('Location: login.php');
-    exit();
-}
+    // Check if user is logged in
+    if (!isset($_SESSION['admin_id'])) {
+        // If not, redirect to login page
+        header('Location: ../login.php');
+        exit();
+    }
+
+    // Query to select the admin details from the database using the admin ID from the session
+    $sql = "SELECT * FROM admin WHERE adminID = '".$_SESSION['admin_id']."'";
+    // Execute the query
+    $result = $conn->query($sql);
+
+    // If the query returns more than 0 rows, fetch the admin details
+    if ($result->num_rows > 0) {
+        $admin = $result->fetch_assoc();
+        // Convert the BLOB data to base64
+        $imageData = base64_encode($admin['pic']);
+    } else {
+        // If no admin details are found, display an error message and exit the script
+        echo "No admin found";
+        exit();
+    }
+
+    // Close the database connection
+    $conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -184,8 +204,7 @@ if (!isset($_SESSION['admin_id']) && !isset($_SESSION['student_id'])) {
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['user_name']; ?></span>
-                                <img class="img-profile rounded-circle" title="profile images"
-                                    src="img/undraw_profile.svg">
+                                <img src="data:image/jpeg;base64,<?php echo $imageData; ?>" class="img-profile rounded-circle img-fluid" title="profile images" style="max-width: 200px;" onerror="this.onerror=null; this.src='img/undraw_profile.svg'">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -202,7 +221,6 @@ if (!isset($_SESSION['admin_id']) && !isset($_SESSION['student_id'])) {
                                 </a>
                             </div>
                         </li>
-
                     </ul>
 
                 </nav>
