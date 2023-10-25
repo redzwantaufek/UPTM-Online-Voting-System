@@ -95,7 +95,9 @@
         $stmt->execute();
 
         if ($stmt->rowCount() > 0) {
-            $_SESSION['admin_id'] = $stmt->fetch()['adminID'];
+            $admin = $stmt->fetch();
+            $_SESSION['admin_id'] = $admin['adminID'];
+            $_SESSION['user_name'] = $admin['adminName']; // Added user name session
             $_SESSION['user_type'] = 'admin';
             header('Location: Admin/index.php');
             exit();
@@ -108,7 +110,9 @@
             $stmt->execute();
 
             if ($stmt->rowCount() > 0) {
-                $_SESSION['student_id'] = $stmt->fetch()['studentID'];
+                $student = $stmt->fetch();
+                $_SESSION['student_id'] = $student['studentID'];
+                $_SESSION['user_name'] = $student['studentName']; // Added user name session
                 $_SESSION['user_type'] = 'student';
                 header('Location: index.php');
                 exit();
