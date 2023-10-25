@@ -1,3 +1,34 @@
+<?php
+    include '../Database/connect.php';
+    session_start();
+
+    // Check if user is logged in
+    if (!isset($_SESSION['admin_id'])) {
+        // If not, redirect to login page
+        header('Location: ../login.php');
+        exit();
+    }
+
+    // Query to select the admin details from the database using the admin ID from the session
+    $sql = "SELECT * FROM admin WHERE adminID = '".$_SESSION['admin_id']."'";
+    // Execute the query
+    $result = $conn->query($sql);
+
+    // If the query returns more than 0 rows, fetch the admin details
+    if ($result->num_rows > 0) {
+        $admin = $result->fetch_assoc();
+        // Convert the BLOB data to base64
+        $imageData = base64_encode($admin['pic']);
+    } else {
+        // If no admin details are found, display an error message and exit the script
+        echo "No admin found";
+        exit();
+    }
+
+    // Close the database connection
+    $conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,7 +59,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
                 <div class="sidebar-brand-icon">
                     <i class="fa-solid fa-user-tie"></i>
                 </div>
@@ -40,7 +71,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="index.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -63,9 +94,9 @@
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
-                        <a class="collapse-item" href="adminProfiles.html">View Profile</a>
-                        <a class="collapse-item" href="adminEdit.html">Edit Admin</a>
-                        <a class="collapse-item" href="adminCreate.html">Create Admin</a>
+                        <a class="collapse-item" href="adminProfiles.php">View Profile</a>
+                        <a class="collapse-item" href="adminEdit.php">Edit Admin</a>
+                        <a class="collapse-item" href="adminCreate.php">Create Admin</a>
                     </div>
                 </div>
             </li>
@@ -81,9 +112,9 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
-                        <a class="collapse-item" href="candidateCreate.html">Add Candidates</a>
-                        <a class="collapse-item" href="candidateView.html">View Candidates</a>
-                        <a class="collapse-item" href="candidateEdit.html">Edit Candidates</a>
+                        <a class="collapse-item" href="candidateCreate.php">Add Candidates</a>
+                        <a class="collapse-item" href="candidateView.php">View Candidates</a>
+                        <a class="collapse-item" href="candidateEdit.php">Edit Candidates</a>
                     </div>
                 </div>
             </li>
@@ -98,8 +129,8 @@
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
-                        <a class="collapse-item" href="electionView.html">Election View</a>
-                        <a class="collapse-item" href="electionSet.html">Election Set Up</a>
+                        <a class="collapse-item" href="electionView.php">Election View</a>
+                        <a class="collapse-item" href="electionSet.php">Election Set Up</a>
                     </div>
                 </div>
             </li>
@@ -114,23 +145,23 @@
                 <div id="collapseStudent" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
-                        <a class="collapse-item" href="studentView.html">View Student Profile</a>
-                        <a class="collapse-item" href="studentEdit.html">Edit Student</a>
-                        <a class="collapse-item" href="studentCreate.html">Create Student</a>
+                        <a class="collapse-item" href="studentView.php">View Student Profile</a>
+                        <a class="collapse-item" href="studentEdit.php">Edit Student</a>
+                        <a class="collapse-item" href="studentCreate.php">Create Student</a>
                     </div>
                 </div>
             </li>
 
             <!-- Nav Item - Result -->
             <li class="nav-item">
-                <a class="nav-link" href="result.html">
+                <a class="nav-link" href="result.php">
                     <i class="fa-solid fa-chart-simple"></i>
                     <span>Election Result</span></a>
             </li>
 
             <!-- Nav Item - Student attendance -->
             <li class="nav-item">
-                <a class="nav-link" href="attendance.html">
+                <a class="nav-link" href="attendance.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Student Attendance</span></a>
             </li>
@@ -172,26 +203,24 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Ali bin Abu</span>
-                                <img class="img-profile rounded-circle" title="profile images"
-                                    src="img/undraw_profile.svg">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['user_name']; ?></span>
+                                <img src="data:image/jpeg;base64,<?php echo $imageData; ?>" class="img-profile rounded-circle img-fluid" title="profile images" style="max-width: 200px;" onerror="this.onerror=null; this.src='img/undraw_profile.svg'">    
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="adminProfiles.html">
+                                <a class="dropdown-item" href="adminProfiles.php">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
                                 
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" href="logout.php">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
                             </div>
                         </li>
-
                     </ul>
 
                 </nav>
@@ -213,51 +242,30 @@
                             <div class="card border-0 shadow h-100 py-2 rounded-lg">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
-                                        <div class="col-12 text-center mb-4">
-                                            <img class="img-profile rounded-circle border-primary" title="profile images"
-                                                src="img/pic1.jpg" style="width:100px;height:100px;">
-                                        </div>
-                                        <div class="col-12">
+                                    <div class="col-12 text-center mb-4">
+                                    <img src="data:image/jpeg;base64,<?php echo $imageData; ?>" class="img-profile rounded-circle border-secondary img-fluid border p-3 bg-light" title="profile images" style="max-width: 200px;" onerror="this.onerror=null; this.src='img/undraw_profile.svg'">
+                                    </div>
+                                    <div class="col-12">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                 Name</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Ali bin Abu</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $admin['adminName']; ?></div>
                                             <hr class="sidebar-divider my-1">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                 Email</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">ali@uptm.com</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $admin['email']; ?></div>
                                             <hr class="sidebar-divider my-1">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                 Contact</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">+60123456789</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $admin['contact']; ?></div>
                                             <hr class="sidebar-divider my-1">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                 Position</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Admin</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $admin['position']; ?></div>
                                         </div>
                                     </div>
-                                    <button class="btn btn-primary mt-3 rounded-pill" title="edit" type="button" data-toggle="modal" data-target="#editModal">
+                                    <a href="adminEdit.php" class="btn btn-primary mt-3 rounded-pill" title="edit">
                                         Edit
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Edit Modal-->
-                    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Edit Profile</h5>
-                                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">Make changes to your profile and click "Save" to update.</div>
-                                <div class="modal-footer">
-                                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                                    <a class="btn btn-primary" href="#">Save</a>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -289,26 +297,6 @@
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
-
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
