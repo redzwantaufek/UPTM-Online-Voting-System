@@ -271,11 +271,16 @@
                      <!-- Page Heading -->
                      <h1 class="h3 mb-0 text-gray-800">Admin List</h1>
                      <div class="input-group mb-3 mt-3">
-                         <input type="text" class="form-control" placeholder="Search by name" id="searchAdmin">
-                         <div class="input-group-append">
-                             <button class="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
-                         </div>
-                     </div>
+                        <input type="text" class="form-control" placeholder="Search by name" id="searchAdmin">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon2">
+                                <i class="fas fa-search"></i>
+                            </button>
+                            <button class="btn btn-outline-secondary" type="button" id="reset-button">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
 
                      <!-- Content Row -->
                      <div class="row">
@@ -392,28 +397,41 @@
         }
     </script>
 
-    <script>
-        document.getElementById('button-addon2').addEventListener('click', function() {
-            // Get the search query
-            var searchQuery = document.getElementById('searchAdmin').value.toLowerCase();
+<script>
+    document.getElementById('button-addon2').addEventListener('click', function() {
+        // Get the search query
+        var searchQuery = document.getElementById('searchAdmin').value.toLowerCase();
 
-            // Get the table rows
-            var tableRows = document.getElementById('adminTableBody').getElementsByTagName('tr');
+        // Get the table rows
+        var tableRows = document.getElementById('adminTableBody').getElementsByTagName('tr');
 
-            // Loop through the table rows
-            for (var i = 0; i < tableRows.length; i++) {
-                // Get the admin name from the first cell of the row
-                var adminName = tableRows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
+        // Loop through the table rows
+        for (var i = 0; i < tableRows.length; i++) {
+            // Get the admin name from the second cell of the row
+            var adminName = tableRows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
 
-                // If the admin name does not contain the search query, hide the row, else show it
-                if (adminName.indexOf(searchQuery) === -1) {
-                    tableRows[i].style.display = 'none';
-                } else {
-                    tableRows[i].style.display = '';
-                }
+            // If the admin name does not contain the search query, hide the row, else show it
+            if (adminName.indexOf(searchQuery) === -1) {
+                tableRows[i].style.display = 'none';
+            } else {
+                tableRows[i].style.display = '';
             }
-        });
-    </script>
+        }
+    });
+
+    document.getElementById('reset-button').addEventListener('click', function() {
+        // Clear the search input
+        document.getElementById('searchAdmin').value = '';
+
+        // Get the table rows
+        var tableRows = document.getElementById('adminTableBody').getElementsByTagName('tr');
+
+        // Show all the table rows
+        for (var i = 0; i < tableRows.length; i++) {
+            tableRows[i].style.display = '';
+        }
+    });
+</script>
 
     <!-- jQuery and Bootstrap Bundle JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
