@@ -4,8 +4,19 @@
 
     // Check if user is logged in
     if (!isset($_SESSION['admin_id'])) {
-        // If not, redirect to login page
         header('Location: ../login.php');
+        exit();
+    }
+
+    // Query to select the profile picture of the currently logged-in admin
+    $sql = "SELECT pic FROM admin WHERE adminID = '".$_SESSION['admin_id']."'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        $currentAdmin = $result->fetch_assoc();
+        $currentAdminPic = $currentAdmin['pic'];
+    } else {
+        echo "No admin found";
         exit();
     }
 
@@ -14,36 +25,12 @@
 
     // Query to select the admin details from the database using the admin ID from the URL
     $sql = "SELECT * FROM admin WHERE adminID = '".$adminIdToEdit."'";
-    // Execute the query
     $result = $conn->query($sql);
 
-    if (!is_writable('uploads/')) {
-        chmod('uploads/', 0777);
-    }
-
-    // If the query returns more than 0 rows, fetch the admin details
     if ($result->num_rows > 0) {
         $admin = $result->fetch_assoc();
-        // Get the image path from the database
-        $imagePath = $admin['pic'];
-    }else {
-        // If no admin details are found, display an error message and exit the script
-        echo "No admin found";
-        exit();
-    }
-
-    // Query to select the current admin details from the database using the admin ID from the session
-    $sql = "SELECT * FROM admin WHERE adminID = '".$_SESSION['admin_id']."'";
-    // Execute the query
-    $result = $conn->query($sql);
-
-    // If the query returns more than 0 rows, fetch the admin details
-    if ($result->num_rows > 0) {
-        $currentAdmin = $result->fetch_assoc();
-        // Get the image path from the database
-        $currentAdminImagePath = $currentAdmin['pic'];
+        $editedAdminPic = $admin['pic'];
     } else {
-        // If no admin details are found, display an error message and exit the script
         echo "No admin found";
         exit();
     }
@@ -54,34 +41,30 @@
         $email = $_POST['email'];
         $contact = $_POST['contact'];
         $position = $_POST['position'];
-        
+
+        // Check if a new profile picture has been uploaded
+        if (isset($_FILES['pic']) && $_FILES['pic']['error'] === UPLOAD_ERR_OK) {
+            $target_dir = "uploads/";
+            $target_file = $target_dir . basename($_FILES["pic"]["name"]);
+
+            if (!move_uploaded_file($_FILES["pic"]["tmp_name"], $target_file)) {
+                echo "Sorry, there was an error uploading your file.";
+                exit();
+            }
+            $pic = $target_file;
+        } else {
+            $pic = $editedAdminPic;
+        }
+
         $sql = "UPDATE admin SET adminName = ?, email = ?, contact = ?, position = ?, pic = ? WHERE adminID = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssbi", $adminName, $email, $contact, $position, $pic, $adminIdToEdit);
+        $stmt->bind_param("sssssi", $adminName, $email, $contact, $position, $pic, $adminIdToEdit);
         $stmt->execute();
 
-        // Redirect to admin list page after successful update
         header('Location: adminList.php');
         exit();
     }
 
-    // Check if a new profile picture has been uploaded
-    if (isset($_FILES['pic']) && $_FILES['pic']['error'] === UPLOAD_ERR_OK) {
-        // Define directory to store images
-        $target_dir = "uploads/";
-        $target_file = $target_dir . basename($_FILES["pic"]["name"]);
-
-        // Move the uploaded file to your desired directory and check if the file was moved successfully
-        if (!move_uploaded_file($_FILES["pic"]["tmp_name"], $target_file)) {
-            echo "Sorry, there was an error uploading your file.";
-            exit();
-        }
-    } else {
-        // If no file was uploaded, use the existing image
-        $target_file = $admin['pic'];
-    }
-
-    // Close the database connection
     $conn->close();
 ?>
 
@@ -260,9 +243,8 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['user_name']; ?></span>
-                                <img src="<?php echo $currentAdminImagePath; ?>" class="img-profile rounded-circle img-fluid" title="profile images" 
+                                <img src="<?php echo $currentAdminPic; ?>" class="img-profile rounded-circle img-fluid" title="profile images" 
                                 style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">
-                            </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
@@ -300,10 +282,12 @@
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col-12 text-center mb-4">
-                                            <img src="<?php echo $imagePath; ?>" class="img-profile rounded-circle border-secondary img-fluid border p-3 bg-light" title="profile images" style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">    
+                                            <img src="<?php echo $editedAdminPic; ?>" class="img-profile rounded-circle border-secondary img-fluid border p-3 bg-light" title="profile images" style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">    
                                         </div>
                                         <div class="col-12">
-                                        <form action="adminUpdate.php?id=<?php echo $adminIdToEdit; ?>" method="post" enctype="multipart/form-data">
+                                        <form action="adminUpdate.php" method="post" enctype="multipart/form-data">
+                                                <input type="hidden" name="id" value="<?php echo $adminIdToEdit; ?>">
+                                                <input type="hidden" name="editedAdminPic" value="<?php echo $editedAdminPic; ?>">
                                                 <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                     <label for="profilePicture">Profile Picture</label>
                                                     <div class="custom-file">
