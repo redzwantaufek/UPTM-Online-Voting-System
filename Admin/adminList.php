@@ -288,23 +288,26 @@
                                          <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                              <thead>
                                                  <tr>
-                                                     <th>Name</th>
-                                                     <th>Email</th>
-                                                     <th>Contact</th>
-                                                     <th>Position</th>
-                                                     <th>Actions</th>
+                                                    <th>Profile Picture</th>
+                                                    <th>Name</th>
+                                                    <th>Email</th>
+                                                    <th>Contact</th>
+                                                    <th>Position</th>
+                                                    <th>Actions</th>
                                                  </tr>
                                              </thead>
                                              <tbody id="adminTableBody">
                                                 <?php foreach($admins as $admin): ?>
                                                     <tr>
+                                                        <td>
+                                                            <img src="<?php echo $admin['pic']; ?>" alt="Profile Picture" class="img-fluid" style="max-width: 100px;">
+                                                        </td>
                                                         <td><?php echo $admin['adminName']; ?></td>
                                                         <td><?php echo $admin['email']; ?></td>
                                                         <td><?php echo $admin['contact']; ?></td>
                                                         <td><?php echo $admin['position']; ?></td>
                                                         <td>
                                                             <a href="adminEdit.php?id=<?php echo $admin['adminID']; ?>" class="btn btn-primary btn-sm">Edit</a>
-                                                            <!--<a href="adminDelete.php?id=<?php echo $admin['adminID']; ?>" class="btn btn-danger btn-sm">Delete</a>-->
                                                             <a href="#" class="btn btn-danger btn-sm delete-btn" data-toggle="modal" data-target="#confirmDeleteModal" data-admin-id="<?php echo $admin['adminID']; ?>">Delete</a>
                                                         </td>
                                                     </tr>
