@@ -16,17 +16,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $contact = $_POST['contact'];
     $position = $_POST['position'];
 
-    // SQL query to update the admin details
-    $sql = "UPDATE admin SET adminName = ?, email = ?, contact = ?, position = ? WHERE adminID = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssi", $adminName, $email, $contact, $position, $adminIdToEdit);
-    $stmt->execute(); // Execute the update query
-}
+    // Check if a new profile picture has been uploaded
+    if (isset($_FILES['pic']) && $_FILES['pic']['error'] === UPLOAD_ERR_OK) {
+        $target_dir = "uploads/";
+        $target_file = $target_dir . basename($_FILES["pic"]["name"]);
 
-if ($stmt->execute()) { // Execute the update query
-    $_SESSION['message'] = "Admin details updated successfully!";
-} else {
-    $_SESSION['message'] = "Error updating admin details.";
+        if (!move_uploaded_file($_FILES["pic"]["tmp_name"], $target_file)) {
+            echo "Sorry, there was an error uploading your file.";
+            exit();
+        }
+        $pic = $target_file;
+
+        // SQL query to update the admin details and profile picture
+        $sql = "UPDATE admin SET adminName = ?, email = ?, contact = ?, position = ?, pic = ? WHERE adminID = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("sssssi", $adminName, $email, $contact, $position, $pic, $adminIdToEdit);
+    } else {
+        // SQL query to update the admin details without changing the profile picture
+        $sql = "UPDATE admin SET adminName = ?, email = ?, contact = ?, position = ? WHERE adminID = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ssssi", $adminName, $email, $contact, $position, $adminIdToEdit);
+    }
+
+    if ($stmt->execute()) { // Execute the update query
+        $_SESSION['message'] = "Admin details updated successfully!";
+    } else {
+        $_SESSION['message'] = "Error updating admin details.";
+    }
 }
 
 // Close the database connection
