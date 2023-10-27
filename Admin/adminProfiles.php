@@ -17,8 +17,8 @@
     // If the query returns more than 0 rows, fetch the admin details
     if ($result->num_rows > 0) {
         $admin = $result->fetch_assoc();
-        // Convert the BLOB data to base64
-        $imageData = base64_encode($admin['pic']);
+        // Get the image path from the database
+        $imagePath = $admin['pic'];
     } else {
         // If no admin details are found, display an error message and exit the script
         echo "No admin found";
@@ -95,8 +95,8 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
                         <a class="collapse-item" href="adminProfiles.php">View Profile</a>
-                        <a class="collapse-item" href="adminEdit.php">Edit Admin</a>
                         <a class="collapse-item" href="adminCreate.php">Create Admin</a>
+                        <a class="collapse-item" href="adminList.php">List Admin</a>
                     </div>
                 </div>
             </li>
@@ -204,7 +204,8 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['user_name']; ?></span>
-                                <img src="data:image/jpeg;base64,<?php echo $imageData; ?>" class="img-profile rounded-circle img-fluid" title="profile images" style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">    
+                                <img src="<?php echo $imagePath; ?>" class="img-profile rounded-circle img-fluid" title="profile images" 
+                                style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -243,7 +244,7 @@
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                     <div class="col-12 text-center mb-4">
-                                    <img src="data:image/jpeg;base64,<?php echo $imageData; ?>" class="img-profile rounded-circle border-secondary img-fluid border p-3 bg-light" title="profile images" style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">
+                                    <img src="<?php echo $imagePath; ?>" class="img-profile rounded-circle border-secondary img-fluid border p-3 bg-light" title="profile images" style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">
                                     </div>
                                     <div class="col-12">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">

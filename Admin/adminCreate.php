@@ -17,8 +17,8 @@
     // If the query returns more than 0 rows, fetch the admin details
     if ($result->num_rows > 0) {
         $admin = $result->fetch_assoc();
-        // Convert the BLOB data to base64
-        $imageData = base64_encode($admin['pic']);
+        // Get the image path from the database
+        $imagePath = $admin['pic'];
     } else {
         // If no admin details are found, display an error message and exit the script
         echo "No admin found";
@@ -33,21 +33,27 @@
         $position = $_POST['position'];
         $password = $_POST['password']; // Added password
         
-        // Check if file was uploaded
-        if (isset($_FILES['pic']) && $_FILES['pic']['error'] === UPLOAD_ERR_OK) {
-            // Convert image to blob
-            $pic = addslashes(file_get_contents($_FILES['pic']['tmp_name']));
-        } else {
-            // If no file was uploaded, use the default image
-            $pic = file_get_contents('../img/no_profile.webp');
-        }
-        
-        $sql = "INSERT INTO admin (adminName, email, contact, position, password, pic) VALUES (?, ?, ?, ?, ?, ?)"; // Added password
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssssb", $adminName, $email, $contact, $position, $password, $pic); // Added password
-        $stmt->execute();
+    // Check if file was uploaded
+    if (isset($_FILES['pic']) && $_FILES['pic']['error'] === UPLOAD_ERR_OK) {
+        // Define directory to store images
+        $target_dir = "uploads/";
+        $target_file = $target_dir . basename($_FILES["pic"]["name"]);
 
-        $_SESSION['success_msg'] = "Admin created successfully!";
+        // Move the uploaded file to your desired directory and check if the file was moved successfully
+        if (!move_uploaded_file($_FILES["pic"]["tmp_name"], $target_file)) {
+            echo "Sorry, there was an error uploading your file.";
+        }
+    } else {
+        // If no file was uploaded, use the default image
+        $target_file = 'img/no_profile.webp';
+    }
+
+    $sql = "INSERT INTO admin (adminName, email, contact, position, password, pic) VALUES (?, ?, ?, ?, ?, ?)"; // Added password
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssssss", $adminName, $email, $contact, $position, $password, $target_file); // Added password
+    $stmt->execute();
+
+    $_SESSION['success_msg'] = "Admin created successfully!";
     }
 
     // Close the database connection
@@ -120,8 +126,8 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
                         <a class="collapse-item" href="adminProfiles.php">View Profile</a>
-                        <a class="collapse-item" href="adminEdit.php">Edit Admin</a>
                         <a class="collapse-item" href="adminCreate.php">Create Admin</a>
+                        <a class="collapse-item" href="adminList.php">List Admin</a>
                     </div>
                 </div>
             </li>
@@ -228,7 +234,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['user_name']; ?></span>
-                                <img src="data:image/jpeg;base64,<?php echo $imageData; ?>" class="img-profile rounded-circle img-fluid" title="profile images" 
+                                <img src="<?php echo $imagePath; ?>" class="img-profile rounded-circle img-fluid" title="profile images" 
                                 style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">
                             </a>
                             <!-- Dropdown - User Information -->
@@ -267,6 +273,7 @@
                                     unset($_SESSION['success_msg']);
                                 ?>
                             </div>
+
                         <?php endif; ?>
 
                      <!-- Content Row -->

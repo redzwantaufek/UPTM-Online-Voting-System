@@ -9,16 +9,19 @@
         exit();
     }
 
-    // Query to select the admin details from the database using the admin ID from the session
-    $sql = "SELECT * FROM admin WHERE adminID = '".$_SESSION['admin_id']."'";
+    // Get the id of the admin to edit from the URL
+    $adminIdToEdit = $_GET['id'];
+
+    // Query to select the admin details from the database using the admin ID from the URL
+    $sql = "SELECT * FROM admin WHERE adminID = '".$adminIdToEdit."'";
     // Execute the query
     $result = $conn->query($sql);
 
     // If the query returns more than 0 rows, fetch the admin details
     if ($result->num_rows > 0) {
         $admin = $result->fetch_assoc();
-        // Convert the BLOB data to base64
-        $imageData = base64_encode($admin['pic']);
+        // Get the image path from the database
+        $imagePath = $admin['pic'];
     } else {
         // If no admin details are found, display an error message and exit the script
         echo "No admin found";
@@ -38,21 +41,17 @@
             $pic = addslashes(file_get_contents($_FILES['pic']['tmp_name']));
         } else {
             // If no file was uploaded, use the existing image
-            $sql = "SELECT pic FROM admin WHERE adminID = ?";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("i", $_SESSION['admin_id']);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $admin = $result->fetch_assoc();
             $pic = $admin['pic'];
         }
         
         $sql = "UPDATE admin SET adminName = ?, email = ?, contact = ?, position = ?, pic = ? WHERE adminID = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssbi", $adminName, $email, $contact, $position, $pic, $_SESSION['admin_id']);
+        $stmt->bind_param("ssssbi", $adminName, $email, $contact, $position, $pic, $adminIdToEdit);
         $stmt->execute();
 
-        echo "Profile updated successfully!";
+        // Redirect to admin list page after successful update
+        header('Location: adminList.php');
+        exit();
     }
 
     // Close the database connection
@@ -176,8 +175,8 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
                         <a class="collapse-item" href="studentView.php">View Student Profile</a>
-                        <a class="collapse-item" href="studentEdit.php">Edit Student</a>
                         <a class="collapse-item" href="studentCreate.php">Create Student</a>
+                        <a class="collapse-item" href="adminList.php">List Admin</a>
                     </div>
                 </div>
             </li>
@@ -234,7 +233,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['user_name']; ?></span>
-                                <img src="data:image/jpeg;base64,<?php echo $imageData; ?>" class="img-profile rounded-circle img-fluid" title="profile images" 
+                                <img src="<?php echo $imagePath; ?>" class="img-profile rounded-circle img-fluid" title="profile images" 
                                 style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">
                             </a>
                             <!-- Dropdown - User Information -->
@@ -277,7 +276,7 @@
                                             <img src="data:image/jpeg;base64,<?php echo $imageData; ?>" class="img-profile rounded-circle border-secondary img-fluid border p-3 bg-light" title="profile images" style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">    
                                         </div>
                                         <div class="col-12">
-                                            <form action="adminUpdate.php" method="post" enctype="multipart/form-data">
+                                        <form action="adminUpdate.php?id=<?php echo $adminIdToEdit; ?>" method="post" enctype="multipart/form-data">
                                                 <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                     <label for="profilePicture">Profile Picture</label>
                                                     <div class="custom-file">
@@ -303,7 +302,7 @@
                                                     Position</div>
                                                 <input type="text" class="form-control" id="position" name="position" value="<?php echo $admin['position']; ?>">
                                                 <button type="submit" class="btn btn-primary mt-3 rounded-pill" title="save">Save</button>
-                                                <button class="btn btn-danger mt-3 rounded-pill" onclick="window.location.href='adminProfiles.php'" title="cancel" type="button">Cancel</button>
+                                                <button class="btn btn-danger mt-3 rounded-pill" onclick="window.location.href='adminList.php'" title="cancel" type="button">Cancel</button>
                                             </form>
                                         </div>
                                     </div>

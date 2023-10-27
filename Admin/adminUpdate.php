@@ -31,26 +31,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pic = $admin['pic'];
     }
 
-    // Prepare an SQL statement for updating the admin profile
+    // Get the id of the admin to update
+    $adminIdToUpdate = $_GET['id'];
+
+    // SQL query to update the admin details
     $sql = "UPDATE admin SET adminName = ?, email = ?, contact = ?, position = ?, pic = ? WHERE adminID = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssbi", $adminName, $email, $contact, $position, $pic, $_SESSION['admin_id']);
-    
-    // Execute the SQL statement
-    if ($stmt->execute()) {
-        echo "Profile updated successfully!";
-    } else {
-        echo "Error: " . $stmt->error;
-    }
+    $stmt->bind_param("ssssbi", $adminName, $email, $contact, $position, $pic, $adminIdToUpdate);
+    $stmt->execute(); // Execute the update query
+}
+
+if ($stmt->execute()) { // Execute the update query
+    $_SESSION['message'] = "Admin details updated successfully!";
 } else {
-    // If form is not submitted, redirect to edit page
-    header('Location: adminEdit.php');
-    exit();
+    $_SESSION['message'] = "Error updating admin details.";
 }
 
 // Close the database connection
 $conn->close();
 
-header('Location: adminProfiles.php');
+header('Location: adminList.php');
 exit();
 ?>

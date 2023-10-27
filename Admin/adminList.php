@@ -9,9 +9,25 @@
         exit();
     }
 
+    // Query to select the admin details from the database using the admin ID from the session
+    $sql = "SELECT * FROM admin WHERE adminID = '".$_SESSION['admin_id']."'";
+    // Execute the query
+    $result = $conn->query($sql);
+    
     // Query to select all admins from the database
     $sql = "SELECT * FROM admin";
     $result = $conn->query($sql);
+
+   // If the query returns more than 0 rows, fetch the admin details
+if ($result->num_rows > 0) {
+    $admin = $result->fetch_assoc();
+    // Get the image path from the database
+    $imagePath = $admin['pic'];
+} else {
+    // If no admin details are found, display an error message and exit the script
+    echo "No admin found";
+    exit();
+}
 
     // Close the database connection
     $conn->close();
@@ -86,8 +102,8 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
                         <a class="collapse-item" href="adminProfiles.php">View Profile</a>
-                        <a class="collapse-item" href="adminEdit.php">Edit Admin</a>
                         <a class="collapse-item" href="adminCreate.php">Create Admin</a>
+                        <a class="collapse-item" href="adminList.php">List Admin</a>
                     </div>
                 </div>
             </li>
@@ -195,7 +211,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['user_name']; ?></span>
-                                <img src="data:image/jpeg;base64,<?php echo $imageData; ?>" class="img-profile rounded-circle img-fluid" title="profile images" 
+                                <img src="<?php echo $imagePath; ?>" class="img-profile rounded-circle img-fluid" title="profile images" 
                                 style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">
                             </a>
                             <!-- Dropdown - User Information -->
@@ -220,6 +236,29 @@
 
                  <!-- Begin Page Content -->
                  <div class="container-fluid">
+                    <?php if(isset($_SESSION['message'])): ?>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <?php 
+                                echo $_SESSION['message']; 
+                                unset($_SESSION['message']);
+                            ?>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if(isset($_SESSION['message'])): ?>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <?php 
+                                echo $_SESSION['message']; 
+                                unset($_SESSION['message']);
+                            ?>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    <?php endif; ?>
 
                      <!-- Page Heading -->
                      <h1 class="h3 mb-0 text-gray-800">Admin List</h1>
@@ -248,7 +287,7 @@
                                                      <th>Actions</th>
                                                  </tr>
                                              </thead>
-                                             <tbody>
+                                             <tbody id="adminTableBody">
                                                 <?php while($admin = $result->fetch_assoc()): ?>
                                                     <tr>
                                                         <td><?php echo $admin['adminName']; ?></td>
@@ -256,7 +295,8 @@
                                                         <td><?php echo $admin['contact']; ?></td>
                                                         <td><?php echo $admin['position']; ?></td>
                                                         <td>
-                                                            <!-- Add action buttons here -->
+                                                            <a href="adminEdit.php?id=<?php echo $admin['adminID']; ?>" class="btn btn-primary btn-sm">Edit</a>
+                                                            <a href="adminDelete.php?id=<?php echo $admin['adminID']; ?>" class="btn btn-danger btn-sm">Delete</a>
                                                         </td>
                                                     </tr>
                                                 <?php endwhile; ?>
@@ -319,6 +359,29 @@
         function updateFileName(inputElement) {
             var fileName = inputElement.files[0].name; inputElement.nextElementSibling.textContent = fileName;
         }
+    </script>
+
+    <script>
+        document.getElementById('button-addon2').addEventListener('click', function() {
+            // Get the search query
+            var searchQuery = document.getElementById('searchAdmin').value.toLowerCase();
+
+            // Get the table rows
+            var tableRows = document.getElementById('adminTableBody').getElementsByTagName('tr');
+
+            // Loop through the table rows
+            for (var i = 0; i < tableRows.length; i++) {
+                // Get the admin name from the first cell of the row
+                var adminName = tableRows[i].getElementsByTagName('td')[0].textContent.toLowerCase();
+
+                // If the admin name does not contain the search query, hide the row, else show it
+                if (adminName.indexOf(searchQuery) === -1) {
+                    tableRows[i].style.display = 'none';
+                } else {
+                    tableRows[i].style.display = '';
+                }
+            }
+        });
     </script>
     
 
