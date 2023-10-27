@@ -389,6 +389,12 @@
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
 
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
     
     <!-- This script updates the file name when a new file is selected -->
     <script>
@@ -397,41 +403,41 @@
         }
     </script>
 
-<script>
-    document.getElementById('button-addon2').addEventListener('click', function() {
-        // Get the search query
-        var searchQuery = document.getElementById('searchAdmin').value.toLowerCase();
+    <script>
+        document.getElementById('button-addon2').addEventListener('click', function() {
+            // Get the search query
+            var searchQuery = document.getElementById('searchAdmin').value.toLowerCase();
 
-        // Get the table rows
-        var tableRows = document.getElementById('adminTableBody').getElementsByTagName('tr');
+            // Get the table rows
+            var tableRows = document.getElementById('adminTableBody').getElementsByTagName('tr');
 
-        // Loop through the table rows
-        for (var i = 0; i < tableRows.length; i++) {
-            // Get the admin name from the second cell of the row
-            var adminName = tableRows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
+            // Loop through the table rows
+            for (var i = 0; i < tableRows.length; i++) {
+                // Get the admin name from the second cell of the row
+                var adminName = tableRows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
 
-            // If the admin name does not contain the search query, hide the row, else show it
-            if (adminName.indexOf(searchQuery) === -1) {
-                tableRows[i].style.display = 'none';
-            } else {
+                // If the admin name does not contain the search query, hide the row, else show it
+                if (adminName.indexOf(searchQuery) === -1) {
+                    tableRows[i].style.display = 'none';
+                } else {
+                    tableRows[i].style.display = '';
+                }
+            }
+        });
+
+        document.getElementById('reset-button').addEventListener('click', function() {
+            // Clear the search input
+            document.getElementById('searchAdmin').value = '';
+
+            // Get the table rows
+            var tableRows = document.getElementById('adminTableBody').getElementsByTagName('tr');
+
+            // Show all the table rows
+            for (var i = 0; i < tableRows.length; i++) {
                 tableRows[i].style.display = '';
             }
-        }
-    });
-
-    document.getElementById('reset-button').addEventListener('click', function() {
-        // Clear the search input
-        document.getElementById('searchAdmin').value = '';
-
-        // Get the table rows
-        var tableRows = document.getElementById('adminTableBody').getElementsByTagName('tr');
-
-        // Show all the table rows
-        for (var i = 0; i < tableRows.length; i++) {
-            tableRows[i].style.display = '';
-        }
-    });
-</script>
+        });
+    </script>
 
     <!-- jQuery and Bootstrap Bundle JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
