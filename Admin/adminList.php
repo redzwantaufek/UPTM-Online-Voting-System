@@ -403,7 +403,7 @@
             // Loop through the table rows
             for (var i = 0; i < tableRows.length; i++) {
                 // Get the admin name from the first cell of the row
-                var adminName = tableRows[i].getElementsByTagName('td')[0].textContent.toLowerCase();
+                var adminName = tableRows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
 
                 // If the admin name does not contain the search query, hide the row, else show it
                 if (adminName.indexOf(searchQuery) === -1) {
