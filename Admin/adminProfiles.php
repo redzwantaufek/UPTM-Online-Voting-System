@@ -264,7 +264,7 @@
                                             <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $admin['position']; ?></div>
                                         </div>
                                     </div>
-                                    <a href="adminEdit.php" class="btn btn-primary mt-3 rounded-pill" title="edit">
+                                    <a href="adminEdit.php?id=<?php echo $_SESSION['admin_id']; ?>" class="btn btn-primary mt-3 rounded-pill" title="edit">
                                         Edit
                                     </a>
                                 </div>

@@ -8,29 +8,35 @@
         header('Location: ../login.php');
         exit();
     }
-
-    // Query to select the admin details from the database using the admin ID from the session
-    $sql = "SELECT * FROM admin WHERE adminID = '".$_SESSION['admin_id']."'";
-    // Execute the query
-    $result = $conn->query($sql);
     
     // Query to select all admins from the database
     $sql = "SELECT * FROM admin";
     $result = $conn->query($sql);
 
-   // If the query returns more than 0 rows, fetch the admin details
-if ($result->num_rows > 0) {
-    $admin = $result->fetch_assoc();
-    // Get the image path from the database
-    $imagePath = $admin['pic'];
-} else {
-    // If no admin details are found, display an error message and exit the script
-    echo "No admin found";
-    exit();
-}
+    // Create an array to store all admins
+    $admins = [];
 
-    // Close the database connection
-    $conn->close();
+    // If the query returns more than 0 rows, fetch all admins
+    if ($result->num_rows > 0) {
+        while ($admin = $result->fetch_assoc()) {
+            $admins[] = $admin;
+        }
+    } else {
+        // If no admin details are found, display an error message and exit the script
+        echo "No admin found";
+        exit();
+    }
+
+    $sql = "SELECT * FROM admin WHERE adminID = '".$_SESSION['admin_id']."'";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        $currentAdmin = $result->fetch_assoc();
+        $currentAdminImagePath = $currentAdmin['pic'];
+    } else {
+        echo "No admin found";
+        exit();
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -54,6 +60,8 @@ if ($result->num_rows > 0) {
     <!-- Bootstrap Table styles-->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+    <!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
 </head>
 
@@ -211,8 +219,8 @@ if ($result->num_rows > 0) {
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['user_name']; ?></span>
-                                <img src="<?php echo $imagePath; ?>" class="img-profile rounded-circle img-fluid" title="profile images" 
-                                style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">
+                                <img src="<?php echo $currentAdminImagePath; ?>" class="img-profile rounded-circle img-fluid" 
+                                title="profile images" style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -288,7 +296,7 @@ if ($result->num_rows > 0) {
                                                  </tr>
                                              </thead>
                                              <tbody id="adminTableBody">
-                                                <?php while($admin = $result->fetch_assoc()): ?>
+                                                <?php foreach($admins as $admin): ?>
                                                     <tr>
                                                         <td><?php echo $admin['adminName']; ?></td>
                                                         <td><?php echo $admin['email']; ?></td>
@@ -296,11 +304,12 @@ if ($result->num_rows > 0) {
                                                         <td><?php echo $admin['position']; ?></td>
                                                         <td>
                                                             <a href="adminEdit.php?id=<?php echo $admin['adminID']; ?>" class="btn btn-primary btn-sm">Edit</a>
-                                                            <a href="adminDelete.php?id=<?php echo $admin['adminID']; ?>" class="btn btn-danger btn-sm">Delete</a>
+                                                            <!--<a href="adminDelete.php?id=<?php echo $admin['adminID']; ?>" class="btn btn-danger btn-sm">Delete</a>-->
+                                                            <a href="#" class="btn btn-danger btn-sm delete-btn" data-toggle="modal" data-target="#confirmDeleteModal" data-admin-id="<?php echo $admin['adminID']; ?>">Delete</a>
                                                         </td>
                                                     </tr>
-                                                <?php endwhile; ?>
-                                             </tbody>
+                                                <?php endforeach; ?>
+                                            </tbody>
                                          </table>
                                      </div>
                                  </div>
@@ -310,6 +319,25 @@ if ($result->num_rows > 0) {
 
                  </div>
                  <!-- /.container-fluid -->
+
+                 <!-- Modal -->
+                <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete this admin?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <a href="" class="btn btn-danger" id="confirmDelete">Delete</a>
+                    </div>
+                    </div>
+                </div>
+                </div>
 
             </div>
             <!-- End of Main Content -->
@@ -383,6 +411,24 @@ if ($result->num_rows > 0) {
             }
         });
     </script>
+
+    <!-- jQuery and Bootstrap Bundle JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+    $(document).ready(function() {
+        $('.delete-btn').on('click', function() {
+            var adminId = $(this).data('admin-id');
+            $('#confirmDelete').attr('href', 'adminDelete.php?id=' + adminId);
+        });
+    });
+    </script>
+
+    <?php
+        // Close the database connection
+        $conn->close();
+    ?>
     
 
 </body>

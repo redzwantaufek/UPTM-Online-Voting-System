@@ -42,6 +42,7 @@
         // Move the uploaded file to your desired directory and check if the file was moved successfully
         if (!move_uploaded_file($_FILES["pic"]["tmp_name"], $target_file)) {
             echo "Sorry, there was an error uploading your file.";
+            exit();
         }
     } else {
         // If no file was uploaded, use the default image

@@ -17,11 +17,31 @@
     // Execute the query
     $result = $conn->query($sql);
 
+    if (!is_writable('uploads/')) {
+        chmod('uploads/', 0777);
+    }
+
     // If the query returns more than 0 rows, fetch the admin details
     if ($result->num_rows > 0) {
         $admin = $result->fetch_assoc();
         // Get the image path from the database
         $imagePath = $admin['pic'];
+    }else {
+        // If no admin details are found, display an error message and exit the script
+        echo "No admin found";
+        exit();
+    }
+
+    // Query to select the current admin details from the database using the admin ID from the session
+    $sql = "SELECT * FROM admin WHERE adminID = '".$_SESSION['admin_id']."'";
+    // Execute the query
+    $result = $conn->query($sql);
+
+    // If the query returns more than 0 rows, fetch the admin details
+    if ($result->num_rows > 0) {
+        $currentAdmin = $result->fetch_assoc();
+        // Get the image path from the database
+        $currentAdminImagePath = $currentAdmin['pic'];
     } else {
         // If no admin details are found, display an error message and exit the script
         echo "No admin found";
@@ -35,15 +55,6 @@
         $contact = $_POST['contact'];
         $position = $_POST['position'];
         
-        // Check if file was uploaded
-        if (isset($_FILES['pic']) && $_FILES['pic']['error'] === UPLOAD_ERR_OK) {
-            // Convert image to blob
-            $pic = addslashes(file_get_contents($_FILES['pic']['tmp_name']));
-        } else {
-            // If no file was uploaded, use the existing image
-            $pic = $admin['pic'];
-        }
-        
         $sql = "UPDATE admin SET adminName = ?, email = ?, contact = ?, position = ?, pic = ? WHERE adminID = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("ssssbi", $adminName, $email, $contact, $position, $pic, $adminIdToEdit);
@@ -52,6 +63,22 @@
         // Redirect to admin list page after successful update
         header('Location: adminList.php');
         exit();
+    }
+
+    // Check if a new profile picture has been uploaded
+    if (isset($_FILES['pic']) && $_FILES['pic']['error'] === UPLOAD_ERR_OK) {
+        // Define directory to store images
+        $target_dir = "uploads/";
+        $target_file = $target_dir . basename($_FILES["pic"]["name"]);
+
+        // Move the uploaded file to your desired directory and check if the file was moved successfully
+        if (!move_uploaded_file($_FILES["pic"]["tmp_name"], $target_file)) {
+            echo "Sorry, there was an error uploading your file.";
+            exit();
+        }
+    } else {
+        // If no file was uploaded, use the existing image
+        $target_file = $admin['pic'];
     }
 
     // Close the database connection
@@ -233,7 +260,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['user_name']; ?></span>
-                                <img src="<?php echo $imagePath; ?>" class="img-profile rounded-circle img-fluid" title="profile images" 
+                                <img src="<?php echo $currentAdminImagePath; ?>" class="img-profile rounded-circle img-fluid" title="profile images" 
                                 style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">
                             </a>
                             <!-- Dropdown - User Information -->
@@ -273,7 +300,7 @@
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col-12 text-center mb-4">
-                                            <img src="data:image/jpeg;base64,<?php echo $imageData; ?>" class="img-profile rounded-circle border-secondary img-fluid border p-3 bg-light" title="profile images" style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">    
+                                            <img src="<?php echo $imagePath; ?>" class="img-profile rounded-circle border-secondary img-fluid border p-3 bg-light" title="profile images" style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">    
                                         </div>
                                         <div class="col-12">
                                         <form action="adminUpdate.php?id=<?php echo $adminIdToEdit; ?>" method="post" enctype="multipart/form-data">
