@@ -254,10 +254,15 @@
                                     <h6 class="m-0 font-weight-bold text-primary">Student List</h6>
                                 </div>
                                 <div class="card-body">
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control" placeholder="Search by name" id="searchInput">
+                                    <div class="input-group mb-3 mt-3">
+                                        <input type="text" class="form-control" placeholder="Search by name" id="searchStudent">
                                         <div class="input-group-append">
-                                            <button class="btn btn-outline-secondary" type="button" id="searchButton">Search</button>
+                                            <button class="btn btn-outline-secondary" type="button" id="button-addon2">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                            <button class="btn btn-outline-secondary" type="button" id="reset-button">
+                                                <i class="fas fa-times"></i>
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="table-responsive">
