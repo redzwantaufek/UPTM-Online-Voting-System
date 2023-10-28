@@ -1,3 +1,69 @@
+<?php
+    include '../Database/connect.php';
+    session_start();
+
+    // Check if user is logged in
+    if (!isset($_SESSION['admin_id'])) {
+        // If not, redirect to login page
+        header('Location: ../login.php');
+        exit();
+    }
+
+    // Query to select the admin details from the database using the admin ID from the session
+    $sql = "SELECT * FROM admin WHERE adminID = '".$_SESSION['admin_id']."'";
+    // Execute the query
+    $result = $conn->query($sql);
+
+    // If the query returns more than 0 rows, fetch the admin details
+    if ($result->num_rows > 0) {
+        $admin = $result->fetch_assoc();
+        // Get the image path from the database
+        $imagePath = $admin['pic'];
+    } else {
+        // If no admin details are found, display an error message and exit the script
+        echo "No admin found";
+        exit();
+    }
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (isset($_POST['electionName'])) {
+            // Code to handle the election setup form submission
+            $electionName = $_POST['electionName'];
+            $voteNo = $_POST['voteNo'];
+            $startTime = $_POST['startTime'];
+            $endTime = $_POST['endTime'];
+            $date = $_POST['date'];
+            $rules = $_POST['rules'];
+
+            // Insert these values into the database
+            $sql = "INSERT INTO election (electionTitle, voteNo, start, end, date, rules) VALUES ('$electionName', '$voteNo', '$startTime', '$endTime', '$date', '$rules')";
+            if ($conn->query($sql) === TRUE) {
+                $_SESSION['success'] = "New election created successfully";
+            } else {
+                $_SESSION['error'] = "Error: " . $sql . "<br>" . $conn->error;
+            }
+        }
+
+        if (isset($_POST['electionNameAnn'])) {
+            // Code to handle the election announcement form submission
+            $electionNameAnn = $_POST['electionNameAnn'];
+            $candidateName = $_POST['candidateName'];
+            $shortInfo = $_POST['shortInfo'];
+
+            // Insert these values into the database and make the announcement
+            $sql = "INSERT INTO announcement (elecTitle, candName, info) VALUES ('$electionNameAnn', '$candidateName', '$shortInfo')";
+            if ($conn->query($sql) === TRUE) {
+                $_SESSION['success'] = "New announcement created successfully";
+            } else {
+                $_SESSION['error'] = "Error: " . $sql . "<br>" . $conn->error;
+            }
+        }
+    }
+
+    // Close the database connection
+    $conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,9 +94,9 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
                 <div class="sidebar-brand-icon">
-                    <i class="fa-solid fa-user-tie"></i>
+                    <i class="fa-solid fa-square-poll-vertical"></i>
                 </div>
                 <div class="sidebar-brand-text mx-3">Dashboard</div>
             </a>
@@ -40,7 +106,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="index.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -63,9 +129,8 @@
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
-                        <a class="collapse-item" href="adminProfiles.html">View Profile</a>
-                        <a class="collapse-item" href="adminEdit.html">Edit Admin</a>
-                        <a class="collapse-item" href="adminCreate.html">Create Admin</a>
+                        <a class="collapse-item" href="adminProfiles.php">View Profile</a>
+                        <a class="collapse-item" href="adminCreate.php">Create Admin</a>
                     </div>
                 </div>
             </li>
@@ -81,9 +146,8 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
-                        <a class="collapse-item" href="candidateCreate.html">Add Candidates</a>
-                        <a class="collapse-item" href="candidateView.html">View Candidates</a>
-                        <a class="collapse-item" href="candidateEdit.html">Edit Candidates</a>
+                        <a class="collapse-item" href="candidateCreate.php">Add Candidates</a>
+                        <a class="collapse-item" href="candidateView.php">View Candidates</a>
                     </div>
                 </div>
             </li>
@@ -98,8 +162,8 @@
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
-                        <a class="collapse-item" href="electionView.html">Election View</a>
-                        <a class="collapse-item" href="electionSet.html">Election Set Up</a>
+                        <a class="collapse-item" href="electionView.php">Election View</a>
+                        <a class="collapse-item" href="electionSet.php">Election Set Up</a>
                     </div>
                 </div>
             </li>
@@ -114,23 +178,22 @@
                 <div id="collapseStudent" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
-                        <a class="collapse-item" href="studentView.html">View Student Profile</a>
-                        <a class="collapse-item" href="studentEdit.html">Edit Student</a>
-                        <a class="collapse-item" href="studentCreate.html">Create Student</a>
+                        <a class="collapse-item" href="studentView.php">View Student Profile</a>
+                        <a class="collapse-item" href="studentCreate.php">Create Student</a>
                     </div>
                 </div>
             </li>
 
             <!-- Nav Item - Result -->
             <li class="nav-item">
-                <a class="nav-link" href="result.html">
+                <a class="nav-link" href="result.php">
                     <i class="fa-solid fa-chart-simple"></i>
                     <span>Election Result</span></a>
             </li>
 
             <!-- Nav Item - Student attendance -->
             <li class="nav-item">
-                <a class="nav-link" href="attendance.html">
+                <a class="nav-link" href="attendance.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Student Attendance</span></a>
             </li>
@@ -172,26 +235,25 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Ali bin Abu</span>
-                                <img class="img-profile rounded-circle" title="profile images"
-                                    src="img/undraw_profile.svg">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['user_name']; ?></span>
+                                <img src="<?php echo $imagePath; ?>" class="img-profile rounded-circle img-fluid" title="profile images" 
+                                style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="adminProfiles.html">
+                                <a class="dropdown-item" href="adminProfiles.php">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
                                 
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" href="logout.php">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
                             </div>
                         </li>
-
                     </ul>
 
                 </nav>
@@ -199,6 +261,26 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+
+                    <!-- Display success message -->
+                    <?php if (isset($_SESSION['success'])): ?>
+                        <div class="alert alert-success">
+                            <?php 
+                                echo $_SESSION['success']; 
+                            ?>
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- Display error message -->
+                    <?php if (isset($_SESSION['error'])): ?>
+                        <div class="alert alert-danger">
+                            <?php 
+                                echo $_SESSION['error']; 
+                            ?>
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        </div>
+                    <?php endif; ?>
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -213,30 +295,30 @@
                                     <h6 class="m-0 font-weight-bold text-primary">Election Details</h6>
                                 </div>
                                 <div class="card-body">
-                                    <form>
+                                    <form method="POST" action="electionSet.php">
                                         <div class="form-group">
                                             <label for="electionName">Election Name</label>
-                                            <input type="text" class="form-control" id="electionName" placeholder="Enter Election Name">
+                                            <input type="text" class="form-control" id="electionName" name="electionName" placeholder="Enter Election Name" required>
                                         </div>
                                         <div class="form-group">
-                                            <label for="voteCount">Number of Votes per Student</label>
-                                            <input type="number" class="form-control" id="voteCount" placeholder="Enter Number of Votes per Student">
+                                            <label for="voteNo">Number of Votes per Student</label>
+                                            <input type="number" class="form-control" id="voteNo" name="voteNo" placeholder="Enter Number of Votes per Student" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="startTime">Start Time</label>
-                                            <input type="time" class="form-control" id="startTime">
+                                            <input type="time" class="form-control" id="startTime" name="startTime" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="endTime">End Time</label>
-                                            <input type="time" class="form-control" id="endTime">
+                                            <input type="time" class="form-control" id="endTime" name="endTime" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="date">Date</label>
-                                            <input type="date" class="form-control" id="date">
+                                            <input type="date" class="form-control" id="date" name="date" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="rules">Rules</label>
-                                            <textarea class="form-control" id="rules" rows="3"></textarea>
+                                            <textarea class="form-control" id="rules" name="rules" rows="3" required></textarea>
                                         </div>
                                         <button type="submit" class="btn btn-primary">Create</button>
                                     </form>
@@ -314,7 +396,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <a class="btn btn-primary" href="login.php">Logout</a>
                 </div>
             </div>
         </div>
