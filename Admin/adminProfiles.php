@@ -114,7 +114,6 @@
                         <h6 class="collapse-header">MENU</h6>
                         <a class="collapse-item" href="candidateCreate.php">Verify Candidates</a>
                         <a class="collapse-item" href="candidateView.php">View Candidates</a>
-                        <a class="collapse-item" href="candidateEdit.php">Edit Candidates</a>
                     </div>
                 </div>
             </li>
@@ -146,7 +145,6 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
                         <a class="collapse-item" href="studentView.php">View Student Profile</a>
-                        <a class="collapse-item" href="studentEdit.php">Edit Student</a>
                         <a class="collapse-item" href="studentCreate.php">Create Student</a>
                     </div>
                 </div>

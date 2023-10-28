@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 25, 2023 at 09:10 AM
+-- Generation Time: Oct 28, 2023 at 10:37 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -32,10 +32,21 @@ CREATE TABLE `admin` (
   `adminName` varchar(80) NOT NULL,
   `email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `contact` int(255) NOT NULL,
+  `contact` varchar(255) NOT NULL,
   `position` varchar(255) NOT NULL,
-  `pic` blob NOT NULL
+  `pic` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `admin`
+--
+
+INSERT INTO `admin` (`adminID`, `adminName`, `email`, `password`, `contact`, `position`, `pic`) VALUES
+(1, 'Muhammad Redzwan Bin Md Taufek', 'redzwantaufek2@gmail.com', '14250', '0194678990', 'System Admin', 'uploads/profile 1.jpg'),
+(8, 'Ahmad Bin Najmi', 'ahmad@gmail.com', '14250', '0193438449', 'Staff HEP', 'uploads/pic1.jpg'),
+(9, 'Abu bin Bakar', 'abu@gmail.com', '1425', '0194583764', 'Staff HEP', 'uploads/profile6m.png'),
+(17, 'Zul bin Arif', 'zul@gmail.com', '1425', '0194683645', 'Staff HEP', 'uploads/profile5m.avif'),
+(20, 'Nur Helena binti Zakariah', 'helenaNur@gmail.com', '14250', '0198493857', 'Staff HEP', 'uploads/profile3f.png');
 
 -- --------------------------------------------------------
 
@@ -103,15 +114,22 @@ CREATE TABLE `election` (
 
 CREATE TABLE `student` (
   `studentId` int(11) NOT NULL,
-  `studPic` blob NOT NULL,
+  `studentPic` varchar(255) NOT NULL,
   `studentName` varchar(80) NOT NULL,
   `email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
   `contact` varchar(255) NOT NULL,
-  `votingHistory` tinyint(4) NOT NULL DEFAULT 1,
+  `votingHistory` tinyint(4) NOT NULL DEFAULT 0,
   `course` varchar(255) NOT NULL,
   `faculty` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `student`
+--
+
+INSERT INTO `student` (`studentId`, `studentPic`, `studentName`, `email`, `password`, `contact`, `votingHistory`, `course`, `faculty`) VALUES
+(1, 'uploads/profile5m.avif', 'Muhammad Redzwan Bin Md Taufek', 'taufekredzwan@gmail.com', '14250', '0194678990', 0, 'CC101 - Diploma in Computer Science', 'FCOM');
 
 -- --------------------------------------------------------
 
@@ -183,7 +201,7 @@ ALTER TABLE `vote`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `adminID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `adminID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `analytic`
@@ -213,7 +231,7 @@ ALTER TABLE `election`
 -- AUTO_INCREMENT for table `student`
 --
 ALTER TABLE `student`
-  MODIFY `studentId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `studentId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables

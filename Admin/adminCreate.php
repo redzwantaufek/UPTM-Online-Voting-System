@@ -146,7 +146,6 @@
                         <h6 class="collapse-header">MENU</h6>
                         <a class="collapse-item" href="candidateCreate.php">Verify Candidates</a>
                         <a class="collapse-item" href="candidateView.php">View Candidates</a>
-                        <a class="collapse-item" href="candidateEdit.php">Edit Candidates</a>
                     </div>
                 </div>
             </li>
@@ -178,7 +177,6 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
                         <a class="collapse-item" href="studentView.php">View Student Profile</a>
-                        <a class="collapse-item" href="studentEdit.php">Edit Student</a>
                         <a class="collapse-item" href="studentCreate.php">Create Student</a>
                     </div>
                 </div>
@@ -285,7 +283,7 @@
                              <div class="card border-0 shadow h-100 py-2 rounded-lg">
                                  <div class="card-body">
                                      <form action="adminCreate.php" method="post" enctype="multipart/form-data">
-                                         <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
                                             <label for="profilePicture">Profile Picture</label>
                                             <div class="custom-file">
                                                 <input type="file" class="custom-file-input" id="profilePicture" name="pic" onchange="updateFileName(this)">
