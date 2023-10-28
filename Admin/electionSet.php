@@ -60,8 +60,6 @@
         }
     }
 
-    // Close the database connection
-    $conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -267,6 +265,7 @@
                         <div class="alert alert-success">
                             <?php 
                                 echo $_SESSION['success']; 
+                                unset($_SESSION['success']);
                             ?>
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
                         </div>
@@ -276,7 +275,8 @@
                     <?php if (isset($_SESSION['error'])): ?>
                         <div class="alert alert-danger">
                             <?php 
-                                echo $_SESSION['error']; 
+                                echo $_SESSION['error'];
+                                unset($_SESSION['error']);
                             ?>
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
                         </div>
@@ -333,20 +333,34 @@
                                     <h6 class="m-0 font-weight-bold text-primary">Election Winner Announcement</h6>
                                 </div>
                                 <div class="card-body">
-                                    <form>
+                                    <form method="POST" action="electionSet.php">
                                         <div class="form-group">
                                             <label for="electionName">Election Name</label>
-                                            <input type="text" class="form-control" id="electionNameAnn" placeholder="Enter Election Name">
+                                            <input type="text" class="form-control" id="electionNameAnn" name="electionNameAnn" placeholder="Enter Election Name" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="candidateName">Candidate Name</label>
-                                            <select multiple class="form-control" id="candidateName">
-                                                <!-- Candidate names will be inserted here dynamically -->
+                                            <select multiple class="form-control" id="candidateName" name="candidateName" required>
+                                                <?php
+                                                    // Fetch candidate names from the database
+                                                    $sql = "SELECT candidateName FROM candidate";
+                                                    $result = $conn->query($sql);
+
+                                                    // Check if the query returns any rows
+                                                    if ($result->num_rows > 0) {
+                                                        // Output data of each row
+                                                        while($row = $result->fetch_assoc()) {
+                                                            echo "<option value='".$row["candidateName"]."'>".$row["candidateName"]."</option>";
+                                                        }
+                                                    } else {
+                                                        echo "No candidates found";
+                                                    }
+                                                ?>
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <label for="shortInfo">Short Info</label>
-                                            <textarea class="form-control" id="shortInfo" rows="3"></textarea>
+                                            <textarea class="form-control" id="shortInfo" name="shortInfo" rows="3" required></textarea>
                                         </div>
                                         <button type="submit" class="btn btn-primary">Announce</button>
                                     </form>
@@ -418,6 +432,11 @@
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
+
+    <?php
+        // Close the database connection
+        $conn->close();
+    ?>
     
 
 </body>
