@@ -271,6 +271,18 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
+                <?php if (isset($_SESSION['message'])): ?>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <?php 
+                        echo $_SESSION['message']; 
+                        unset($_SESSION['message']);
+                        ?>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                <?php endif; ?>
+
                     <!-- Page Heading -->
                     <h1 class="h3 mb-0 text-gray-800">View Election</h1>
 
