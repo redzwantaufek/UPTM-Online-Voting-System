@@ -299,7 +299,7 @@
                         </div>
                         <div class="card-body">
                             <?php if (isset($election)): ?>
-                                <p><b>Election Name:</b> <?php echo $election['electionTitle']; ?></p>
+                                <p><b>Election Title:</b> <?php echo $election['electionTitle']; ?></p>
                                 <p><b>Number of Votes per Student:</b> <?php echo $election['voteNo']; ?></p>
                                 <p><b>Start Time:</b> <?php echo $election['start']; ?></p>
                                 <p><b>End Time:</b> <?php echo $election['end']; ?></p>
@@ -325,8 +325,9 @@
                         </div>
                         <div class="card-body">
                             <?php if (isset($announcement)): ?>
+                                <p><b>Election Title:</b> <?php echo $announcement['elecTitle']; ?></p>
                                 <p><b>Winner:</b> <?php echo $announcement['candName']; ?></p>
-                                <p><b>Short Info:</b> <?php echo $announcement['info']; ?></p>
+                                <p><b>Info:</b> <?php echo $announcement['info']; ?></p>
                             <?php else: ?>
                                 <p>No winner announcement data available.</p>
                             <?php endif; ?>

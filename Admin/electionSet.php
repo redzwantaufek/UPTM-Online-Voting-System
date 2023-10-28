@@ -60,6 +60,20 @@
         }
     }
 
+    // Query to select the election names from the database
+    $sql = "SELECT electionTitle FROM election";
+    // Execute the query
+    $result = $conn->query($sql);
+
+    // If the query returns more than 0 rows, fetch the election names
+    if ($result->num_rows > 0) {
+        $electionNames = $result->fetch_all(MYSQLI_ASSOC);
+    } else {
+        // If no election names are found, display an error message and exit the script
+        echo "No elections found";
+        exit();
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -336,7 +350,11 @@
                                     <form method="POST" action="electionSet.php">
                                         <div class="form-group">
                                             <label for="electionName">Election Name</label>
-                                            <input type="text" class="form-control" id="electionNameAnn" name="electionNameAnn" placeholder="Enter Election Name" required>
+                                            <select class="form-control" id="electionNameAnn" name="electionNameAnn" required>
+                                                <?php foreach($electionNames as $election): ?>
+                                                    <option value="<?php echo $election['electionTitle']; ?>"><?php echo $election['electionTitle']; ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
                                         </div>
                                         <div class="form-group">
                                             <label for="candidateName">Candidate Name</label>
@@ -359,7 +377,7 @@
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label for="shortInfo">Short Info</label>
+                                            <label for="shortInfo">Info</label>
                                             <textarea class="form-control" id="shortInfo" name="shortInfo" rows="3" required></textarea>
                                         </div>
                                         <button type="submit" class="btn btn-primary">Announce</button>
