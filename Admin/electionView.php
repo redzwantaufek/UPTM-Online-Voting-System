@@ -1,3 +1,58 @@
+<?php
+    include '../Database/connect.php';
+    session_start();
+
+    // Check if user is logged in
+    if (!isset($_SESSION['admin_id'])) {
+        // If not, redirect to login page
+        header('Location: ../login.php');
+        exit();
+    }
+
+    // Query to select the admin details from the database using the admin ID from the session
+    $sql = "SELECT * FROM admin WHERE adminID = '".$_SESSION['admin_id']."'";
+    // Execute the query
+    $result = $conn->query($sql);
+
+    // If the query returns more than 0 rows, fetch the admin details
+    if ($result->num_rows > 0) {
+        $admin = $result->fetch_assoc();
+        // Get the image path from the database
+        $imagePath = $admin['pic'];
+    } else {
+        // If no admin details are found, display an error message and exit the script
+        echo "No admin found";
+        exit();
+    }
+
+    // Fetch election information from the database
+    $sql = "SELECT * FROM election";
+    $result = $conn->query($sql);
+
+    // Check if the query returns any rows
+    if ($result->num_rows > 0) {
+        // Output data of each row
+        $election = $result->fetch_assoc();
+    } else {
+        echo "No election found";
+    }
+
+    // Fetch announcement information from the database
+    $sql = "SELECT * FROM announcement";
+    $result = $conn->query($sql);
+
+    // Check if the query returns any rows
+    if ($result->num_rows > 0) {
+        // Output data of each row
+        $announcement = $result->fetch_assoc();
+    } else {
+        echo "No announcement found";
+    }
+
+    // Close the database connection
+    $conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -207,16 +262,18 @@
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Election Information</h6>
-                            <button class="btn btn-danger float-right">Delete</button>
+                            <form method="POST" action="electionDelete.php">
+                                <input type="hidden" name="delete_id" value="<?php echo $election['electionId']; ?>">
+                                <button type="submit" class="btn btn-danger float-right" name="delete">Delete</button>
+                            </form>
                         </div>
                         <div class="card-body">
-                            <p>Election Name: Dummy Election</p>
-                            <p>Number of Votes per Student: 2</p>
-                            <p>Start Time: 09:00 AM</p>
-                            <p>End Time: 05:00 PM</p>
-                            <p>Date: 2023-05-01</p>
-                            <p>Rules: Dummy rules for the dummy election.</p>
-                            <p>Manual: Dummy manual for the dummy election.</p>
+                            <p><b>Election Name:</b> <?php echo $election['electionTitle']; ?></p>
+                            <p><b>Number of Votes per Student:</b> <?php echo $election['voteNo']; ?></p>
+                            <p><b>Start Time:</b> <?php echo $election['start']; ?></p>
+                            <p><b>End Time:</b> <?php echo $election['end']; ?></p>
+                            <p><b>Date:</b> <?php echo $election['date']; ?></p>
+                            <p><b>Rules:</b> <?php echo $election['rules']; ?></p>
                         </div>
                     </div>
 
@@ -224,11 +281,15 @@
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Winner Announcement</h6>
-                            <button class="btn btn-danger float-right">Delete</button>
+                            <form method="POST" action="annDelete.php">
+                                <input type="hidden" name="delete_id" value="<?php echo $announcement['announcementId']; ?>">
+                                <button type="submit" class="btn btn-danger float-right" name="delete">Delete</button>
+                            </form>
+                            <button class="btn btn-primary float-right mr-2">Edit</button>
                         </div>
                         <div class="card-body">
-                            <p>Winner: Dummy Candidate</p>
-                            <p>Short Info: Dummy Candidate won the dummy election.</p>
+                            <p><b>Winner:</b> <?php echo $announcement['candName']; ?></p>
+                            <p><b>Short Info:</b> <?php echo $announcement['info']; ?></p>
                         </div>
                     </div>
 
