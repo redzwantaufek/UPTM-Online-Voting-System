@@ -25,39 +25,6 @@
         exit();
     }
 
-    // Create student if form is submitted
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $studentName = $_POST['studentName'];
-        $email = $_POST['email'];
-        $contact = $_POST['contact'];
-        $course = $_POST['course'];
-        $faculty = $_POST['faculty'];
-        $password = $_POST['password'];
-
-        // Check if file was uploaded
-        if (isset($_FILES['pic']) && $_FILES['pic']['error'] === UPLOAD_ERR_OK) {
-            // Define directory to store images
-            $target_dir = "uploads/";
-            $target_file = $target_dir . basename($_FILES["pic"]["name"]);
-
-            // Move the uploaded file to your desired directory and check if the file was moved successfully
-            if (!move_uploaded_file($_FILES["pic"]["tmp_name"], $target_file)) {
-                echo "Sorry, there was an error uploading your file.";
-                exit();
-            }
-        } else {
-            // If no file was uploaded, use the default image
-            $target_file = 'img/no_profile.webp';
-        }
-
-        $sql = "INSERT INTO student (studentName, email, contact, course, faculty, password, studentPic) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssssss", $studentName, $email, $contact, $course, $faculty, $password, $target_file);
-        $stmt->execute();
-
-        $_SESSION['success_msg'] = "Student created successfully!";
-    }
-
     // Close the database connection
     $conn->close();
 ?>
@@ -73,7 +40,7 @@
     <meta name="Uptm Voting System" content="">
     <meta name="Redzwan" content="">
 
-    <title>Student - UPTM VOTING SYSTEM</title>
+    <title>Dashboard - UPTM VOTING SYSTEM</title>
 
     <!-- Custom fonts-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
@@ -145,7 +112,7 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
-                        <a class="collapse-item" href="candidateCreate.php">Add Candidates</a>
+                        <a class="collapse-item" href="candidateCreate.php">Verify Candidates</a>
                         <a class="collapse-item" href="candidateView.php">View Candidates</a>
                     </div>
                 </div>
@@ -168,7 +135,7 @@
             </li>
 
             <!-- Nav Item - Student Collapse Menu -->
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseStudent"
                     aria-expanded="true" aria-controls="collapsePages">
                     <i class="fa-solid fa-person"></i>
@@ -198,12 +165,12 @@
             </li>
 
             <!-- Nav Item - Result -->
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link" href="about.php">
                     <i class="fas fa-fw fa-cog"></i>
                     <span>About</span></a>
             </li>
-            
+  
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 
@@ -232,7 +199,7 @@
                     <!-- UPTM Logo -->
                         <div class="navbar-brand" href="#">
                             <img src="img/uptm.jpg" alt="" class="img-fluid logo-img" style="max-width: 100px; max-height: 100px;">
-                        </div>        
+                        </div>            
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -242,7 +209,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['user_name']; ?></span>
-                                <img src="<?php echo $imagePath ; ?>" class="img-profile rounded-circle img-fluid" title="profile images" 
+                                <img src="<?php echo $imagePath; ?>" class="img-profile rounded-circle img-fluid" title="profile images" 
                                 style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">
                             </a>
                             <!-- Dropdown - User Information -->
@@ -265,77 +232,63 @@
                 </nav>
                 <!-- _______________________________________End of Topbar__________________________________________________________ -->
 
-                 <!-- Begin Page Content -->
-                 <div class="container-fluid">
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
 
-                     <!-- Page Heading -->
-                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                         <h1 class="h3 mb-0 text-gray-800">Create Student</h1>
-                     </div>
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">About</h1>
+                    </div>
 
-                    <!-- Success Message -->
-                    <?php if (isset($_SESSION['success_msg'])): ?>
-                        <div class="alert alert-success" role="alert">
-                            <?php 
-                                echo $_SESSION['success_msg']; 
-                                unset($_SESSION['success_msg']);
-                            ?>
-                        </div>
-                    <?php endif; ?>
+                    <!-- Content Row -->
+                    <div class="row">
 
-                     <!-- Content Row -->
-                     <div class="row">
-
-                         <!-- Admin Create Form -->
-                         <div class="col-xl-12 col-md-12 mb-4">
-                             <div class="card border-0 shadow h-100 py-2 rounded-lg">
-                                 <div class="card-body">
-                                 <form action="studentCreate.php" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
-                                        <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1 ">
-                                            <label for="profilePicture">Profile Picture</label>
-                                            <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="profilePicture" name="pic" onchange="updateFileName(this)" required>
-                                                <label class="custom-file-label" for="profilePicture">Choose file</label>
-                                            </div>
+                        <!-- UPTM Picture Card -->
+                        <div class="col-xl-12 col-md-12 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-md font-weight-bold text-primary text-uppercase mb-1">
+                                                Universiti Poly-Tech Malaysia (UPTM)</div>
+                                                <img src="img/uptm.jpg" alt="" class="img-fluid logo-img" style="max-width: 300px; max-height: 300px;">
+                                                <div class="col mr-2">
+                                                    <p class="mb-0 text-justify">
+                                                        <br>
+                                                        UPTM is a higher learning institute that nurtures students with moral values and humanity in every aspect of learning and human capital development, while ensuring every individual are given equal opportunity to shape their success in the professional scope through a variety of technology and knowledge. This is what UPTM is all about, offering recognised certification and transforming graduates into professionals of high standards of morality.
+                                                    </p>
+                                                </div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                                    <div class="form-group">
-                                        <label for="name">Name</label>
-                                        <input type="text" class="form-control" id="name" name="studentName" placeholder="Enter name" required>
+                        <!-- Information Card -->
+                        <div class="col-xl-12 col-md-12 mb-4">
+                            <div class="card border-left-info shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-md font-weight-bold text-info text-uppercase mb-1">About UPTM Online Voting System
+                                            </div>
+                                            <p class="mb-0 text-justify">UPTM Online Voting System is a web application designed to facilitate the voting process for the Universiti Poly-Tech Malaysia. This system allows students to vote for their preferred candidates for the student council elections.</p>
+                                            <br>
+                                            <p class="mb-0">For any inquiries, please contact us at:</p>
+                                            <ul>
+                                                <li>Faculty: Faculty of Computing and Multimedia</li>
+                                            </ul>
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="email">Email Address</label>
-                                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="contact">Contact</label>
-                                        <input type="text" class="form-control" id="contact" name="contact" placeholder="Enter contact number" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="course">Course</label>
-                                        <input type="text" class="form-control" id="course" name="course" placeholder="Enter course" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="faculty">Faculty</label>
-                                        <input type="text" class="form-control" id="faculty" name="faculty" placeholder="Enter faculty" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="password">Password</label>
-                                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Create</button>
-                                </form>
-                                 </div>
-                             </div>
-                         </div>
-                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                 </div>
-                 <!-- /.container-fluid -->
-
-             </div>
-             <!-- End of Main Content -->
-
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
 
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
@@ -394,51 +347,7 @@
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
-
-    <script>
-    function validateForm() {
-        var studentName = document.getElementById('name').value;
-        var email = document.getElementById('email').value;
-        var contact = document.getElementById('contact').value;
-        var course = document.getElementById('course').value;
-        var faculty = document.getElementById('faculty').value;
-        var password = document.getElementById('password').value;
-
-        if (studentName == "" || email == "" || contact == "" || course == "" || faculty == "" || password == "") {
-            alert("All fields must be filled out");
-            return false;
-        }
-    }
-    </script>
-
-    <script>
-        function updateFileName(inputElement) {
-            var fileName = inputElement.files[0].name;
-            inputElement.nextElementSibling.textContent = fileName;
-        }
-    </script>
-
-    <script>
-    (function () {
-    'use strict'
-
-    // Fetch all the forms we want to apply custom Bootstrap validation styles to
-    var forms = document.querySelectorAll('.needs-validation')
-
-    // Loop over them and prevent submission
-    Array.prototype.slice.call(forms)
-        .forEach(function (form) {
-        form.addEventListener('submit', function (event) {
-            if (!form.checkValidity()) {
-            event.preventDefault()
-            event.stopPropagation()
-            }
-
-            form.classList.add('was-validated')
-        }, false)
-        })
-    })()
-    </script>
+    
 
 </body>
 

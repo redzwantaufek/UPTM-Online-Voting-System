@@ -100,7 +100,7 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
                 <div class="sidebar-brand-icon">
-                    <i class="fa-solid fa-user-tie"></i>
+                    <i class="fa-solid fa-square-poll-vertical"></i>
                 </div>
                 <div class="sidebar-brand-text mx-3">Dashboard</div>
             </a>
@@ -202,6 +202,14 @@
                     <i class="fas fa-fw fa-table"></i>
                     <span>Student Attendance</span></a>
             </li>
+
+            <!-- Nav Item - Result -->
+            <li class="nav-item">
+                <a class="nav-link" href="about.php">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>About</span></a>
+            </li>
+            
             
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
