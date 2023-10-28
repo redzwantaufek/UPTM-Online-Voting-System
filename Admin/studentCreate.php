@@ -283,38 +283,38 @@
                          <div class="col-xl-12 col-md-12 mb-4">
                              <div class="card border-0 shadow h-100 py-2 rounded-lg">
                                  <div class="card-body">
-                                 <form action="studentCreate.php" method="post" enctype="multipart/form-data">
-                                        <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                 <form action="studentCreate.php" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+                                        <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1 ">
                                             <label for="profilePicture">Profile Picture</label>
                                             <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="profilePicture" name="pic" onchange="updateFileName(this)">
+                                                <input type="file" class="custom-file-input" id="profilePicture" name="pic" onchange="updateFileName(this)" required>
                                                 <label class="custom-file-label" for="profilePicture">Choose file</label>
                                             </div>
                                         </div>
 
                                     <div class="form-group">
                                         <label for="name">Name</label>
-                                        <input type="text" class="form-control" id="name" name="studentName" placeholder="Enter name">
+                                        <input type="text" class="form-control" id="name" name="studentName" placeholder="Enter name" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="email">Email Address</label>
-                                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
+                                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="contact">Contact</label>
-                                        <input type="text" class="form-control" id="contact" name="contact" placeholder="Enter contact number">
+                                        <input type="text" class="form-control" id="contact" name="contact" placeholder="Enter contact number" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="course">Course</label>
-                                        <input type="text" class="form-control" id="course" name="course" placeholder="Enter course">
+                                        <input type="text" class="form-control" id="course" name="course" placeholder="Enter course" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="faculty">Faculty</label>
-                                        <input type="text" class="form-control" id="faculty" name="faculty" placeholder="Enter faculty">
+                                        <input type="text" class="form-control" id="faculty" name="faculty" placeholder="Enter faculty" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="password">Password</label>
-                                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter password">
+                                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
                                     </div>
                                     <button type="submit" class="btn btn-primary">Create</button>
                                 </form>
@@ -387,6 +387,51 @@
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
+
+    <script>
+    function validateForm() {
+        var studentName = document.getElementById('name').value;
+        var email = document.getElementById('email').value;
+        var contact = document.getElementById('contact').value;
+        var course = document.getElementById('course').value;
+        var faculty = document.getElementById('faculty').value;
+        var password = document.getElementById('password').value;
+
+        if (studentName == "" || email == "" || contact == "" || course == "" || faculty == "" || password == "") {
+            alert("All fields must be filled out");
+            return false;
+        }
+    }
+    </script>
+
+    <script>
+        function updateFileName(inputElement) {
+            var fileName = inputElement.files[0].name;
+            inputElement.nextElementSibling.textContent = fileName;
+        }
+    </script>
+
+    <script>
+    (function () {
+    'use strict'
+
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.querySelectorAll('.needs-validation')
+
+    // Loop over them and prevent submission
+    Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+            }
+
+            form.classList.add('was-validated')
+        }, false)
+        })
+    })()
+    </script>
 
 </body>
 
