@@ -294,8 +294,11 @@
                                     <input type="hidden" name="delete_id" value="<?php echo $election['electionId']; ?>">
                                     <button type="submit" class="btn btn-danger float-right" name="delete">Delete</button>
                                 </form>
-                                <button class="btn btn-primary float-right mr-2">Edit</button>
-                            <?php endif; ?>
+                                <form method="GET" action="electionEdit.php">
+                                    <input type="hidden" name="id" value="<?php echo $election['electionId']; ?>">
+                                    <button type="submit" class="btn btn-primary float-right mr-2" name="edit">Edit</button>
+                                </form>
+                                <?php endif; ?>
                         </div>
                         <div class="card-body">
                             <?php if (isset($election)): ?>

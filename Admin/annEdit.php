@@ -20,35 +20,48 @@
         exit();
     }
 
-    // Get the id of the election to edit from the URL
-    $electionIdToEdit = $_GET['id'];
+    // Get the id of the admin to edit from the URL
+    $adminIdToEdit = $_GET['id'];
 
-    // Query to select the election details from the database using the election ID from the URL
-    $sql = "SELECT * FROM election WHERE electionId = '".$electionIdToEdit."'";
+    // Query to select the admin details from the database using the admin ID from the URL
+    $sql = "SELECT * FROM admin WHERE adminID = '".$adminIdToEdit."'";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
-        $election = $result->fetch_assoc();
+        $admin = $result->fetch_assoc();
+        $editedAdminPic = $admin['pic'];
     } else {
-        echo "No election found";
+        echo "No admin found";
         exit();
     }
 
-    // Update election information if form is submitted
+    // Update admin information and profile picture if form is submitted
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $electionTitle = $_POST['electionTitle'];
-        $voteNo = $_POST['voteNo'];
-        $start = $_POST['start'];
-        $end = $_POST['end'];
-        $date = $_POST['date'];
-        $rules = $_POST['rules'];
+        $adminName = $_POST['adminName'];
+        $email = $_POST['email'];
+        $contact = $_POST['contact'];
+        $position = $_POST['position'];
 
-        $sql = "UPDATE election SET electionTitle = ?, voteNo = ?, start = ?, end = ?, date = ?, rules = ? WHERE electionId = ?";
+        // Check if a new profile picture has been uploaded
+        if (isset($_FILES['pic']) && $_FILES['pic']['error'] === UPLOAD_ERR_OK) {
+            $target_dir = "uploads/";
+            $target_file = $target_dir . basename($_FILES["pic"]["name"]);
+
+            if (!move_uploaded_file($_FILES["pic"]["tmp_name"], $target_file)) {
+                echo "Sorry, there was an error uploading your file.";
+                exit();
+            }
+            $pic = $target_file;
+        } else {
+            $pic = $editedAdminPic;
+        }
+
+        $sql = "UPDATE admin SET adminName = ?, email = ?, contact = ?, position = ?, pic = ? WHERE adminID = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sissssi", $electionTitle, $voteNo, $start, $end, $date, $rules, $electionIdToEdit);
+        $stmt->bind_param("sssssi", $adminName, $email, $contact, $position, $pic, $adminIdToEdit);
         $stmt->execute();
 
-        header('Location: electionView.php');
+        header('Location: adminList.php');
         exit();
     }
 
@@ -111,7 +124,7 @@
             </div>
 
             <!-- Nav Item - Admin Collapse Menu -->
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                     aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-cog"></i>
@@ -144,7 +157,7 @@
             </li>
 
             <!-- Nav Item - Election Collapse Menu -->
-            <li class="nav-item  active">
+            <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                     aria-expanded="true" aria-controls="collapsePages">
                     <i class="fa-solid fa-check-to-slot"></i>
@@ -269,39 +282,44 @@
                     <!-- Content Row -->
                     <div class="row">
 
-                        <!-- Election Information Card -->
+                        <!-- Admin Profile Card -->
                         <div class="col-xl-12 col-md-12 mb-4">
                             <div class="card border-0 shadow h-100 py-2 rounded-lg">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
+                                        <div class="col-12 text-center mb-4">
+                                            <img src="<?php echo $editedAdminPic; ?>" class="img-profile rounded-circle border-secondary img-fluid border p-3 bg-light" title="profile images" style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">    
+                                        </div>
                                         <div class="col-12">
-                                        <form action="electionUpdate.php" method="post" enctype="multipart/form-data">
-                                                <input type="hidden" name="id" value="<?php echo $electionIdToEdit; ?>">
+                                        <form action="adminUpdate.php" method="post" enctype="multipart/form-data">
+                                                <input type="hidden" name="id" value="<?php echo $adminIdToEdit; ?>">
+                                                <input type="hidden" name="editedAdminPic" value="<?php echo $editedAdminPic; ?>">
                                                 <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                    Election Title</div>
-                                                <input type="text" class="form-control" id="electionTitle" name="electionTitle" value="<?php echo $election['electionTitle']; ?>">
+                                                    <label for="profilePicture">Profile Picture</label>
+                                                    <div class="custom-file">
+                                                        <input type="file" class="custom-file-input" id="profilePicture" name="pic" onchange="updateFileName(this)">
+                                                        <label class="custom-file-label" for="profilePicture">Choose file</label>
+                                                    </div>
+                                                </div>
+                                                
+                                                
+                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                    Name</div>
+                                                <input type="text" class="form-control" id="adminName" name="adminName" value="<?php echo $admin['adminName']; ?>">
                                                 <hr class="sidebar-divider my-1">
-                                                <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                    Number of Votes</div>
-                                                <input type="number" class="form-control" id="voteNo" name="voteNo" value="<?php echo $election['voteNo']; ?>">
+                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                    Email</div>
+                                                <input type="email" class="form-control" id="email" name="email" value="<?php echo $admin['email']; ?>">
                                                 <hr class="sidebar-divider my-1">
-                                                <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                    Start Time</div>
-                                                <input type="time" class="form-control" id="start" name="start" value="<?php echo $election['start']; ?>">
+                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                    Contact</div>
+                                                <input type="text" class="form-control" id="contact" name="contact" value="<?php echo $admin['contact']; ?>">
                                                 <hr class="sidebar-divider my-1">
-                                                <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                    End Time</div>
-                                                <input type="time" class="form-control" id="end" name="end" value="<?php echo $election['end']; ?>">
-                                                <hr class="sidebar-divider my-1">
-                                                <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                    Date</div>
-                                                <input type="date" class="form-control" id="date" name="date" value="<?php echo $election['date']; ?>">
-                                                <hr class="sidebar-divider my-1">
-                                                <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                    Rules</div>
-                                                <textarea class="form-control" id="rules" name="rules"><?php echo $election['rules']; ?></textarea>
+                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                    Position</div>
+                                                <input type="text" class="form-control" id="position" name="position" value="<?php echo $admin['position']; ?>">
                                                 <button type="submit" class="btn btn-primary mt-3 rounded-pill" title="save">Save</button>
-                                                <button class="btn btn-danger mt-3 rounded-pill" onclick="window.location.href='electionView.php'" title="cancel" type="button">Cancel</button>
+                                                <button class="btn btn-danger mt-3 rounded-pill" onclick="window.location.href='adminList.php'" title="cancel" type="button">Cancel</button>
                                             </form>
                                         </div>
                                     </div>
