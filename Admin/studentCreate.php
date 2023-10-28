@@ -25,6 +25,7 @@
         exit();
     }
 
+    // Create student if form is submitted
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $studentName = $_POST['studentName'];
         $email = $_POST['email'];
@@ -33,11 +34,23 @@
         $faculty = $_POST['faculty'];
         $password = $_POST['password'];
 
-        $target_dir = "uploads/";
-        $target_file = $target_dir . basename($_FILES["pic"]["name"]);
-        move_uploaded_file($_FILES["pic"]["tmp_name"], $target_file);
+        // Check if file was uploaded
+        if (isset($_FILES['pic']) && $_FILES['pic']['error'] === UPLOAD_ERR_OK) {
+            // Define directory to store images
+            $target_dir = "uploads/";
+            $target_file = $target_dir . basename($_FILES["pic"]["name"]);
 
-        $sql = "INSERT INTO student (studentName, email, contact, course, faculty, password, pic) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            // Move the uploaded file to your desired directory and check if the file was moved successfully
+            if (!move_uploaded_file($_FILES["pic"]["tmp_name"], $target_file)) {
+                echo "Sorry, there was an error uploading your file.";
+                exit();
+            }
+        } else {
+            // If no file was uploaded, use the default image
+            $target_file = 'img/no_profile.webp';
+        }
+
+        $sql = "INSERT INTO student (studentName, email, contact, course, faculty, password, studentPic) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("sssssss", $studentName, $email, $contact, $course, $faculty, $password, $target_file);
         $stmt->execute();
@@ -116,6 +129,7 @@
                         <h6 class="collapse-header">MENU</h6>
                         <a class="collapse-item" href="adminProfiles.php">View Profile</a>
                         <a class="collapse-item" href="adminCreate.php">Create Admin</a>
+                        <a class="collapse-item" href="adminList.php">List Admin</a>
                     </div>
                 </div>
             </li>
@@ -251,6 +265,28 @@
                      <div class="d-sm-flex align-items-center justify-content-between mb-4">
                          <h1 class="h3 mb-0 text-gray-800">Create Student</h1>
                      </div>
+
+                    <!-- Success Message -->
+                    <?php if (isset($_SESSION['success_msg'])): ?>
+                        <div class="alert alert-success" role="alert">
+                            <?php 
+                                echo $_SESSION['success_msg']; 
+                                unset($_SESSION['success_msg']);
+                            ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="input-group mb-3 mt-3">
+                        <input type="text" class="form-control" placeholder="Search by name" id="searchAdmin">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon2">
+                                <i class="fas fa-search"></i>
+                            </button>
+                            <button class="btn btn-outline-secondary" type="button" id="reset-button">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
 
                      <!-- Content Row -->
                      <div class="row">

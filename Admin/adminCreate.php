@@ -312,7 +312,7 @@
                                              <label for="password">Password</label>
                                              <input type="password" class="form-control" id="password" name="password" placeholder="Password">
                                          </div>
-                                         <button type="submit" class="btn btn-primary">Save</button>
+                                         <button type="submit" class="btn btn-primary">Create</button>
                                      </form>
                                  </div>
                              </div>

@@ -266,9 +266,9 @@
                         </div>
                     <?php endif; ?>
 
-                     <!-- Page Heading -->
-                     <h1 class="h3 mb-0 text-gray-800">Admin List</h1>
-                     <div class="input-group mb-3 mt-3">
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-0 text-gray-800">Admin List</h1>
+                    <div class="input-group mb-3 mt-3">
                         <input type="text" class="form-control" placeholder="Search by name" id="searchAdmin">
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="button" id="button-addon2">
