@@ -276,18 +276,6 @@
                         </div>
                     <?php endif; ?>
 
-                    <div class="input-group mb-3 mt-3">
-                        <input type="text" class="form-control" placeholder="Search by name" id="searchAdmin">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" id="button-addon2">
-                                <i class="fas fa-search"></i>
-                            </button>
-                            <button class="btn btn-outline-secondary" type="button" id="reset-button">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    </div>
-
                      <!-- Content Row -->
                      <div class="row">
 
@@ -399,7 +387,6 @@
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
-    
 
 </body>
 
