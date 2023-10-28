@@ -151,7 +151,7 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
-                        <a class="collapse-item" href="candidateCreate.php">Add Candidates</a>
+                        <a class="collapse-item" href="candidateCreate.php">Verify Candidates</a>
                         <a class="collapse-item" href="candidateView.php">View Candidates</a>
                         <a class="collapse-item" href="candidateEdit.php">Edit Candidates</a>
                     </div>
