@@ -20,48 +20,32 @@
         exit();
     }
 
-    // Get the id of the admin to edit from the URL
-    $adminIdToEdit = $_GET['id'];
+    // Get the id of the announcement to edit from the URL
+    $annIdToEdit = $_GET['id'];
 
-    // Query to select the admin details from the database using the admin ID from the URL
-    $sql = "SELECT * FROM admin WHERE adminID = '".$adminIdToEdit."'";
+    // Query to select the announcement details from the database using the announcement ID from the URL
+    $sql = "SELECT * FROM announcement WHERE annId = '".$annIdToEdit."'";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
-        $admin = $result->fetch_assoc();
-        $editedAdminPic = $admin['pic'];
+        $announcement = $result->fetch_assoc();
     } else {
-        echo "No admin found";
+        echo "No announcement found";
         exit();
     }
 
-    // Update admin information and profile picture if form is submitted
+    // Update announcement information if form is submitted
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $adminName = $_POST['adminName'];
-        $email = $_POST['email'];
-        $contact = $_POST['contact'];
-        $position = $_POST['position'];
+        $elecTitle = $_POST['elecTitle'];
+        $candName = $_POST['candName'];
+        $info = $_POST['info'];
 
-        // Check if a new profile picture has been uploaded
-        if (isset($_FILES['pic']) && $_FILES['pic']['error'] === UPLOAD_ERR_OK) {
-            $target_dir = "uploads/";
-            $target_file = $target_dir . basename($_FILES["pic"]["name"]);
-
-            if (!move_uploaded_file($_FILES["pic"]["tmp_name"], $target_file)) {
-                echo "Sorry, there was an error uploading your file.";
-                exit();
-            }
-            $pic = $target_file;
-        } else {
-            $pic = $editedAdminPic;
-        }
-
-        $sql = "UPDATE admin SET adminName = ?, email = ?, contact = ?, position = ?, pic = ? WHERE adminID = ?";
+        $sql = "UPDATE announcement SET elecTitle = ?, candName = ?, info = ? WHERE annId = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssssi", $adminName, $email, $contact, $position, $pic, $adminIdToEdit);
+        $stmt->bind_param("sssi", $elecTitle, $candName, $info, $annIdToEdit);
         $stmt->execute();
 
-        header('Location: adminList.php');
+        header('Location: electionView.php');
         exit();
     }
 
@@ -124,7 +108,7 @@
             </div>
 
             <!-- Nav Item - Admin Collapse Menu -->
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                     aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-cog"></i>
@@ -157,7 +141,7 @@
             </li>
 
             <!-- Nav Item - Election Collapse Menu -->
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                     aria-expanded="true" aria-controls="collapsePages">
                     <i class="fa-solid fa-check-to-slot"></i>
@@ -276,50 +260,34 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Admin Profile</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Announcement Details</h1>
                     </div>
 
                     <!-- Content Row -->
                     <div class="row">
 
-                        <!-- Admin Profile Card -->
+                        <!-- Announcement Edit Card -->
                         <div class="col-xl-12 col-md-12 mb-4">
                             <div class="card border-0 shadow h-100 py-2 rounded-lg">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
-                                        <div class="col-12 text-center mb-4">
-                                            <img src="<?php echo $editedAdminPic; ?>" class="img-profile rounded-circle border-secondary img-fluid border p-3 bg-light" title="profile images" style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">    
-                                        </div>
                                         <div class="col-12">
-                                        <form action="adminUpdate.php" method="post" enctype="multipart/form-data">
-                                                <input type="hidden" name="id" value="<?php echo $adminIdToEdit; ?>">
-                                                <input type="hidden" name="editedAdminPic" value="<?php echo $editedAdminPic; ?>">
+                                            <form action="annUpdate.php" method="post" enctype="multipart/form-data">
+                                                <input type="hidden" name="id" value="<?php echo $annIdToEdit; ?>">
                                                 <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                    <label for="profilePicture">Profile Picture</label>
-                                                    <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="profilePicture" name="pic" onchange="updateFileName(this)">
-                                                        <label class="custom-file-label" for="profilePicture">Choose file</label>
-                                                    </div>
+                                                    <label for="elecTitle">Election Title</label>
+                                                    <input type="text" class="form-control" id="elecTitle" name="elecTitle" value="<?php echo $announcement['elecTitle']; ?>">
                                                 </div>
-                                                
-                                                
-                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                    Name</div>
-                                                <input type="text" class="form-control" id="adminName" name="adminName" value="<?php echo $admin['adminName']; ?>">
-                                                <hr class="sidebar-divider my-1">
-                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                    Email</div>
-                                                <input type="email" class="form-control" id="email" name="email" value="<?php echo $admin['email']; ?>">
-                                                <hr class="sidebar-divider my-1">
-                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                    Contact</div>
-                                                <input type="text" class="form-control" id="contact" name="contact" value="<?php echo $admin['contact']; ?>">
-                                                <hr class="sidebar-divider my-1">
-                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                    Position</div>
-                                                <input type="text" class="form-control" id="position" name="position" value="<?php echo $admin['position']; ?>">
+                                                <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                    <label for="candName">Candidate Name</label>
+                                                    <input type="text" class="form-control" id="candName" name="candName" value="<?php echo $announcement['candName']; ?>">
+                                                </div>
+                                                <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                    <label for="info">Information</label>
+                                                    <textarea class="form-control" id="info" name="info"><?php echo $announcement['info']; ?></textarea>
+                                                </div>
                                                 <button type="submit" class="btn btn-primary mt-3 rounded-pill" title="save">Save</button>
-                                                <button class="btn btn-danger mt-3 rounded-pill" onclick="window.location.href='adminList.php'" title="cancel" type="button">Cancel</button>
+                                                <button class="btn btn-danger mt-3 rounded-pill" onclick="window.location.href='electionView.php'" title="cancel" type="button">Cancel</button>
                                             </form>
                                         </div>
                                     </div>
