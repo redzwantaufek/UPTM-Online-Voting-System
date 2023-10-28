@@ -33,9 +33,7 @@
     if ($result->num_rows > 0) {
         // Output data of each row
         $election = $result->fetch_assoc();
-    } else {
-        echo "No election found";
-    }
+    } 
 
     // Fetch announcement information from the database
     $sql = "SELECT * FROM announcement";
@@ -45,8 +43,30 @@
     if ($result->num_rows > 0) {
         // Output data of each row
         $announcement = $result->fetch_assoc();
-    } else {
-        echo "No announcement found";
+    }
+
+    // Check if delete button is clicked
+    if (isset($_POST['delete'])) {
+        // Delete election from the database
+        $sql = "DELETE FROM election WHERE electionId = '".$_POST['delete_id']."'";
+        // Execute the query
+        if ($conn->query($sql) === TRUE) {
+            echo "Election deleted successfully";
+        } else {
+            echo "Error deleting election: " . $conn->error;
+        }
+    }
+
+    // Check if delete_announcement button is clicked
+    if (isset($_POST['delete_announcement'])) {
+        // Delete announcement from the database
+        $sql = "DELETE FROM announcement WHERE announcementId = '".$_POST['delete_announcement_id']."'";
+        // Execute the query
+        if ($conn->query($sql) === TRUE) {
+            echo "Announcement deleted successfully";
+        } else {
+            echo "Error deleting announcement: " . $conn->error;
+        }
     }
 
     // Close the database connection
@@ -83,9 +103,9 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
                 <div class="sidebar-brand-icon">
-                    <i class="fa-solid fa-user-tie"></i>
+                    <i class="fa-solid fa-square-poll-vertical"></i>
                 </div>
                 <div class="sidebar-brand-text mx-3">Dashboard</div>
             </a>
@@ -95,7 +115,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="index.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -118,9 +138,8 @@
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
-                        <a class="collapse-item" href="adminProfiles.html">View Profile</a>
-                        <a class="collapse-item" href="adminEdit.html">Edit Admin</a>
-                        <a class="collapse-item" href="adminCreate.html">Create Admin</a>
+                        <a class="collapse-item" href="adminProfiles.php">View Profile</a>
+                        <a class="collapse-item" href="adminCreate.php">Create Admin</a>
                     </div>
                 </div>
             </li>
@@ -136,9 +155,8 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
-                        <a class="collapse-item" href="candidateCreate.html">Add Candidates</a>
-                        <a class="collapse-item" href="candidateView.html">View Candidates</a>
-                        <a class="collapse-item" href="candidateEdit.html">Edit Candidates</a>
+                        <a class="collapse-item" href="candidateCreate.php">Add Candidates</a>
+                        <a class="collapse-item" href="candidateView.php">View Candidates</a>
                     </div>
                 </div>
             </li>
@@ -153,8 +171,8 @@
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
-                        <a class="collapse-item" href="electionView.html">Election View</a>
-                        <a class="collapse-item" href="electionSet.html">Election Set Up</a>
+                        <a class="collapse-item" href="electionView.php">Election View</a>
+                        <a class="collapse-item" href="electionSet.php">Election Set Up</a>
                     </div>
                 </div>
             </li>
@@ -169,23 +187,22 @@
                 <div id="collapseStudent" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
-                        <a class="collapse-item" href="studentView.html">View Student Profile</a>
-                        <a class="collapse-item" href="studentEdit.html">Edit Student</a>
-                        <a class="collapse-item" href="studentCreate.html">Create Student</a>
+                        <a class="collapse-item" href="studentView.php">View Student Profile</a>
+                        <a class="collapse-item" href="studentCreate.php">Create Student</a>
                     </div>
                 </div>
             </li>
 
             <!-- Nav Item - Result -->
             <li class="nav-item">
-                <a class="nav-link" href="result.html">
+                <a class="nav-link" href="result.php">
                     <i class="fa-solid fa-chart-simple"></i>
                     <span>Election Result</span></a>
             </li>
 
             <!-- Nav Item - Student attendance -->
             <li class="nav-item">
-                <a class="nav-link" href="attendance.html">
+                <a class="nav-link" href="attendance.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Student Attendance</span></a>
             </li>
@@ -227,26 +244,25 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Ali bin Abu</span>
-                                <img class="img-profile rounded-circle" title="profile images"
-                                    src="img/undraw_profile.svg">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['user_name']; ?></span>
+                                <img src="<?php echo $imagePath; ?>" class="img-profile rounded-circle img-fluid" title="profile images" 
+                                style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="adminProfiles.html">
+                                <a class="dropdown-item" href="adminProfiles.php">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
                                 
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" href="logout.php">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
                             </div>
                         </li>
-
                     </ul>
 
                 </nav>
@@ -258,22 +274,28 @@
                     <!-- Page Heading -->
                     <h1 class="h3 mb-0 text-gray-800">View Election</h1>
 
-                    <!-- Election Information Section -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Election Information</h6>
-                            <form method="POST" action="electionDelete.php">
-                                <input type="hidden" name="delete_id" value="<?php echo $election['electionId']; ?>">
-                                <button type="submit" class="btn btn-danger float-right" name="delete">Delete</button>
-                            </form>
+                            <?php if (isset($election)): ?>
+                                <form method="POST" action="electionDelete.php">
+                                    <input type="hidden" name="delete_id" value="<?php echo $election['electionId']; ?>">
+                                    <button type="submit" class="btn btn-danger float-right" name="delete">Delete</button>
+                                </form>
+                                <button class="btn btn-primary float-right mr-2">Edit</button>
+                            <?php endif; ?>
                         </div>
                         <div class="card-body">
-                            <p><b>Election Name:</b> <?php echo $election['electionTitle']; ?></p>
-                            <p><b>Number of Votes per Student:</b> <?php echo $election['voteNo']; ?></p>
-                            <p><b>Start Time:</b> <?php echo $election['start']; ?></p>
-                            <p><b>End Time:</b> <?php echo $election['end']; ?></p>
-                            <p><b>Date:</b> <?php echo $election['date']; ?></p>
-                            <p><b>Rules:</b> <?php echo $election['rules']; ?></p>
+                            <?php if (isset($election)): ?>
+                                <p><b>Election Name:</b> <?php echo $election['electionTitle']; ?></p>
+                                <p><b>Number of Votes per Student:</b> <?php echo $election['voteNo']; ?></p>
+                                <p><b>Start Time:</b> <?php echo $election['start']; ?></p>
+                                <p><b>End Time:</b> <?php echo $election['end']; ?></p>
+                                <p><b>Date:</b> <?php echo $election['date']; ?></p>
+                                <p><b>Rules:</b> <?php echo $election['rules']; ?></p>
+                            <?php else: ?>
+                                <p>No election data available.</p>
+                            <?php endif; ?>
                         </div>
                     </div>
 
@@ -281,15 +303,21 @@
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Winner Announcement</h6>
-                            <form method="POST" action="annDelete.php">
-                                <input type="hidden" name="delete_id" value="<?php echo $announcement['announcementId']; ?>">
-                                <button type="submit" class="btn btn-danger float-right" name="delete">Delete</button>
-                            </form>
-                            <button class="btn btn-primary float-right mr-2">Edit</button>
+                            <?php if (isset($announcement)): ?>
+                                <form method="POST" action="annDelete.php">
+                                    <input type="hidden" name="delete_id" value="<?php echo $announcement['annId']; ?>">
+                                    <button type="submit" class="btn btn-danger float-right" name="delete">Delete</button>
+                                </form>
+                                <button class="btn btn-primary float-right mr-2">Edit</button>
+                            <?php endif; ?>
                         </div>
                         <div class="card-body">
-                            <p><b>Winner:</b> <?php echo $announcement['candName']; ?></p>
-                            <p><b>Short Info:</b> <?php echo $announcement['info']; ?></p>
+                            <?php if (isset($announcement)): ?>
+                                <p><b>Winner:</b> <?php echo $announcement['candName']; ?></p>
+                                <p><b>Short Info:</b> <?php echo $announcement['info']; ?></p>
+                            <?php else: ?>
+                                <p>No winner announcement data available.</p>
+                            <?php endif; ?>
                         </div>
                     </div>
 
@@ -334,7 +362,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <a class="btn btn-primary" href="login.php">Logout</a>
                 </div>
             </div>
         </div>
