@@ -276,11 +276,11 @@
                                                 <input type="hidden" name="id" value="<?php echo $annIdToEdit; ?>">
                                                 <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                     <label for="elecTitle">Election Title</label>
-                                                    <input type="text" class="form-control" id="elecTitle" name="elecTitle" value="<?php echo $announcement['elecTitle']; ?>">
+                                                    <input type="text" class="form-control" id="elecTitle" name="elecTitle" value="<?php echo $announcement['elecTitle']; ?>" readonly>
                                                 </div>
                                                 <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                     <label for="candName">Candidate Name</label>
-                                                    <input type="text" class="form-control" id="candName" name="candName" value="<?php echo $announcement['candName']; ?>">
+                                                    <input type="text" class="form-control" id="candName" name="candName" value="<?php echo $announcement['candName']; ?>" readonly>
                                                 </div>
                                                 <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                     <label for="info">Information</label>
