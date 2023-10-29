@@ -25,18 +25,18 @@
         exit();
     }
 
-    // Fetch election information from the database
-    $sql = "SELECT * FROM election";
+    // Query to select the latest election from the database
+    $sql = "SELECT * FROM election ORDER BY electionId DESC LIMIT 1";
+    // Execute the query
     $result = $conn->query($sql);
 
-    // Check if the query returns any rows
+    // If the query returns more than 0 rows, fetch the election
     if ($result->num_rows > 0) {
-        // Output data of each row
         $election = $result->fetch_assoc();
     } 
 
     // Fetch announcement information from the database
-    $sql = "SELECT * FROM announcement";
+    $sql = "SELECT * FROM announcement ORDER BY annId DESC LIMIT 1";
     $result = $conn->query($sql);
 
     // Check if the query returns any rows
@@ -404,7 +404,6 @@
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
-    
 
 </body>
 
