@@ -124,6 +124,7 @@
                         <h6 class="collapse-header">MENU</h6>
                         <a class="collapse-item" href="adminProfiles.php">View Profile</a>
                         <a class="collapse-item" href="adminCreate.php">Create Admin</a>
+                        <a class="collapse-item" href="adminList.php">List Admin</a>
                     </div>
                 </div>
             </li>
