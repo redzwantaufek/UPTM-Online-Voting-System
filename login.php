@@ -111,7 +111,7 @@
 
             if ($stmt->rowCount() > 0) {
                 $student = $stmt->fetch();
-                $_SESSION['student_id'] = $student['studentID'];
+                $_SESSION['student_id'] = $student['studentId'];
                 $_SESSION['user_name'] = $student['studentName']; // Added user name session
                 $_SESSION['user_type'] = 'student';
                 header('Location: index.php');
