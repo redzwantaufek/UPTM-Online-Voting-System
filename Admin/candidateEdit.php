@@ -415,8 +415,14 @@
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
-    
 
+    <!-- This script updates the file name when a new file is selected -->
+    <script>
+        function updateFileName(inputElement) {
+            var fileName = inputElement.files[0].name; inputElement.nextElementSibling.textContent = fileName;
+        }
+    </script>
+    
 </body>
 
 </html>

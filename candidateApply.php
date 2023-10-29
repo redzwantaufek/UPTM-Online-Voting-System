@@ -213,42 +213,46 @@
                                 <?php else: ?>
                                         <!-- Show the application form here -->
                                         <div class="col-12 text-center mb-4">
-                                            <img class="img-profile rounded-circle border-primary" title="profile images"
-                                                src="img/pic1.jpg" style="width:100px;height:100px;">
+                                            <img src="<?php echo $imagePath; ?>" class="img-profile rounded-circle border-secondary img-fluid border p-3 bg-light" title="profile images" style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">    
                                         </div>
-                                        <div class="col-12">
-                                            <div class="form-group text-md font-weight-bold text-primary text-uppercase mb-1">
-                                                <label for="profilePicture">Profile Picture</label>
-                                                <input type="file" class="form-control-file" id="profilePicture">
+                                        <form action="submitApplication.php" method="post" enctype="multipart/form-data">
+                                            <div class="input-group mb-3">
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="profilePicture" name="pic" onchange="updateFileName(this)">
+                                                    <label class="custom-file-label" for="profilePicture">Choose Candidate Profile Picture</label>
+                                                </div>
                                             </div>
-                                            <div class="text-md font-weight-bold text-primary text-uppercase mb-1">
-                                                Name</div>
-                                            <input type="text" class="form-control" id="name" placeholder="Ali bin Abu">
-                                            <hr class="sidebar-divider my-1">
-                                            <div class="text-md font-weight-bold text-primary text-uppercase mb-1">
-                                                Email</div>
-                                            <input type="email" class="form-control" id="email" placeholder="ali@uptm.com">
-                                            <hr class="sidebar-divider my-1">
-                                            <div class="text-md font-weight-bold text-primary text-uppercase mb-1">
-                                                Contact</div>
-                                            <input type="text" class="form-control" id="contact" placeholder="0123456789">
-                                            <hr class="sidebar-divider my-1">
-                                            <div class="text-md font-weight-bold text-primary text-uppercase mb-1">
-                                                Course</div>
-                                            <input type="text" class="form-control" id="course" placeholder="CC101 - Computer Science">
-                                            <hr class="sidebar-divider my-1">
-                                            <div class="text-md font-weight-bold text-primary text-uppercase mb-1">
-                                                Faculty</div>
-                                            <input type="text" class="form-control" id="faculty" placeholder="FCOM">
-                                            <hr class="sidebar-divider my-1">
-                                            <div class="text-md font-weight-bold text-primary text-uppercase mb-1">
-                                                Semester</div>
-                                            <input type="text" class="form-control" id="semester" placeholder="Semester 2">
-                                            <hr class="sidebar-divider my-1">
-                                            <div class="text-md font-weight-bold text-primary text-uppercase mb-1">
-                                                Manifesto</div>
-                                            <input type="text" class="form-control" id="manifesto" placeholder="Money">
-                                        </div>
+                                            <div class="form-group">
+                                                <label for="name">Name</label>
+                                                <input type="text" class="form-control" id="name" name="name" placeholder="Ali bin Abu">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="email">Email</label>
+                                                <input type="email" class="form-control" id="email" name="email" placeholder="ali@uptm.com">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="contact">Contact</label>
+                                                <input type="text" class="form-control" id="contact" name="contact" placeholder="0123456789">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="course">Course</label>
+                                                <input type="text" class="form-control" id="course" name="course" placeholder="CC101 - Computer Science">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="faculty">Faculty</label>
+                                                <input type="text" class="form-control" id="faculty" name="faculty" placeholder="FCOM">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="semester">Semester</label>
+                                                <input type="text" class="form-control" id="semester" name="semester" placeholder="Semester 2">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="manifesto">Manifesto</label>
+                                                <textarea class="form-control" id="manifesto" name="manifesto" placeholder="Your manifesto..."></textarea>
+                                            </div>
+                                            <button class="btn btn-danger" onclick="window.location.href='index.php'" title="cancel" type="button">Cancel</button>
+                                            <button type="submit" class="btn btn-primary">Submit Application</button>
+                                        </form>
                                     <?php endif; ?>
                                 </div>
                             </div>
@@ -319,8 +323,13 @@
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
-    
 
+    <!-- This script updates the file name when a new file is selected -->
+    <script>
+        function updateFileName(inputElement) {
+            var fileName = inputElement.files[0].name; inputElement.nextElementSibling.textContent = fileName;
+        }
+    </script>
 </body>
 
 </html>
