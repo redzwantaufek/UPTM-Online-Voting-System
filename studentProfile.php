@@ -1,3 +1,34 @@
+<?php
+    include 'Database/connect.php';
+    session_start();
+
+    // Check if user is logged in
+    if (!isset($_SESSION['student_id'])) {
+        // If not, redirect to login page
+        header('Location: ../login.php');
+        exit();
+    }
+
+    // Query to select the student details from the database using the student ID from the session
+    $sql = "SELECT * FROM student WHERE studentId = '".$_SESSION['student_id']."'";
+    // Execute the query
+    $result = $conn->query($sql);
+
+    // If the query returns more than 0 rows, fetch the student details
+    if ($result->num_rows > 0) {
+        $student = $result->fetch_assoc();
+        // Get the image path from the database
+        $imagePath = $student['studentPic'];
+    } else {
+        // If no student details are found, display an error message and exit the script
+        echo "No student found";
+        exit();
+    }
+
+    // Close the database connection
+    $conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,7 +59,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
                 <div class="sidebar-brand-icon">
                     <i class="fa-solid fa-vote-yea"></i>
                 </div>
@@ -40,7 +71,7 @@
 
             <!-- Nav Item - Home -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="index.php">
                     <i class="fas fa-fw fa-home"></i>
                     <span>Home</span></a>
             </li>
@@ -59,15 +90,15 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
-                        <a class="collapse-item" href="candidateView.html">View Candidates</a>
-                        <a class="collapse-item" href="candidateApply.html">Apply Candidates</a>
+                        <a class="collapse-item" href="candidateView.php">View Candidates</a>
+                        <a class="collapse-item" href="candidateApply.php">Apply Candidates</a>
                     </div>
                 </div>
             </li>
             
             <!-- Nav Item - Vote -->
             <li class="nav-item">
-                <a class="nav-link" href="vote.html">
+                <a class="nav-link" href="vote.php">
                     <i class="fa-solid fa-check-to-slot"></i>
                     <span>Vote</span>
                 </a>
@@ -75,7 +106,7 @@
 
             <!-- Nav Item - Election Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link" href="about.html">
+                <a class="nav-link" href="about.php">
                     <i class="fas fa-fw fa-cog"></i>
                     <span>About</span>
                 </a>
@@ -83,7 +114,7 @@
 
             <!-- Nav Item - Student Collapse Menu -->
             <li class="nav-item active">
-                <a class="nav-link" href="studentProfile.html">
+                <a class="nav-link" href="studentProfile.php">
                     <i class="fa-solid fa-person"></i>
                     <span>Profile</span>
                 </a>
@@ -117,7 +148,7 @@
                     <!-- UPTM Logo -->
                         <div class="navbar-brand" href="#">
                             <img src="img/uptm.jpg" alt="" class="img-fluid logo-img" style="max-width: 100px; max-height: 100px;">
-                        </div>       
+                        </div>            
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -126,26 +157,25 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Ali bin Abu</span>
-                                <img class="img-profile rounded-circle" title="profile images"
-                                    src="img/undraw_profile.svg">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['user_name']; ?></span>
+                                <img src="<?php echo $imagePath; ?>" class="img-profile rounded-circle img-fluid" title="profile images" 
+                                style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="adminProfiles.html">
+                                <a class="dropdown-item" href="studentProfile.php">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
                                 
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
                             </div>
                         </li>
-
                     </ul>
 
                 </nav>
@@ -162,40 +192,37 @@
                     <!-- Content Row -->
                     <div class="row">
 
-                        <!-- Admin Profile Card -->
+                        <!-- Student Profile Card -->
                         <div class="col-xl-12 col-md-12 mb-4">
                             <div class="card border-0 shadow h-100 py-2 rounded-lg">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col-12 text-center mb-4">
                                             <img class="img-profile rounded-circle border-primary" title="profile images"
-                                                src="img/undraw_profile.svg" style="width:100px;height:100px;">
+                                                src="<?php echo $imagePath; ?>" style="width:100px;height:100px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">
                                         </div>
                                         <div class="col-12">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                 Name</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Ali bin Abu</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $_SESSION['user_name']; ?></div>
                                             <hr class="sidebar-divider my-1">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                 Email</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">ali@uptm.com</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $student['email']; ?></div>
                                             <hr class="sidebar-divider my-1">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                 Contact</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">+60123456789</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $student['contact']; ?></div>
                                             <hr class="sidebar-divider my-1">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                 Course</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Diploma in Computer Science CC101</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $student['course']; ?></div>
                                             <hr class="sidebar-divider my-1">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                 Faculty</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">FCOM</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $student['faculty']; ?></div>
                                         </div>
                                     </div>
-                                    <button class="btn btn-primary mt-3 rounded-pill" title="edit" type="button" data-toggle="modal" data-target="#editModal">
-                                        Edit
-                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -258,7 +285,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <a class="btn btn-danger" href="login.php">Logout</a>
                 </div>
             </div>
         </div>
