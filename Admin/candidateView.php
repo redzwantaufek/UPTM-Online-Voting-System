@@ -111,6 +111,7 @@
                         <h6 class="collapse-header">MENU</h6>
                         <a class="collapse-item" href="adminProfiles.php">View Profile</a>
                         <a class="collapse-item" href="adminCreate.php">Create Admin</a>
+                        <a class="collapse-item" href="adminList.php">List Admin</a>
                     </div>
                 </div>
             </li>
@@ -343,22 +344,21 @@
         <i class="fas fa-angle-up"></i>
     </a>
 
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
+    <!-- Modal -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.php">Logout</a>
-                </div>
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this candidate?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <a href="candidateDelete.php" class="btn btn-danger" id="confirmDelete">Delete</a>
+            </div>
             </div>
         </div>
     </div>
@@ -379,6 +379,26 @@
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
+
+    <script>
+    // Get all delete buttons
+    var deleteButtons = document.getElementsByClassName('delete-btn');
+
+    // Loop through the delete buttons
+    for (var i = 0; i < deleteButtons.length; i++) {
+        // Add click event listener to each delete button
+        deleteButtons[i].addEventListener('click', function() {
+            // Get the candidate ID from the data-candidate-id attribute
+            var candidateId = this.getAttribute('data-candidate-id');
+
+            // Get the delete confirmation button
+            var confirmDeleteButton = document.getElementById('confirmDelete');
+
+            // Update the href attribute of the delete confirmation button
+            confirmDeleteButton.href = 'candidateDelete.php?id=' + candidateId;
+        });
+    }
+    </script>
 
     <script>
         document.getElementById('button-addon2').addEventListener('click', function() {
