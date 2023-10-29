@@ -283,6 +283,7 @@
                                                 <tr>
                                                     <th>Picture</th>
                                                     <th>Name</th>
+                                                    <th>Candidate No</th>
                                                     <th>Email</th>
                                                     <th>Contact</th>
                                                     <th>Course</th>
@@ -297,6 +298,7 @@
                                                     <tr>
                                                         <td><img src="<?php echo $candidate['candidatePic']; ?>" alt="Profile Picture" class="img-fluid" style="max-width: 100px;"></td>
                                                         <td><?php echo $candidate['candidateName']; ?></td>
+                                                        <td><?php echo $candidate['candNo']; ?></td>
                                                         <td><?php echo $candidate['email']; ?></td>
                                                         <td><?php echo $candidate['contact']; ?></td>
                                                         <td><?php echo $candidate['courseName']; ?></td>

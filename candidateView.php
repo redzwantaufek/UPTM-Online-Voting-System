@@ -1,3 +1,43 @@
+<?php
+    include 'Database/connect.php';
+    session_start();
+
+    // Check if user is logged in
+    if (!isset($_SESSION['student_id'])) {
+        // If not, redirect to login page
+        header('Location: login.php');
+        exit();
+    }
+
+    // Query to select the student details from the database using the student ID from the session
+    $sql = "SELECT * FROM student WHERE studentId = '".$_SESSION['student_id']."'";
+    // Execute the query
+    $result = $conn->query($sql);
+
+    // If the query returns more than 0 rows, fetch the student details
+    if ($result->num_rows > 0) {
+        $student = $result->fetch_assoc();
+        // Get the image path from the database
+        $imagePath = $student['studentPic'];
+    } else {
+        // If no student details are found, display an error message and exit the script
+        echo "No student found";
+        exit();
+    }
+
+    $sql = "SELECT * FROM candidate";
+    $result = $conn->query($sql);
+    $candidates = [];
+    if ($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            $candidates[] = $row;
+        }
+    }
+
+    // Close the database connection
+    $conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,7 +68,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
                 <div class="sidebar-brand-icon">
                     <i class="fa-solid fa-vote-yea"></i>
                 </div>
@@ -40,7 +80,7 @@
 
             <!-- Nav Item - Home -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="index.php">
                     <i class="fas fa-fw fa-home"></i>
                     <span>Home</span></a>
             </li>
@@ -59,15 +99,15 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
-                        <a class="collapse-item" href="candidateView.html">View Candidates</a>
-                        <a class="collapse-item" href="candidateApply.html">Apply Candidates</a>
+                        <a class="collapse-item" href="candidateView.php">View Candidates</a>
+                        <a class="collapse-item" href="candidateApply.php">Apply Candidates</a>
                     </div>
                 </div>
             </li>
             
             <!-- Nav Item - Vote -->
             <li class="nav-item">
-                <a class="nav-link" href="vote.html">
+                <a class="nav-link" href="vote.php">
                     <i class="fa-solid fa-check-to-slot"></i>
                     <span>Vote</span>
                 </a>
@@ -75,7 +115,7 @@
 
             <!-- Nav Item - Election Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link" href="about.html">
+                <a class="nav-link" href="about.php">
                     <i class="fas fa-fw fa-cog"></i>
                     <span>About</span>
                 </a>
@@ -83,7 +123,7 @@
 
             <!-- Nav Item - Student Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link" href="studentProfile.html">
+                <a class="nav-link" href="studentProfile.php">
                     <i class="fa-solid fa-person"></i>
                     <span>Profile</span>
                 </a>
@@ -126,26 +166,25 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Ali bin Abu</span>
-                                <img class="img-profile rounded-circle" title="profile images"
-                                    src="img/undraw_profile.svg">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['user_name']; ?></span>
+                                <img src="<?php echo $imagePath; ?>" class="img-profile rounded-circle img-fluid" title="profile images" 
+                                style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="adminProfiles.html">
+                                <a class="dropdown-item" href="studentProfile.php">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
                                 
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
                             </div>
                         </li>
-
                     </ul>
 
                 </nav>
@@ -171,85 +210,24 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <!-- Candidate Card 1 -->
-                                        <div class="col-lg-12 mb-4">
-                                            <div class="card">
-                                                <img src="img/undraw_profile.svg" class="card-img-top" alt="Candidate 1" style="max-width: 100px;">
-                                                <div class="card-body">
-                                                    <!-- Candidate 1 details -->
-                                                    <h5 class="card-title">Candidate 1</h5>
-                                                    <p class="card-text">Email: candidate1@example.com</p>
-                                                    <p class="card-text">Contact: 1234567890</p>
-                                                    <p class="card-text">Course: Computer Science</p>
-                                                    <p class="card-text">Faculty: Engineering</p>
-                                                    <p class="card-text">Manifesto: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                                    <p class="card-text">Social Link: <a href="#">Facebook</a></p>
+                                        <?php foreach ($candidates as $candidate): ?>
+                                            <div class="col-lg-12 mb-4">
+                                                <div class="card">
+                                                    <img src="<?php echo $candidate['candidatePic']; ?>" class="card-img-top" alt="Candidate <?php echo $candidate['candidateId']; ?>" 
+                                                    style="max-width: 200px; height: 200px; object-fit: cover; display: block; margin: auto; padding: 10px;">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title"><strong><?php echo $candidate['candidateName']; ?></strong></h5>
+                                                        <p class="card-text"><strong>Candidate No: </strong> <?php echo $candidate['candNo']; ?></p>
+                                                        <p class="card-text"><strong>Email: </strong> <?php echo $candidate['email']; ?></p>
+                                                        <p class="card-text"><strong>Contact: </strong> <?php echo $candidate['contact']; ?></p>
+                                                        <p class="card-text"><strong>Course: </strong> <?php echo $candidate['courseName']; ?></p>
+                                                        <p class="card-text"><strong>Faculty: </strong> <?php echo $candidate['faculty']; ?></p>
+                                                        <p class="card-text"><strong>Manifesto: </strong> <?php echo $candidate['manifesto']; ?></p>
+                                                        <p class="card-text"><strong>Social Link: </strong> <a href="<?php echo $candidate['links']; ?>" target="_blank">Link</a></p>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <!-- Candidate Card 2 -->
-                                        <div class="col-lg-12 mb-4">
-                                            <div class="card">
-                                                <img src="img/undraw_profile.svg" class="card-img-top" alt="Candidate 1" style="max-width: 100px;">
-                                                <div class="card-body">
-                                                    <!-- Candidate 2 details -->
-                                                    <h5 class="card-title">Candidate 2</h5>
-                                                    <p class="card-text">Email: candidate2@example.com</p>
-                                                    <p class="card-text">Contact: 9876543210</p>
-                                                    <p class="card-text">Course: Business Administration</p>
-                                                    <p class="card-text">Faculty: Business</p>
-                                                    <p class="card-text">Manifesto: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                                    <p class="card-text">Social Link: <a href="#">Twitter</a></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Candidate Card 3 -->
-                                        <div class="col-lg-12 mb-4">
-                                            <div class="card">
-                                                <img src="img/undraw_profile.svg" class="card-img-top" alt="Candidate 1" style="max-width: 100px;">
-                                                <div class="card-body">
-                                                    <!-- Candidate 3 details -->
-                                                    <h5 class="card-title">Candidate 3</h5>
-                                                    <p class="card-text">Email: candidate3@example.com</p>
-                                                    <p class="card-text">Contact: 5555555555</p>
-                                                    <p class="card-text">Course: Psychology</p>
-                                                    <p class="card-text">Faculty: Social Sciences</p>
-                                                    <p class="card-text">Manifesto: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                                    <p class="card-text">Social Link: <a href="#">Instagram</a></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Candidate Card 4 -->
-                                        <div class="col-lg-12 mb-4">
-                                            <div class="card">
-                                                <img src="img/undraw_profile.svg" class="card-img-top" alt="Candidate 1" style="max-width: 100px;">
-                                                <div class="card-body">
-                                                    <!-- Candidate 4 details -->
-                                                    <h5 class="card-title">Candidate 4</h5>
-                                                    <p class="card-text">Email: candidate4@example.com</p>
-                                                    <p class="card-text">Contact: 1111111111</p>
-                                                    <p class="card-text">Course: Biology</p>
-                                                    <p class="card-text">Faculty: Science</p>
-                                                    <p class="card-text">Manifesto: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                                    <p class="card-text">Social Link: <a href="#">LinkedIn</a></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Candidate Card 5 -->
-                                        <div class="col-lg-12 mb-4">
-                                            <div class="card">
-                                                <img src="img/undraw_profile.svg" class="card-img-top" alt="Candidate 1" style="max-width: 100px;">
-                                                <div class="card-body">
-                                                    <!-- Candidate 5 details -->
-                                                    <h5 class="card-title">Candidate 5</h5>
-                                                    <p class="card-text">Email: {{candidate5.email}}</p>
-                                                    <p class="card-text">Contact: {{candidate5.contact}}</p>
-                                                    <p class="card-text">Course: {{candidate5.course}}</p>
-                                                    <p class="card-text">Faculty: {{candidate5.faculty}}</p>
-                                                    <p class="card-text">Manifesto: {{candidate5.manifesto}}</p>
-                                                    <p class="card-text">Social Link: <a href="{{candidate5.socialLink}}">{{candidate5.socialLinkText}}</a></p>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <?php endforeach; ?>
                                 </div>
                             </div>
                         </div>
@@ -296,7 +274,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <a class="btn btn-danger" href="login.php">Logout</a>
                 </div>
             </div>
         </div>

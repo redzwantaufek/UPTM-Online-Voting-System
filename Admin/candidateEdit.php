@@ -42,6 +42,7 @@
     // Update candidate information and profile picture if form is submitted
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $candidateName = $_POST['candidateName'];
+        $candNo = $_POST['candNo'];
         $email = $_POST['email'];
         $contact = $_POST['contact'];
         $faculty = $_POST['faculty'];
@@ -312,6 +313,10 @@
                                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                     Name</div>
                                                 <input type="text" class="form-control" id="candidateName" name="candidateName" value="<?php echo $candidate['candidateName']; ?>">
+                                                <hr class="sidebar-divider my-1">
+                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                    Candidate No</div>
+                                                <input type="text" class="form-control" id="candNo" name="candNo" value="<?php echo $candidate['candNo']; ?>">
                                                 <hr class="sidebar-divider my-1">
                                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                     Email</div>

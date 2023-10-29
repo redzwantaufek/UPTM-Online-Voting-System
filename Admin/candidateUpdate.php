@@ -12,6 +12,7 @@ if (!isset($_SESSION['admin_id'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $candidateIdToEdit = $_POST['id'];
     $candidateName = $_POST['candidateName'];
+    $candNo = $_POST['candNo'];
     $email = $_POST['email'];
     $contact = $_POST['contact'];
     $faculty = $_POST['faculty'];
@@ -30,15 +31,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         $pic = $target_file;
 
-        // SQL query to update the candidate details and profile picture
-        $sql = "UPDATE candidate SET candidateName = ?, candidatePic = ?, email = ?, contact = ?, faculty = ?, courseName = ?, manifesto = ?, links = ? WHERE candidateId = ?";
+        // SQL query to update the candidate details, candidate no and profile picture
+        $sql = "UPDATE candidate SET candidateName = ?, candNo = ?, candidatePic = ?, email = ?, contact = ?, faculty = ?, courseName = ?, manifesto = ?, links = ? WHERE candidateId = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssssssi", $candidateName, $pic, $email, $contact, $faculty, $courseName, $manifesto, $links, $candidateIdToEdit);
+        $stmt->bind_param("sssssssssi", $candidateName, $candNo, $pic, $email, $contact, $faculty, $courseName, $manifesto, $links, $candidateIdToEdit);
     } else {
-        // SQL query to update the candidate details without changing the profile picture
-        $sql = "UPDATE candidate SET candidateName = ?, email = ?, contact = ?, faculty = ?, courseName = ?, manifesto = ?, links = ? WHERE candidateId = ?";
+        // SQL query to update the candidate details and candidate no without changing the profile picture
+        $sql = "UPDATE candidate SET candidateName = ?, candNo = ?, email = ?, contact = ?, faculty = ?, courseName = ?, manifesto = ?, links = ? WHERE candidateId = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssssssi", $candidateName, $email, $contact, $faculty, $courseName, $manifesto, $links, $candidateIdToEdit);
+        $stmt->bind_param("ssssssssi", $candidateName, $candNo, $email, $contact, $faculty, $courseName, $manifesto, $links, $candidateIdToEdit);
     }
 
     if ($stmt->execute()) { // Execute the update query
