@@ -36,6 +36,39 @@
         }
     }
 
+    // Create application if form is submitted
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $name = $_POST['name'];
+        $email = $_POST['email'];
+        $contact = $_POST['contact'];
+        $course = $_POST['course'];
+        $faculty = $_POST['faculty'];
+        $manifesto = $_POST['manifesto'];
+        $link = $_POST['link'];
+
+        // Check if file was uploaded
+        if (isset($_FILES['pic']) && $_FILES['pic']['error'] === UPLOAD_ERR_OK) {
+            // Define directory to store images
+            $target_dir = "uploads/";
+            $target_file = $target_dir . basename($_FILES["pic"]["name"]);
+
+            // Move the uploaded file to your desired directory and check if the file was moved successfully
+            if (!move_uploaded_file($_FILES["pic"]["tmp_name"], $target_file)) {
+                echo "Sorry, there was an error uploading your file.";
+                exit();
+            }
+        } else {
+            // If no file was uploaded, use the default image
+            $target_file = 'img/no_profile.webp';
+        }
+
+        $sql = "INSERT INTO apply (name, email, contact, course, faculty, manifesto, link) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("sssssss", $name, $email, $contact, $course, $faculty, $manifesto, $link);
+        $stmt->execute();
+
+        $_SESSION['success_msg'] = "Application submitted successfully!";
+    }
     // Close the database connection
     $conn->close();
 ?>
@@ -215,40 +248,55 @@
                                         <div class="col-12 text-center mb-4">
                                             <img src="<?php echo $imagePath; ?>" class="img-profile rounded-circle border-secondary img-fluid border p-3 bg-light" title="profile images" style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">    
                                         </div>
-                                        <form action="submitApplication.php" method="post" enctype="multipart/form-data">
+                                        <form action="submitApply.php" method="post" enctype="multipart/form-data">
                                             <div class="input-group mb-3">
                                                 <div class="custom-file">
-                                                    <input type="file" class="custom-file-input" id="profilePicture" name="pic" onchange="updateFileName(this)">
+                                                    <input type="file" class="custom-file-input" id="profilePicture" name="pic" onchange="updateFileName(this)" required>
                                                     <label class="custom-file-label" for="profilePicture">Choose Candidate Profile Picture</label>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label for="name">Name</label>
-                                                <input type="text" class="form-control" id="name" name="name" placeholder="Ali bin Abu">
+                                                <input type="text" class="form-control" id="name" name="name" value="<?php echo $student['studentName']; ?>" readonly>
                                             </div>
                                             <div class="form-group">
                                                 <label for="email">Email</label>
-                                                <input type="email" class="form-control" id="email" name="email" placeholder="ali@uptm.com">
+                                                <input type="email" class="form-control" id="email" name="email" value="<?php echo $student['email']; ?>" readonly>
                                             </div>
                                             <div class="form-group">
                                                 <label for="contact">Contact</label>
-                                                <input type="text" class="form-control" id="contact" name="contact" placeholder="0123456789">
+                                                <input type="text" class="form-control" id="contact" name="contact" value="<?php echo $student['contact']; ?>" readonly>
                                             </div>
                                             <div class="form-group">
                                                 <label for="course">Course</label>
-                                                <input type="text" class="form-control" id="course" name="course" placeholder="CC101 - Computer Science">
+                                                <input type="text" class="form-control" id="course" name="course" value="<?php echo $student['course']; ?>" readonly>
                                             </div>
                                             <div class="form-group">
                                                 <label for="faculty">Faculty</label>
-                                                <input type="text" class="form-control" id="faculty" name="faculty" placeholder="FCOM">
+                                                <input type="text" class="form-control" id="faculty" name="faculty" value="<?php echo $student['faculty']; ?>" readonly>
                                             </div>
                                             <div class="form-group">
                                                 <label for="semester">Semester</label>
-                                                <input type="text" class="form-control" id="semester" name="semester" placeholder="Semester 2">
+                                                <select class="form-control" id="semester" name="semester" required>
+                                                    <option value="">Select Semester</option>
+                                                    <option value="Semester 1">Semester 1</option>
+                                                    <option value="Semester 2">Semester 2</option>
+                                                    <option value="Semester 3">Semester 3</option>
+                                                    <option value="Semester 4">Semester 4</option>
+                                                    <option value="Semester 5">Semester 5</option>
+                                                    <option value="Semester 6">Semester 6</option>
+                                                    <option value="Semester 7">Semester 7</option>
+                                                    <option value="Semester 8">Semester 8</option>
+                                                    <option value="Semester 9">Semester 9</option>
+                                                    <option value="Semester 10">Semester 10</option>
+                                                    <option value="Semester 11">Semester 11</option>
+                                                    <option value="Semester 12">Semester 12</option>
+                                                    <option value="Semester 13">Semester 13</option>
+                                                </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="manifesto">Manifesto</label>
-                                                <textarea class="form-control" id="manifesto" name="manifesto" placeholder="Your manifesto..."></textarea>
+                                                <textarea class="form-control" id="manifesto" name="manifesto" required></textarea>
                                             </div>
                                             <button class="btn btn-danger" onclick="window.location.href='index.php'" title="cancel" type="button">Cancel</button>
                                             <button type="submit" class="btn btn-primary">Submit Application</button>
