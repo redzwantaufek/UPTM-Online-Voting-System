@@ -29,7 +29,7 @@
 
     // If the student has applied, fetch the application details
     if ($hasApplied) {
-        $sql = "SELECT * FROM applications WHERE studentId = '".$_SESSION['student_id']."'";
+        $sql = "SELECT * FROM apply WHERE studentId = '".$_SESSION['student_id']."'";
         $result = $conn->query($sql);
         if ($result->num_rows > 0) {
             $application = $result->fetch_assoc();
@@ -62,13 +62,27 @@
             $target_file = 'img/no_profile.webp';
         }
 
-        $sql = "INSERT INTO apply (name, email, contact, course, faculty, manifesto, link) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO apply (studentId, name, email, contact, course, faculty, manifesto, link) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssssss", $name, $email, $contact, $course, $faculty, $manifesto, $link);
+        $stmt->bind_param("ssssssss", $_SESSION['student_id'], $name, $email, $contact, $course, $faculty, $manifesto, $link);
         $stmt->execute();
 
         $_SESSION['success_msg'] = "Application submitted successfully!";
-    }
+
+            // Execute the INSERT statement
+        $stmt->execute();
+
+        // Prepare an UPDATE statement to set the 'apply' field to 1 for the current student
+        $sql = "UPDATE student SET apply = 1 WHERE studentId = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $_SESSION['student_id']);
+
+        // Execute the UPDATE statement
+        $stmt->execute();
+
+        $_SESSION['success_msg'] = "Application submitted successfully!";
+        }
+
     // Close the database connection
     $conn->close();
 ?>
@@ -241,14 +255,28 @@
                             <div class="card border-0 shadow h-100 py-2 rounded-lg">
                                 <div class="card-body">
                                 <?php if ($hasApplied): ?>
-                                    <p>You have already applied. Here are your application details:</p>
-                                    <!-- Display the application details here -->
+                                    <h5>You have already applied. Here are your application details:</h5>
+                                    <div class="card">
+                                        <div class="card-body">                                            
+                                            <h5 class="card-title">Application Info</h5>
+                                            <img src="<?php echo $application['applyPic']; ?>" class="img-profile img-fluid" title="profile images" 
+                                            style="max-width: 200px; margin-bottom:10px; border-radius: 5px; " onerror="this.onerror=null; this.src='../img/no_profile.webp'">
+                                            <p class="card-text"><strong>Name: </strong><?php echo $application['name']; ?></p>
+                                            <p class="card-text"><strong>Email: </strong><?php echo $application['email']; ?></p>
+                                            <p class="card-text"><strong>Contact: </strong><?php echo $application['contact']; ?></p>
+                                            <p class="card-text"><strong>Course: </strong><?php echo $application['course']; ?></p>
+                                            <p class="card-text"><strong>Faculty: </strong><?php echo $application['faculty']; ?></p>
+                                            <p class="card-text"><strong>Manifesto: </strong><?php echo $application['manifesto']; ?></p>
+                                            <p class="card-text"><strong>Link: </strong><a href="<?php echo $application['link']; ?>"><?php echo $application['link']; ?></a></p>
+                                            <p class="card-text"><strong>Status: </strong><?php echo $application['status']; ?></p>
+                                        </div>
+                                    </div>
                                 <?php else: ?>
                                         <!-- Show the application form here -->
                                         <div class="col-12 text-center mb-4">
                                             <img src="<?php echo $imagePath; ?>" class="img-profile rounded-circle border-secondary img-fluid border p-3 bg-light" title="profile images" style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">    
                                         </div>
-                                        <form action="submitApply.php" method="post" enctype="multipart/form-data">
+                                        <form action="candidateApply.php" method="post" enctype="multipart/form-data">
                                             <div class="input-group mb-3">
                                                 <div class="custom-file">
                                                     <input type="file" class="custom-file-input" id="profilePicture" name="pic" onchange="updateFileName(this)" required>
@@ -296,7 +324,11 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="manifesto">Manifesto</label>
-                                                <textarea class="form-control" id="manifesto" name="manifesto" required></textarea>
+                                                <textarea class="form-control" id="manifesto" name="manifesto"  placeholder="Enter your manifesto" required></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="link">Social Link</label>
+                                                <input type="text" class="form-control" id="link" name="link" placeholder="Enter your social link" required>
                                             </div>
                                             <button class="btn btn-danger" onclick="window.location.href='index.php'" title="cancel" type="button">Cancel</button>
                                             <button type="submit" class="btn btn-primary">Submit Application</button>
