@@ -122,9 +122,8 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
-                        <a class="collapse-item" href="candidateCreate.php">Add Candidates</a>
+                        <a class="collapse-item" href="candidateCreate.php">Verify Candidates</a>
                         <a class="collapse-item" href="candidateView.php">View Candidates</a>
-                        <a class="collapse-item" href="candidateEdit.php">Edit Candidates</a>
                     </div>
                 </div>
             </li>
@@ -264,14 +263,14 @@
                                 <div class="card-body">
                                     <div class="input-group mb-3 mt-3">
                                         <input type="text" class="form-control" placeholder="Search by name" id="searchStudent">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-outline-secondary" type="button" id="button-addon2">
-                                                <i class="fas fa-search"></i>
-                                            </button>
-                                            <button class="btn btn-outline-secondary" type="button" id="reset-button">
-                                                <i class="fas fa-times"></i>
-                                            </button>
-                                        </div>
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary" type="button" id="button-addon2">
+                                                    <i class="fas fa-search"></i>
+                                                </button>
+                                                <button class="btn btn-outline-secondary" type="button" id="reset-button">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
                                     </div>
                                     <div class="table-responsive">
                                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">

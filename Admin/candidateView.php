@@ -1,3 +1,49 @@
+<?php
+    include '../Database/connect.php';
+    session_start();
+
+    // Check if user is logged in
+    if (!isset($_SESSION['admin_id'])) {
+        // If not, redirect to login page
+        header('Location: ../login.php');
+        exit();
+    }
+
+    // Query to select the admin details from the database using the admin ID from the session
+    $sql = "SELECT * FROM admin WHERE adminID = '".$_SESSION['admin_id']."'";
+    // Execute the query
+    $result = $conn->query($sql);
+
+    // If the query returns more than 0 rows, fetch the admin details
+    if ($result->num_rows > 0) {
+        $admin = $result->fetch_assoc();
+        // Get the image path from the database
+        $imagePath = $admin['pic'];
+    } else {
+        // If no admin details are found, display an error message and exit the script
+        echo "No admin found";
+        exit();
+    }
+    
+    // Query to select all candidates from the database
+    $sql = "SELECT * FROM candidate";
+    $result = $conn->query($sql);
+
+    // Create an array to store all candidates
+    $candidates = [];
+
+    // If the query returns more than 0 rows, fetch all candidates
+    if ($result->num_rows > 0) {
+        while ($candidate = $result->fetch_assoc()) {
+            $candidates[] = $candidate;
+        }
+    } else {
+        // If no candidate details are found, display an error message and exit the script
+        echo "No candidates found";
+        exit();
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -80,7 +126,7 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
-                        <a class="collapse-item" href="candidateCreate.php">Add Candidates</a>
+                        <a class="collapse-item" href="candidateCreate.php">Verify Candidates</a>
                         <a class="collapse-item" href="candidateView.php">View Candidates</a>
                     </div>
                 </div>
@@ -177,9 +223,9 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Ali bin Abu</span>
-                                <img class="img-profile rounded-circle" title="profile images"
-                                    src="img/undraw_profile.svg">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['user_name']; ?></span>
+                                <img src="<?php echo $imagePath; ?>" class="img-profile rounded-circle img-fluid" title="profile images" 
+                                style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -190,13 +236,12 @@
                                 </a>
                                 
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" href="logout.php">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
                             </div>
                         </li>
-
                     </ul>
 
                 </nav>
@@ -220,11 +265,16 @@
                                     <h6 class="m-0 font-weight-bold text-primary">Candidates List</h6>
                                 </div>
                                 <div class="card-body">
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control" placeholder="Search by name" id="searchInput">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-outline-secondary" type="button" id="searchButton">Search</button>
-                                        </div>
+                                    <div class="input-group mb-3 mt-3">
+                                        <input type="text" class="form-control" placeholder="Search by name" id="searchCandidate">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary" type="button" id="button-addon2">
+                                                    <i class="fas fa-search"></i>
+                                                </button>
+                                                <button class="btn btn-outline-secondary" type="button" id="reset-button">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
                                     </div>
                                     <div class="table-responsive">
                                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -242,7 +292,22 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <!-- Data will be inserted here dynamically -->
+                                                <?php foreach($candidates as $candidate): ?>
+                                                    <tr>
+                                                        <td><img src="<?php echo $candidate['candidatePic']; ?>" alt="Profile Picture" class="img-fluid" style="max-width: 100px;"></td>
+                                                        <td><?php echo $candidate['candidateName']; ?></td>
+                                                        <td><?php echo $candidate['email']; ?></td>
+                                                        <td><?php echo $candidate['contact']; ?></td>
+                                                        <td><?php echo $candidate['courseName']; ?></td>
+                                                        <td><?php echo $candidate['faculty']; ?></td>
+                                                        <td><?php echo $candidate['manifesto']; ?></td>
+                                                        <td><a href="<?php echo $candidate['links']; ?>" target="_blank">Link</a></td>
+                                                        <td>
+                                                            <a href="candidateEdit.php?id=<?php echo $candidate['candidateId']; ?>" class="btn btn-primary btn-sm mr-2">Edit</a>
+                                                            <a href="#" class="btn btn-danger btn-sm delete-btn" data-toggle="modal" data-target="#confirmDeleteModal" data-candidate-id="<?php echo $candidate['candidateId']; ?>">Delete</a>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
                                             </tbody>
                                         </table>
                                     </div>
@@ -314,6 +379,48 @@
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
+
+    <script>
+        document.getElementById('button-addon2').addEventListener('click', function() {
+        // Get the search query
+        var searchQuery = document.getElementById('searchCandidate').value.toLowerCase();
+
+        // Get the table body
+        var tableBody = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+
+        // Get the table rows
+        var tableRows = tableBody.getElementsByTagName('tr');
+
+        // Loop through the table rows
+        for (var i = 0; i < tableRows.length; i++) {
+            // Get the candidate name from the second cell of the row
+            var candidateName = tableRows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
+
+            // If the candidate name does not contain the search query, hide the row, else show it
+            if (candidateName.indexOf(searchQuery) === -1) {
+                tableRows[i].style.display = 'none';
+            } else {
+                tableRows[i].style.display = '';
+            }
+        }
+    });
+
+    document.getElementById('reset-button').addEventListener('click', function() {
+        // Clear the search input
+        document.getElementById('searchCandidate').value = '';
+
+        // Get the table body
+        var tableBody = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+
+        // Get the table rows
+        var tableRows = tableBody.getElementsByTagName('tr');
+
+        // Show all the table rows
+        for (var i = 0; i < tableRows.length; i++) {
+            tableRows[i].style.display = '';
+        }
+    });
+    </script>
     
 
 </body>
