@@ -1,3 +1,81 @@
+<?php
+    include '../Database/connect.php';
+    session_start();
+
+    // Check if user is logged in
+    if (!isset($_SESSION['admin_id'])) {
+        header('Location: ../login.php');
+        exit();
+    }
+
+    // Query to select the admin details from the database using the admin ID from the session
+    $sql = "SELECT * FROM admin WHERE adminID = '".$_SESSION['admin_id']."'";
+    // Execute the query
+    $result = $conn->query($sql);
+
+    // If the query returns more than 0 rows, fetch the admin details
+    if ($result->num_rows > 0) {
+        $admin = $result->fetch_assoc();
+        // Get the image path from the database
+        $imagePath = $admin['pic'];
+    } else {
+        // If no admin details are found, display an error message and exit the script
+        echo "No admin found";
+        exit();
+    }
+
+    // Get the id of the candidate to edit from the URL
+    $candidateIdToEdit = $_GET['id'];
+
+    // Query to select the candidate details from the database using the candidate ID from the URL
+    $sql = "SELECT * FROM candidate WHERE candidateId = '".$candidateIdToEdit."'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        $candidate = $result->fetch_assoc();
+        $editedCandidatePic = $candidate['candidatePic'];
+    } else {
+        echo "No candidate found";
+        exit();
+    }
+
+    // Update candidate information and profile picture if form is submitted
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $candidateName = $_POST['candidateName'];
+        $email = $_POST['email'];
+        $contact = $_POST['contact'];
+        $faculty = $_POST['faculty'];
+        $courseName = $_POST['courseName'];
+        $manifesto = $_POST['manifesto'];
+        $links = $_POST['links'];
+
+        // Check if a new profile picture has been uploaded
+        if (isset($_FILES['candidatePic']) && $_FILES['candidatePic']['error'] === UPLOAD_ERR_OK) {
+            $target_dir = "uploads/";
+            $target_file = $target_dir . basename($_FILES["candidatePic"]["name"]);
+
+            if (!move_uploaded_file($_FILES["candidatePic"]["tmp_name"], $target_file)) {
+                echo "Sorry, there was an error uploading your file.";
+                exit();
+            }
+            $candidatePic = $target_file;
+        } else {
+            $candidatePic = $editedCandidatePic;
+        }
+
+        $sql = "UPDATE candidate SET candidateName = ?, email = ?, contact = ?, faculty = ?, courseName = ?, manifesto = ?, links = ?, candidatePic = ? WHERE candidateId = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ssssssssi", $candidateName, $email, $contact, $faculty, $courseName, $manifesto, $links, $candidatePic, $candidateIdToEdit);
+        $stmt->execute();
+
+        header('Location: candidateList.php');
+        exit();
+    }
+    $conn->close();
+?>
+
+<!-- The HTML structure and JavaScript code should be similar to adminEdit.php, but replace "admin" with "candidate" -->
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -30,7 +108,7 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
                 <div class="sidebar-brand-icon">
-                    <i class="fa-solid fa-user-tie"></i>
+                    <i class="fa-solid fa-square-poll-vertical"></i>
                 </div>
                 <div class="sidebar-brand-text mx-3">Dashboard</div>
             </a>
@@ -64,7 +142,6 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
                         <a class="collapse-item" href="adminProfiles.html">View Profile</a>
-                        <a class="collapse-item" href="adminEdit.html">Edit Admin</a>
                         <a class="collapse-item" href="adminCreate.html">Create Admin</a>
                     </div>
                 </div>
@@ -81,9 +158,8 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
-                        <a class="collapse-item" href="candidateCreate.html">Add Candidates</a>
+                        <a class="collapse-item" href="candidateCreate.html">Verify Candidates</a>
                         <a class="collapse-item" href="candidateView.html">View Candidates</a>
-                        <a class="collapse-item" href="candidateEdit.html">Edit Candidates</a>
                     </div>
                 </div>
             </li>
@@ -115,7 +191,6 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
                         <a class="collapse-item" href="studentView.html">View Student Profile</a>
-                        <a class="collapse-item" href="studentEdit.html">Edit Student</a>
                         <a class="collapse-item" href="studentCreate.html">Create Student</a>
                     </div>
                 </div>
@@ -133,6 +208,13 @@
                 <a class="nav-link" href="attendance.html">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Student Attendance</span></a>
+            </li>
+
+            <!-- Nav Item - Result -->
+            <li class="nav-item">
+                <a class="nav-link" href="about.php">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>About</span></a>
             </li>
             
             <!-- Divider -->
@@ -172,26 +254,25 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Ali bin Abu</span>
-                                <img class="img-profile rounded-circle" title="profile images"
-                                    src="img/undraw_profile.svg">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['user_name']; ?></span>
+                                <img src="<?php echo $imagePath; ?>" class="img-profile rounded-circle img-fluid" title="profile images" 
+                                style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="adminProfiles.html">
+                                <a class="dropdown-item" href="adminProfiles.php">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
                                 
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" href="logout.php">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
                             </div>
                         </li>
-
                     </ul>
 
                 </nav>
@@ -214,50 +295,52 @@
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col-12 text-center mb-4">
-                                            <img class="img-profile rounded-circle border-primary" title="profile images"
-                                                src="img/pic1.jpg" style="width:100px;height:100px;">
+                                            <img src="<?php echo $editedCandidatePic; ?>" class="img-profile rounded-circle border-secondary img-fluid border p-3 bg-light" title="profile images" style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">    
                                         </div>
                                         <div class="col-12">
-                                            <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                <label for="profilePicture">Profile Picture</label>
-                                                <input type="file" class="form-control-file" id="profilePicture">
-                                            </div>
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Name</div>
-                                            <input type="text" class="form-control" id="name" value="Ali bin Abu">
-                                            <hr class="sidebar-divider my-1">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Email</div>
-                                            <input type="email" class="form-control" id="email" value="ali@uptm.com">
-                                            <hr class="sidebar-divider my-1">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Contact</div>
-                                            <input type="text" class="form-control" id="contact" value="+60123456789">
-                                            <hr class="sidebar-divider my-1">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Course</div>
-                                            <input type="text" class="form-control" id="course" value="CC101 - Computer Science">
-                                            <hr class="sidebar-divider my-1">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Faculty</div>
-                                            <input type="text" class="form-control" id="faculty" value="FCOM">
-                                            <hr class="sidebar-divider my-1">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Manifesto</div>
-                                            <input type="text" class="form-control" id="manifesto" value="Money">
-                                            <hr class="sidebar-divider my-1">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Link</div>
-                                            <input type="text" class="form-control" id="link social" value="www.abc.com">
-                                            <hr class="sidebar-divider my-1">
+                                            <form action="candidateUpdate.php" method="post" enctype="multipart/form-data">
+                                                <input type="hidden" name="id" value="<?php echo $candidateIdToEdit; ?>">
+                                                <input type="hidden" name="editedCandidatePic" value="<?php echo $editedCandidatePic; ?>">
+                                                <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                    <label for="profilePicture">Profile Picture</label>
+                                                    <div class="custom-file">
+                                                        <input type="file" class="custom-file-input" id="profilePicture" name="pic" onchange="updateFileName(this)">
+                                                        <label class="custom-file-label" for="profilePicture">Choose file</label>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                    Name</div>
+                                                <input type="text" class="form-control" id="candidateName" name="candidateName" value="<?php echo $candidate['candidateName']; ?>">
+                                                <hr class="sidebar-divider my-1">
+                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                    Email</div>
+                                                <input type="email" class="form-control" id="email" name="email" value="<?php echo $candidate['email']; ?>">
+                                                <hr class="sidebar-divider my-1">
+                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                    Contact</div>
+                                                <input type="text" class="form-control" id="contact" name="contact" value="<?php echo $candidate['contact']; ?>">
+                                                <hr class="sidebar-divider my-1">
+                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                    Faculty</div>
+                                                <input type="text" class="form-control" id="faculty" name="faculty" value="<?php echo $candidate['faculty']; ?>">
+                                                <hr class="sidebar-divider my-1">
+                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                    Course Name</div>
+                                                <input type="text" class="form-control" id="courseName" name="courseName" value="<?php echo $candidate['courseName']; ?>">
+                                                <hr class="sidebar-divider my-1">
+                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                    Manifesto</div>
+                                                <textarea class="form-control" id="manifesto" name="manifesto"><?php echo $candidate['manifesto']; ?></textarea>
+                                                <hr class="sidebar-divider my-1">
+                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                    Links</div>
+                                                <input type="text" class="form-control" id="links" name="links" value="<?php echo $candidate['links']; ?>">
+                                                <button type="submit" class="btn btn-primary mt-3 rounded-pill" title="save">Save</button>
+                                                <button class="btn btn-danger mt-3 rounded-pill" onclick="window.location.href='candidateView.php'" title="cancel" type="button">Cancel</button>
+                                            </form>
                                         </div>
                                     </div>
-                                    <button class="btn btn-primary mt-3 rounded-pill" title="save" type="button">
-                                        Save
-                                    </button>
-                                    <button class="btn btn-danger mt-3 rounded-pill" title="delete" type="button">
-                                        Delete
-                                    </button>
                                 </div>
                             </div>
                         </div>
