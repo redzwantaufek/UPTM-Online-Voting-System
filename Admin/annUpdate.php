@@ -30,6 +30,6 @@
     // Close the database connection
     $conn->close();
 
-    header('Location: annView.php');
+    header('Location: electionView.php');
     exit();
 ?>

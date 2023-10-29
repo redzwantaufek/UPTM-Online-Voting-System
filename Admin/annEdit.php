@@ -287,9 +287,9 @@
                                                     <textarea class="form-control" id="info" name="info"><?php echo $announcement['info']; ?></textarea>
                                                 </div>
                                                 <button type="submit" class="btn btn-primary mt-3 rounded-pill" title="save">Save</button>
-                                                </form>
-                                                <a href="electionView.php" class="btn btn-danger mt-3 rounded-pill" title="cancel">Cancel</a>
-                                        </div>
+                                                <button class="btn btn-danger mt-3 rounded-pill" onclick="window.location.href='electionView.php'" title="cancel" type="button">Cancel</button>
+                                            </form>
+                                         </div>
                                     </div>
                                 </div>
                             </div>
