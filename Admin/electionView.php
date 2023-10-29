@@ -140,6 +140,7 @@
                         <h6 class="collapse-header">MENU</h6>
                         <a class="collapse-item" href="adminProfiles.php">View Profile</a>
                         <a class="collapse-item" href="adminCreate.php">Create Admin</a>
+                        <a class="collapse-item" href="adminList.php">List Admin</a>
                     </div>
                 </div>
             </li>
@@ -291,9 +292,9 @@
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Election Information</h6>
                             <?php if (isset($election)): ?>
-                                <form method="POST" action="electionDelete.php">
+                                <form id="deleteForm" method="POST" action="electionDelete.php">
                                     <input type="hidden" name="delete_id" value="<?php echo $election['electionId']; ?>">
-                                    <button type="submit" class="btn btn-danger float-right" name="delete">Delete</button>
+                                    <button id="deleteBtn" type="button" class="btn btn-danger float-right" data-toggle="modal" data-target="#confirmDeleteModal">Delete</button>
                                 </form>
                                 <form method="GET" action="electionEdit.php">
                                     <input type="hidden" name="id" value="<?php echo $election['electionId']; ?>">
@@ -368,6 +369,25 @@
         <i class="fas fa-angle-up"></i>
     </a>
 
+    <!-- Modal -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            Are you sure you want to delete.?
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button id="confirmDelete" class="btn btn-danger">Delete</button>
+        </div>
+        </div>
+    </div>
+    </div>
+
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -404,6 +424,14 @@
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
+
+    <script>
+        // When the user confirms the deletion
+        document.getElementById('confirmDelete').addEventListener('click', function() {
+            // Submit the form
+            document.getElementById('deleteForm').submit();
+        });
+    </script>
 
 </body>
 
