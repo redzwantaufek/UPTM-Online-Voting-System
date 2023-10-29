@@ -322,9 +322,9 @@
                             <h6 class="m-0 font-weight-bold text-primary">Winner Announcement</h6>
                             <?php if (isset($announcement)): ?>
                                 <form id="deleteAnnouncementForm" method="POST" action="annDelete.php">
-    <input type="hidden" name="delete_id" value="<?php echo $announcement['annId']; ?>">
-    <button id="deleteAnnouncementBtn" type="button" class="btn btn-danger float-right" data-toggle="modal" data-target="#confirmDeleteAnnouncementModal">Delete</button>
-</form>
+                                    <input type="hidden" name="delete_id" value="<?php echo $announcement['annId']; ?>">
+                                    <button id="deleteAnnouncementBtn" type="button" class="btn btn-danger float-right" data-toggle="modal" data-target="#confirmDeleteAnnouncementModal">Delete</button>
+                                </form>
                                 <form method="GET" action="annEdit.php">
                                     <input type="hidden" name="id" value="<?php echo $announcement['annId']; ?>">
                                     <button type="submit" class="btn btn-primary float-right mr-2" name="edit">Edit</button>
@@ -389,23 +389,23 @@
     </div>
 
     <!-- Delete Announcement Modal-->
-<div class="modal fade" id="confirmDeleteAnnouncementModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Are you sure?</h5>
-        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">×</span>
-        </button>
-      </div>
-      <div class="modal-body">Select "Delete" below if you are ready to delete the announcement.</div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-        <button id="confirmDeleteAnnouncement" class="btn btn-primary">Delete</button>
-      </div>
+    <div class="modal fade" id="confirmDeleteAnnouncementModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Are you sure?</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">Select "Delete" below if you are ready to delete the announcement.</div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+            <button id="confirmDeleteAnnouncement" class="btn btn-danger">Delete</button>
+        </div>
+        </div>
     </div>
-  </div>
-</div>
+    </div>
 
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
