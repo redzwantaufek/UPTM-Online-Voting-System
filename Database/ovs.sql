@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 28, 2023 at 04:03 PM
+-- Generation Time: Oct 29, 2023 at 03:50 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -46,8 +46,7 @@ INSERT INTO `admin` (`adminID`, `adminName`, `email`, `password`, `contact`, `po
 (8, 'Ahmad Bin Najmi', 'ahmad@gmail.com', '14250', '0193438449', 'Staff HEP', 'uploads/pic1.jpg'),
 (9, 'Abu bin Bakar', 'abu@gmail.com', '1425', '0194583764', 'Staff HEP', 'uploads/profile6m.png'),
 (17, 'Zul bin Arif', 'zul@gmail.com', '1425', '0194683645', 'Staff HEP', 'uploads/profile5m.avif'),
-(20, 'Nur Helena binti Zakariah', 'helenaNur@gmail.com', '14250', '0198493857', 'Staff HEP', 'uploads/profile3f.png'),
-(26, 'heren', 'heren@gmail.com', '1425', '019273653', 'Staff', 'uploads/profile5m.avif');
+(20, 'Nur Helena binti Zakariah', 'helenaNur@gmail.com', '14250', '0198493857', 'Staff HEP', 'uploads/profile3f.png');
 
 -- --------------------------------------------------------
 
@@ -78,6 +77,24 @@ CREATE TABLE `announcement` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `apply`
+--
+
+CREATE TABLE `apply` (
+  `applyId` int(11) NOT NULL,
+  `studentId` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `contact` varchar(50) NOT NULL,
+  `course` varchar(255) NOT NULL,
+  `faculty` varchar(255) NOT NULL,
+  `manifesto` text NOT NULL,
+  `link` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `candidate`
 --
 
@@ -85,7 +102,7 @@ CREATE TABLE `candidate` (
   `candidateId` int(11) NOT NULL,
   `studentId` int(11) NOT NULL,
   `candidateName` varchar(80) NOT NULL,
-  `candidatePic` blob NOT NULL,
+  `candidatePic` varchar(255) NOT NULL,
   `faculty` varchar(255) NOT NULL,
   `courseName` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
@@ -93,6 +110,13 @@ CREATE TABLE `candidate` (
   `links` varchar(255) NOT NULL,
   `contact` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `candidate`
+--
+
+INSERT INTO `candidate` (`candidateId`, `studentId`, `candidateName`, `candidatePic`, `faculty`, `courseName`, `email`, `manifesto`, `links`, `contact`) VALUES
+(1, 1, 'Muhammad Redzwan Bin Md Taufek', 'uploads/profile6m.png', 'FCOM', 'CC101-Diploma In Computer Science', 'redzwantaufek2@gmail.com', 'Free Transport For All Students', 'https://www.facebook.com/redzwan.taufek', '0194678990');
 
 -- --------------------------------------------------------
 
@@ -104,8 +128,8 @@ CREATE TABLE `election` (
   `electionId` int(11) NOT NULL,
   `electionTitle` varchar(255) NOT NULL,
   `voteNo` int(50) NOT NULL,
-  `start` datetime NOT NULL,
-  `end` datetime NOT NULL,
+  `start` time NOT NULL,
+  `end` time NOT NULL,
   `date` date NOT NULL,
   `rules` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -133,7 +157,7 @@ CREATE TABLE `student` (
 --
 
 INSERT INTO `student` (`studentId`, `studentPic`, `studentName`, `email`, `password`, `contact`, `votingHistory`, `course`, `faculty`) VALUES
-(1, 'uploads/profile5m.avif', 'Muhammad Redzwan Bin Md Taufek', 'taufekredzwan@gmail.com', '14250', '0194678990', 0, 'CC101 - Diploma in Computer Science', 'FCOM'),
+(1, 'uploads/profile5m.avif', 'Muhammad Redzwan', 'taufekredzwan@gmail.com', '14250', '0194678990', 0, 'CC101 - Diploma in Computer Science', 'FCOM'),
 (2, 'uploads/profile6m.png', 'nur', 'nur@gmail.com', '12345', '123456789', 0, 'Nur', 'Nur'),
 (5, 'uploads/profile3f.png', 'Nur Helen', 'helen@gmail.com', '1425', '1023874659', 0, 'CC101 - Computer Science', 'FCOM'),
 (6, 'uploads/pic1.jpg', 'Porsche', 'porsche@gmail.com', '1425', '019345334', 0, 'CC101', 'FCOM');
@@ -173,6 +197,12 @@ ALTER TABLE `analytic`
 --
 ALTER TABLE `announcement`
   ADD PRIMARY KEY (`annId`);
+
+--
+-- Indexes for table `apply`
+--
+ALTER TABLE `apply`
+  ADD PRIMARY KEY (`applyId`);
 
 --
 -- Indexes for table `candidate`
@@ -220,19 +250,25 @@ ALTER TABLE `analytic`
 -- AUTO_INCREMENT for table `announcement`
 --
 ALTER TABLE `announcement`
-  MODIFY `annId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `annId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `apply`
+--
+ALTER TABLE `apply`
+  MODIFY `applyId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `candidate`
 --
 ALTER TABLE `candidate`
-  MODIFY `candidateId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `candidateId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `election`
 --
 ALTER TABLE `election`
-  MODIFY `electionId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `electionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `student`
