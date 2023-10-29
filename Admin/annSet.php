@@ -26,19 +26,16 @@
     }
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        if (isset($_POST['electionName'])) {
-            // Code to handle the election setup form submission
-            $electionName = $_POST['electionName'];
-            $voteNo = $_POST['voteNo'];
-            $startTime = $_POST['startTime'];
-            $endTime = $_POST['endTime'];
-            $date = $_POST['date'];
-            $rules = $_POST['rules'];
+        if (isset($_POST['electionNameAnn'])) {
+            // Code to handle the election announcement form submission
+            $electionNameAnn = $_POST['electionNameAnn'];
+            $candidateName = $_POST['candidateName'];
+            $shortInfo = $_POST['shortInfo'];
 
-            // Insert these values into the database
-            $sql = "INSERT INTO election (electionTitle, voteNo, start, end, date, rules) VALUES ('$electionName', '$voteNo', '$startTime', '$endTime', '$date', '$rules')";
+            // Insert these values into the database and make the announcement
+            $sql = "INSERT INTO announcement (elecTitle, candName, info) VALUES ('$electionNameAnn', '$candidateName', '$shortInfo')";
             if ($conn->query($sql) === TRUE) {
-                $_SESSION['success'] = "New election created successfully";
+                $_SESSION['success'] = "New announcement created successfully";
             } else {
                 $_SESSION['error'] = "Error: " . $sql . "<br>" . $conn->error;
             }
@@ -280,43 +277,53 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Election Set Up</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Election Announcement</h1>
                     </div>
 
                     <!-- Election Form -->
                     <div class="row">
+                        
+                        <!-- Election Announcement -->
                         <div class="col-lg-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Election Details</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Election Winner Announcement</h6>
                                 </div>
                                 <div class="card-body">
-                                    <form method="POST" action="electionSet.php">
+                                    <form method="POST" action="annSet.php">
                                         <div class="form-group">
                                             <label for="electionName">Election Name</label>
-                                            <input type="text" class="form-control" id="electionName" name="electionName" placeholder="Enter Election Name" required>
+                                            <select class="form-control" id="electionNameAnn" name="electionNameAnn" required>
+                                                <?php foreach($electionNames as $election): ?>
+                                                    <option value="<?php echo $election['electionTitle']; ?>"><?php echo $election['electionTitle']; ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
                                         </div>
                                         <div class="form-group">
-                                            <label for="voteNo">Number of Votes per Student</label>
-                                            <input type="number" class="form-control" id="voteNo" name="voteNo" placeholder="Enter Number of Votes per Student" required>
+                                            <label for="candidateName">Candidate Name</label>
+                                            <select multiple class="form-control" id="candidateName" name="candidateName" required>
+                                                <?php
+                                                    // Fetch candidate names from the database
+                                                    $sql = "SELECT candidateName FROM candidate";
+                                                    $result = $conn->query($sql);
+
+                                                    // Check if the query returns any rows
+                                                    if ($result->num_rows > 0) {
+                                                        // Output data of each row
+                                                        while($row = $result->fetch_assoc()) {
+                                                            echo "<option value='".$row["candidateName"]."'>".$row["candidateName"]."</option>";
+                                                        }
+                                                    } else {
+                                                        echo "No candidates found";
+                                                    }
+                                                ?>
+                                            </select>
                                         </div>
                                         <div class="form-group">
-                                            <label for="startTime">Start Time</label>
-                                            <input type="time" class="form-control" id="startTime" name="startTime" required>
+                                            <label for="shortInfo">Info</label>
+                                            <textarea class="form-control" id="shortInfo" name="shortInfo" rows="3" required></textarea>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="endTime">End Time</label>
-                                            <input type="time" class="form-control" id="endTime" name="endTime" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="date">Date</label>
-                                            <input type="date" class="form-control" id="date" name="date" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="rules">Rules</label>
-                                            <textarea class="form-control" id="rules" name="rules" rows="3" required></textarea>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">Create</button>
+                                        <button type="submit" class="btn btn-primary">Announce</button>
                                     </form>
                                 </div>
                             </div>
