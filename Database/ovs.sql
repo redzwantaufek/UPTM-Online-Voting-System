@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 29, 2023 at 03:50 PM
+-- Generation Time: Oct 29, 2023 at 04:37 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -101,6 +101,7 @@ CREATE TABLE `apply` (
 CREATE TABLE `candidate` (
   `candidateId` int(11) NOT NULL,
   `studentId` int(11) NOT NULL,
+  `candNo` int(255) NOT NULL,
   `candidateName` varchar(80) NOT NULL,
   `candidatePic` varchar(255) NOT NULL,
   `faculty` varchar(255) NOT NULL,
@@ -115,8 +116,9 @@ CREATE TABLE `candidate` (
 -- Dumping data for table `candidate`
 --
 
-INSERT INTO `candidate` (`candidateId`, `studentId`, `candidateName`, `candidatePic`, `faculty`, `courseName`, `email`, `manifesto`, `links`, `contact`) VALUES
-(1, 1, 'Muhammad Redzwan Bin Md Taufek', 'uploads/profile6m.png', 'FCOM', 'CC101-Diploma In Computer Science', 'redzwantaufek2@gmail.com', 'Free Transport For All Students', 'https://www.facebook.com/redzwan.taufek', '0194678990');
+INSERT INTO `candidate` (`candidateId`, `studentId`, `candNo`, `candidateName`, `candidatePic`, `faculty`, `courseName`, `email`, `manifesto`, `links`, `contact`) VALUES
+(1, 1, 1, 'Muhammad Redzwan Bin Md Taufek', 'uploads/profile6m.png', 'FCOM', 'CC101-Diploma In Computer Science', 'redzwantaufek2@gmail.com', 'Free Transport For All Students', 'https://www.facebook.com/redzwan.taufek', '0194678990'),
+(2, 2, 2, 'Nur', 'uploads/pic1.jpg', 'nu', 'noh', 'nay@gmail.com', 'Free food!!', 'food.com', '123456789');
 
 -- --------------------------------------------------------
 
@@ -149,18 +151,19 @@ CREATE TABLE `student` (
   `contact` varchar(255) NOT NULL,
   `votingHistory` tinyint(4) NOT NULL DEFAULT 0,
   `course` varchar(255) NOT NULL,
-  `faculty` varchar(255) NOT NULL
+  `faculty` varchar(255) NOT NULL,
+  `apply` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `student`
 --
 
-INSERT INTO `student` (`studentId`, `studentPic`, `studentName`, `email`, `password`, `contact`, `votingHistory`, `course`, `faculty`) VALUES
-(1, 'uploads/profile5m.avif', 'Muhammad Redzwan', 'taufekredzwan@gmail.com', '14250', '0194678990', 0, 'CC101 - Diploma in Computer Science', 'FCOM'),
-(2, 'uploads/profile6m.png', 'nur', 'nur@gmail.com', '12345', '123456789', 0, 'Nur', 'Nur'),
-(5, 'uploads/profile3f.png', 'Nur Helen', 'helen@gmail.com', '1425', '1023874659', 0, 'CC101 - Computer Science', 'FCOM'),
-(6, 'uploads/pic1.jpg', 'Porsche', 'porsche@gmail.com', '1425', '019345334', 0, 'CC101', 'FCOM');
+INSERT INTO `student` (`studentId`, `studentPic`, `studentName`, `email`, `password`, `contact`, `votingHistory`, `course`, `faculty`, `apply`) VALUES
+(1, 'uploads/profile5m.avif', 'Muhammad Redzwan', 'taufekredzwan@gmail.com', '14250', '0194678990', 0, 'CC101 - Diploma in Computer Science', 'FCOM', 0),
+(2, 'uploads/profile6m.png', 'nur', 'nur@gmail.com', '12345', '123456789', 0, 'Nur', 'Nur', 0),
+(5, 'uploads/profile3f.png', 'Nur Helen', 'helen@gmail.com', '1425', '1023874659', 0, 'CC101 - Computer Science', 'FCOM', 0),
+(6, 'uploads/pic1.jpg', 'Porsche', 'porsche@gmail.com', '1425', '019345334', 0, 'CC101', 'FCOM', 0);
 
 -- --------------------------------------------------------
 
