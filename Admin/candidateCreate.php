@@ -434,7 +434,8 @@
         fetch('applyUpdate.php?status=' + status + '&id=' + id)
         .then(response => response.text())
         .then(data => {
-            if (data === 'success') {
+            console.log(data);  // Log the response data to the console
+            if (data.trim() === 'success') {  // Use trim() to remove any extra whitespace
                 alert('Status updated successfully');
                 location.reload();
             } else {
