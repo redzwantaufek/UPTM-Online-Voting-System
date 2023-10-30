@@ -37,7 +37,7 @@
     }
 
     // Create application if form is submitted
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {        
         $name = $_POST['name'];
         $email = $_POST['email'];
         $contact = $_POST['contact'];
@@ -62,15 +62,12 @@
             $target_file = 'img/no_profile.webp';
         }
 
-        $sql = "INSERT INTO apply (studentId, name, email, contact, course, faculty, manifesto, link) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO apply (studentId, applyPic, name, email, contact, course, faculty, manifesto, link) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssssss", $_SESSION['student_id'], $name, $email, $contact, $course, $faculty, $manifesto, $link);
+        $stmt->bind_param("sssssssss", $_SESSION['student_id'], $target_file, $name, $email, $contact, $course, $faculty, $manifesto, $link);
         $stmt->execute();
 
         $_SESSION['success_msg'] = "Application submitted successfully!";
-
-            // Execute the INSERT statement
-        $stmt->execute();
 
         // Prepare an UPDATE statement to set the 'apply' field to 1 for the current student
         $sql = "UPDATE student SET apply = 1 WHERE studentId = ?";
@@ -81,6 +78,9 @@
         $stmt->execute();
 
         $_SESSION['success_msg'] = "Application submitted successfully!";
+
+        // Redirect to index.php
+        header('Location: index.php');
         }
 
     // Close the database connection
@@ -267,7 +267,7 @@
                                             <p class="card-text"><strong>Course: </strong><?php echo $application['course']; ?></p>
                                             <p class="card-text"><strong>Faculty: </strong><?php echo $application['faculty']; ?></p>
                                             <p class="card-text"><strong>Manifesto: </strong><?php echo $application['manifesto']; ?></p>
-                                            <p class="card-text"><strong>Link: </strong><a href="<?php echo $application['link']; ?>"><?php echo $application['link']; ?></a></p>
+                                            <p class="card-text"><strong>Manifesto Link: </strong><a href="<?php echo $application['link']; ?>"><?php echo $application['link']; ?></a></p>
                                             <p class="card-text"><strong>Status: </strong><?php echo $application['status']; ?></p>
                                         </div>
                                     </div>
@@ -327,8 +327,8 @@
                                                 <textarea class="form-control" id="manifesto" name="manifesto"  placeholder="Enter your manifesto" required></textarea>
                                             </div>
                                             <div class="form-group">
-                                                <label for="link">Social Link</label>
-                                                <input type="text" class="form-control" id="link" name="link" placeholder="Enter your social link" required>
+                                                <label for="link">Manifesto Link</label>
+                                                <input type="text" class="form-control" id="link" name="link" placeholder="Enter your link">
                                             </div>
                                             <button class="btn btn-danger" onclick="window.location.href='index.php'" title="cancel" type="button">Cancel</button>
                                             <button type="submit" class="btn btn-primary">Submit Application</button>
