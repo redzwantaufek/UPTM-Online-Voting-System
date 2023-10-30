@@ -1,3 +1,55 @@
+<?php
+    include '../Database/connect.php';
+    session_start();
+
+    // Check if user is logged in
+    if (!isset($_SESSION['admin_id'])) {
+        // If not, redirect to login page
+        header('Location: ../login.php');
+        exit();
+    }
+
+    // Query to select the admin details from the database using the admin ID from the session
+    $sql = "SELECT * FROM admin WHERE adminID = '".$_SESSION['admin_id']."'";
+    // Execute the query
+    $result = $conn->query($sql);
+
+    // If the query returns more than 0 rows, fetch the admin details
+    if ($result->num_rows > 0) {
+        $admin = $result->fetch_assoc();
+        // Get the image path from the database
+        $imagePath = $admin['pic'];
+    } else {
+        // If no admin details are found, display an error message and exit the script
+        echo "No admin found";
+        exit();
+    }
+
+    // Query to select all candidates from the database
+    $sql = "SELECT * FROM apply";
+    $result = $conn->query($sql);
+
+    // Create an array to store all candidates
+    $applications = [];
+
+    // If the query returns more than 0 rows, fetch all candidates
+    if ($result->num_rows > 0) {
+        while ($application = $result->fetch_assoc()) {
+            $applications[] = $application;
+        }
+    }
+
+    // Check if the status parameter is set in the URL
+    if (isset($_GET['status']) && isset($_GET['id'])) {
+        // Update the status of the application in the database
+        $sql = "UPDATE apply SET status = '".$_GET['status']."' WHERE id = '".$_GET['id']."'";
+        $conn->query($sql);
+    }
+
+    // Close the database connection
+    $conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,9 +80,9 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
                 <div class="sidebar-brand-icon">
-                    <i class="fa-solid fa-user-tie"></i>
+                    <i class="fa-solid fa-square-poll-vertical"></i>
                 </div>
                 <div class="sidebar-brand-text mx-3">Dashboard</div>
             </a>
@@ -40,7 +92,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="index.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -63,9 +115,9 @@
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
-                        <a class="collapse-item" href="adminProfiles.html">View Profile</a>
-                        <a class="collapse-item" href="adminEdit.html">Edit Admin</a>
-                        <a class="collapse-item" href="adminCreate.html">Create Admin</a>
+                        <a class="collapse-item" href="adminProfiles.php">View Profile</a>
+                        <a class="collapse-item" href="adminCreate.php">Create Admin</a>
+                        <a class="collapse-item" href="adminList.php">List Admin</a>
                     </div>
                 </div>
             </li>
@@ -81,9 +133,8 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
-                        <a class="collapse-item" href="candidateCreate.html">Add Candidates</a>
-                        <a class="collapse-item" href="candidateView.html">View Candidates</a>
-                        <a class="collapse-item" href="candidateEdit.html">Edit Candidates</a>
+                        <a class="collapse-item" href="candidateCreate.php">Verify Candidates</a>
+                        <a class="collapse-item" href="candidateView.php">View Candidates</a>
                     </div>
                 </div>
             </li>
@@ -98,8 +149,9 @@
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
-                        <a class="collapse-item" href="electionView.html">Election View</a>
-                        <a class="collapse-item" href="electionSet.html">Election Set Up</a>
+                        <a class="collapse-item" href="electionView.php">Election View</a>
+                        <a class="collapse-item" href="electionSet.php">Election Set Up</a>
+                        <a class="collapse-item" href="annSet.php">Election Announcement</a>
                     </div>
                 </div>
             </li>
@@ -114,26 +166,34 @@
                 <div id="collapseStudent" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
-                        <a class="collapse-item" href="studentView.html">View Student Profile</a>
-                        <a class="collapse-item" href="studentEdit.html">Edit Student</a>
-                        <a class="collapse-item" href="studentCreate.html">Create Student</a>
+                        <a class="collapse-item" href="studentView.php">View Student Profile</a>
+                        <a class="collapse-item" href="studentCreate.php">Create Student</a>
                     </div>
                 </div>
             </li>
 
             <!-- Nav Item - Result -->
             <li class="nav-item">
-                <a class="nav-link" href="result.html">
+                <a class="nav-link" href="result.php">
                     <i class="fa-solid fa-chart-simple"></i>
                     <span>Election Result</span></a>
             </li>
 
             <!-- Nav Item - Student attendance -->
             <li class="nav-item">
-                <a class="nav-link" href="attendance.html">
+                <a class="nav-link" href="attendance.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Student Attendance</span></a>
             </li>
+
+            <!-- Nav Item - Result -->
+            <li class="nav-item">
+                <a class="nav-link" href="about.php">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>About</span></a>
+            </li>
+
+            
             
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -163,7 +223,7 @@
                     <!-- UPTM Logo -->
                         <div class="navbar-brand" href="#">
                             <img src="img/uptm.jpg" alt="" class="img-fluid logo-img" style="max-width: 100px; max-height: 100px;">
-                        </div>                
+                        </div>            
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -172,26 +232,25 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Ali bin Abu</span>
-                                <img class="img-profile rounded-circle" title="profile images"
-                                    src="img/undraw_profile.svg">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['user_name']; ?></span>
+                                <img src="<?php echo $imagePath; ?>" class="img-profile rounded-circle img-fluid" title="profile images" 
+                                style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="adminProfiles.html">
+                                <a class="dropdown-item" href="adminProfiles.php">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
                                 
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" href="logout.php">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
                             </div>
                         </li>
-
                     </ul>
 
                 </nav>
@@ -200,63 +259,100 @@
                  <!-- Begin Page Content -->
                  <div class="container-fluid">
 
-                     <!-- Page Heading -->
-                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                         <h1 class="h3 mb-0 text-gray-800">Create Candidate</h1>
-                     </div>
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Candidate</h1>
+                    </div>
 
-                     <!-- Content Row -->
-                     <div class="row">
+                    <!-- Content Row -->
+                    <div class="row">
 
-                         <!-- Admin Create Form -->
-                         <div class="col-xl-12 col-md-12 mb-4">
-                             <div class="card border-0 shadow h-100 py-2 rounded-lg">
-                                 <div class="card-body">
-                                     <form>
-                                         <div class="form-group">
-                                             <label for="profilePicture">Profile Picture</label>
-                                             <input type="file" class="form-control-file" id="profilePicture">
-                                         </div>
-                                         <div class="form-group">
-                                             <label for="name">Name</label>
-                                             <input type="text" class="form-control" id="name" placeholder="Enter name">
-                                         </div>
-                                         <div class="form-group">
-                                             <label for="email">Email Address</label>
-                                             <input type="email" class="form-control" id="email" placeholder="Enter email">
-                                         </div>
-                                         <div class="form-group">
-                                             <label for="contact">Contact</label>
-                                             <input type="text" class="form-control" id="contact" placeholder="Enter contact number">
-                                         </div>
-                                         <div class="form-group">
-                                            <label for="text">Course</label>
-                                            <input type="text" class="form-control" id="course" placeholder="Course name">
+                        <!-- Candidate Profile Card -->
+                        <?php foreach ($applications as $application): ?>
+                        <div class="col-xl-12 col-md-12 mb-4">
+                            <div class="card border-0 shadow h-100 py-2 rounded-lg">
+                                <div class="card-body">
+                                    <h5 class="font-weight-bold">Application details:</h5>
+                                    <div class="card">
+                                        <div class="card-body">                                            
+                                            <h5 class="card-title">Application Info</h5>
+                                            <img src="<?php echo $application['applyPic']; ?>" class="img-profile img-fluid" title="profile images" 
+                                            style="max-width: 200px; margin-bottom:10px; border-radius: 5px; " onerror="this.onerror=null; this.src='../img/no_profile.webp'">
+                                            <p class="card-text"><strong>Name: </strong><?php echo $application['name']; ?></p>
+                                            <p class="card-text"><strong>Email: </strong><?php echo $application['email']; ?></p>
+                                            <p class="card-text"><strong>Contact: </strong><?php echo $application['contact']; ?></p>
+                                            <p class="card-text"><strong>Course: </strong><?php echo $application['course']; ?></p>
+                                            <p class="card-text"><strong>Faculty: </strong><?php echo $application['faculty']; ?></p>
+                                            <p class="card-text"><strong>Semester: </strong><?php echo $application['semester']; ?></p>
+                                            <p class="card-text"><strong>Manifesto: </strong><?php echo $application['manifesto']; ?></p>
+                                            <p class="card-text"><strong>Status: </strong><?php echo $application['status']; ?></p>
+                                            <button type="button" class="btn btn-success" onclick="updateStatus('Accept', '<?php echo $application['applyId']; ?>')">Accept</button>
+                                            <button type="button" class="btn btn-danger" onclick="updateStatus('Reject', '<?php echo $application['applyId']; ?>')">Reject</button>    
                                         </div>
-                                        <div class="form-group">
-                                            <label for="text">Faculty</label>
-                                            <input type="text" class="form-control" id="faculty" placeholder="Faculty name">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                        <?php foreach ($applications as $application): ?>
+                        <?php if ($application['status'] == 'Accept'): ?>
+                        <div class="col-xl-12 col-md-12 mb-4">
+                            <div class="card border-0 shadow h-100 py-2 rounded-lg">
+                                <div class="card-body">
+                                    <h5 class="font-weight-bold">Accepted Application details:</h5>
+                                    <div class="card">
+                                        <div class="card-body">                                            
+                                            <h5 class="card-title">Application Info</h5>
+                                            <img src="<?php echo $application['applyPic']; ?>" class="img-profile img-fluid" title="profile images" 
+                                            style="max-width: 200px; margin-bottom:10px; border-radius: 5px; " onerror="this.onerror=null; this.src='../img/no_profile.webp'">
+                                            <p class="card-text"><strong>Name: </strong><?php echo $application['name']; ?></p>
+                                            <p class="card-text"><strong>Email: </strong><?php echo $application['email']; ?></p>
+                                            <p class="card-text"><strong>Contact: </strong><?php echo $application['contact']; ?></p>
+                                            <p class="card-text"><strong>Course: </strong><?php echo $application['course']; ?></p>
+                                            <p class="card-text"><strong>Faculty: </strong><?php echo $application['faculty']; ?></p>
+                                            <p class="card-text"><strong>Semester: </strong><?php echo $application['semester']; ?></p>
+                                            <p class="card-text"><strong>Manifesto: </strong><?php echo $application['manifesto']; ?></p>
+                                            <p class="card-text"><strong>Status: </strong><?php echo $application['status']; ?></p>
                                         </div>
-                                         <div class="form-group">
-                                             <label for="position">Manifesto</label>
-                                             <input type="text" class="form-control" id="position" placeholder="Enter manifesto">
-                                         </div>
-                                        <div class="form-group">
-                                            <label for="position">Link</label>
-                                            <input type="text" class="form-control" id="link" placeholder="https://example.com">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <?php endif; ?>
+                        <?php endforeach; ?>
+                        <?php foreach ($applications as $application): ?>
+                        <?php if ($application['status'] == 'Reject'): ?>
+                        <div class="col-xl-12 col-md-12 mb-4">
+                            <div class="card border-0 shadow h-100 py-2 rounded-lg">
+                                <div class="card-body">
+                                    <h5 class="font-weight-bold">Rejected Application details:</h5>
+                                    <div class="card">
+                                        <div class="card-body">                                            
+                                            <h5 class="card-title">Application Info</h5>
+                                            <img src="<?php echo $application['applyPic']; ?>" class="img-profile img-fluid" title="profile images" 
+                                            style="max-width: 200px; margin-bottom:10px; border-radius: 5px; " onerror="this.onerror=null; this.src='../img/no_profile.webp'">
+                                            <p class="card-text"><strong>Name: </strong><?php echo $application['name']; ?></p>
+                                            <p class="card-text"><strong>Email: </strong><?php echo $application['email']; ?></p>
+                                            <p class="card-text"><strong>Contact: </strong><?php echo $application['contact']; ?></p>
+                                            <p class="card-text"><strong>Course: </strong><?php echo $application['course']; ?></p>
+                                            <p class="card-text"><strong>Faculty: </strong><?php echo $application['faculty']; ?></p>
+                                            <p class="card-text"><strong>Semester: </strong><?php echo $application['semester']; ?></p>
+                                            <p class="card-text"><strong>Manifesto: </strong><?php echo $application['manifesto']; ?></p>
+                                            <p class="card-text"><strong>Status: </strong><?php echo $application['status']; ?></p>
                                         </div>
-                                         <button type="submit" class="btn btn-primary">Create</button>
-                                     </form>
-                                 </div>
-                             </div>
-                         </div>
-                     </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <?php endif; ?>
+                        <?php endforeach; ?>
+                    </div>
 
-                 </div>
-                 <!-- /.container-fluid -->
+                </div>
+                <!-- /.container-fluid -->
 
-             </div>
-             <!-- End of Main Content -->
+            </div>
+            <!-- End of Main Content -->
 
 
             <!-- Footer -->
@@ -294,7 +390,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <a class="btn btn-danger" href="login.php">Logout</a>
                 </div>
             </div>
         </div>
@@ -316,8 +412,28 @@
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
-    
 
+    <!-- This script updates the file name when a new file is selected -->
+    <script>
+        function updateFileName(inputElement) {
+            var fileName = inputElement.files[0].name; inputElement.nextElementSibling.textContent = fileName;
+        }
+    </script>
+
+    <script>
+    function updateStatus(status, id) {
+        fetch('applyUpdate.php?status=' + status + '&id=' + id)
+        .then(response => response.text())
+        .then(data => {
+            if (data === 'success') {
+                alert('Status updated successfully');
+                location.reload();
+            } else {
+                alert('Error updating status');
+            }
+        });
+    }
+    </script>
 </body>
 
 </html>
