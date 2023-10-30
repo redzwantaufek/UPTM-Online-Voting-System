@@ -25,8 +25,15 @@
         exit();
     }
 
-    // Close the database connection
-    $conn->close();
+    $sql = "SELECT * FROM candidate";
+    $result = $conn->query($sql);
+    $candidates = [];
+    if ($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            $candidates[] = $row;
+        }
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -266,11 +273,28 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <!-- Data will be inserted here dynamically -->
+                                                        <?php
+                                                        // Query to select the candidates details from the database
+                                                        $sql = "SELECT * FROM candidate LIMIT 2";
+                                                        // Execute the query
+                                                        $result = $conn->query($sql);
+                                                        // Fetch the data and display it in the table
+                                                        while($row = $result->fetch_assoc()) {
+                                                            echo "<tr>";
+                                                            echo "<td><img src='".$row['candidatePic']."' width='50' height='50'></td>";
+                                                            echo "<td>".$row['candidateName']."</td>";
+                                                            echo "<td>".$row['email']."</td>";
+                                                            echo "<td>".$row['courseName']."</td>";
+                                                            echo "<td>".$row['faculty']."</td>";
+                                                            echo "<td>".$row['manifesto']."</td>";
+                                                            echo "<td><a href='".$row['links']."' target='_blank'>View</a></td>";
+                                                            echo "</tr>";
+                                                        }
+                                                        ?>
                                                     </tbody>
                                                 </table>
                                             </div>
-                                            <a href="#" class="btn btn-info mt-3">View More Candidates</a>
+                                            <a href="candidateView.php" class="btn btn-info mt-3">View More Candidates</a>
                                         </div>
                                     </div>
                                 </div>
@@ -342,6 +366,10 @@
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
     
+    <?php
+    // Close the database connection
+    $conn->close();
+    ?>
 
 </body>
 
