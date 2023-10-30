@@ -25,11 +25,18 @@
         exit();
     }
 
-    // Get the id of the candidate to edit from the URL
-    $candidateIdToEdit = $student['studentId'];
+    // Get the id of the candidate to edit from the foreign key student id
+    $sql = "SELECT candidateId FROM candidate WHERE studentId = '".$_SESSION['student_id']."'";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        $candidateIdToEdit = $result->fetch_assoc()['candidateId'];
+    } else {
+        echo "No candidate found for this student";
+        exit();
+    }
 
-    // Query to select the candidate details from the database using the candidate ID from the URL
-    $sql = "SELECT * FROM candidate WHERE studentId = '".$candidateIdToEdit."'";
+    // Query to select the candidate details from the database using the candidate ID from the foreign key student id
+    $sql = "SELECT * FROM candidate WHERE candidateId = '".$candidateIdToEdit."'";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
@@ -51,12 +58,26 @@
         $manifesto = $_POST['manifesto'];
         $links = $_POST['links'];
 
-        $sql = "UPDATE candidate SET candidateName = ?, email = ?, contact = ?, faculty = ?, courseName = ?, manifesto = ?, links = ? WHERE candidateId = ?";
+        // Check if a new profile picture has been uploaded
+        if (isset($_FILES['candidatePic']) && $_FILES['candidatePic']['error'] === UPLOAD_ERR_OK) {
+            $target_dir = "uploads/";
+            $target_file = $target_dir . basename($_FILES["candidatePic"]["name"]);
+
+            if (!move_uploaded_file($_FILES["candidatePic"]["tmp_name"], $target_file)) {
+                echo "Sorry, there was an error uploading your file.";
+                exit();
+            }
+            $candidatePic = $target_file;
+        } else {
+            $candidatePic = $editedCandidatePic;
+        }
+
+        $sql = "UPDATE candidate SET candidateName = ?, email = ?, contact = ?, faculty = ?, courseName = ?, manifesto = ?, links = ?, candidatePic = ? WHERE candidateId = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssssssi", $candidateName, $email, $contact, $faculty, $courseName, $manifesto, $links, $candidateIdToEdit);
+        $stmt->bind_param("ssssssssi", $candidateName, $email, $contact, $faculty, $courseName, $manifesto, $links, $candidatePic, $candidateIdToEdit);
         $stmt->execute();
 
-        header('Location: candidateView.php');
+        header('Location: candidateList.php');
         exit();
     }
     $conn->close();
@@ -237,7 +258,7 @@
                                         </div>
                                         <div class="col-12">
                                             <form action="candidateUpdate.php" method="post" enctype="multipart/form-data">
-                                                <input type="hidden" name="id" value="<?php echo $candidateIdToEdit; ?>" readonly>
+                                                <input type="hidden" name="id" value="<?php echo $candidateIdToEdit; ?>">
                                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                     Name</div>
                                                 <input type="text" class="form-control" id="candidateName" name="candidateName" value="<?php echo $candidate['candidateName']; ?>" readonly>
