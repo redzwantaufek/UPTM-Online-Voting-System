@@ -43,8 +43,8 @@
         $contact = $_POST['contact'];
         $course = $_POST['course'];
         $faculty = $_POST['faculty'];
+        $semester = $_POST['semester'];
         $manifesto = $_POST['manifesto'];
-        $link = $_POST['link'];
 
         // Check if file was uploaded
         if (isset($_FILES['pic']) && $_FILES['pic']['error'] === UPLOAD_ERR_OK) {
@@ -62,9 +62,9 @@
             $target_file = 'img/no_profile.webp';
         }
 
-        $sql = "INSERT INTO apply (studentId, applyPic, name, email, contact, course, faculty, manifesto, link) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO apply (studentId, applyPic, name, email, contact, course, faculty, semester, manifesto) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssssssss", $_SESSION['student_id'], $target_file, $name, $email, $contact, $course, $faculty, $manifesto, $link);
+        $stmt->bind_param("sssssssss", $_SESSION['student_id'], $target_file, $name, $email, $contact, $course, $faculty, $semester, $manifesto);
         $stmt->execute();
 
         $_SESSION['success_msg'] = "Application submitted successfully!";
@@ -82,6 +82,14 @@
         // Redirect to index.php
         header('Location: index.php');
         }
+
+        $studentId = $_SESSION['student_id'];
+        $sql = "SELECT * FROM candidate WHERE studentId = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $studentId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $candidate = $result->fetch_assoc();
 
     // Close the database connection
     $conn->close();
@@ -244,7 +252,7 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Candidate Application</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Candidate Dashboard</h1>
                     </div>
 
                     <!-- Content Row -->
@@ -255,7 +263,7 @@
                             <div class="card border-0 shadow h-100 py-2 rounded-lg">
                                 <div class="card-body">
                                 <?php if ($hasApplied): ?>
-                                    <h5>You have already applied. Here are your application details:</h5>
+                                    <h5 class="font-weight-bold">You have already applied. Here are your application details:</h5>
                                     <div class="card">
                                         <div class="card-body">                                            
                                             <h5 class="card-title">Application Info</h5>
@@ -266,13 +274,31 @@
                                             <p class="card-text"><strong>Contact: </strong><?php echo $application['contact']; ?></p>
                                             <p class="card-text"><strong>Course: </strong><?php echo $application['course']; ?></p>
                                             <p class="card-text"><strong>Faculty: </strong><?php echo $application['faculty']; ?></p>
+                                            <p class="card-text"><strong>Semester: </strong><?php echo $application['semester']; ?></p>
                                             <p class="card-text"><strong>Manifesto: </strong><?php echo $application['manifesto']; ?></p>
-                                            <p class="card-text"><strong>Manifesto Link: </strong><a href="<?php echo $application['link']; ?>"><?php echo $application['link']; ?></a></p>
                                             <p class="card-text"><strong>Status: </strong><?php echo $application['status']; ?></p>
                                         </div>
                                     </div>
+                                    <?php if ($application['status'] == 'Accept'): ?>
+                                    <div style="margin-top: 20px;"></div>
+                                        <h5 class="font-weight-bold">You have already accepted. Here are your candidate details:</h5>
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Candidate Info</h5>
+                                                <img src="<?php echo $candidate['candidatePic']; ?>" class="img-profile img-fluid" title="profile images" 
+                                                style="max-width: 200px; margin-bottom:10px; border-radius: 5px; " onerror="this.onerror=null; this.src='../img/no_profile.webp'">
+                                                <p class="card-text"><strong>Name: </strong><?php echo $candidate['candidateName']; ?></p>
+                                                <p class="card-text"><strong>Email: </strong><?php echo $candidate['email']; ?></p>
+                                                <p class="card-text"><strong>Contact: </strong><?php echo $candidate['contact']; ?></p>
+                                                <p class="card-text"><strong>Course: </strong><?php echo $candidate['courseName']; ?></p>
+                                                <p class="card-text"><strong>Faculty: </strong><?php echo $candidate['faculty']; ?></p>
+                                                <p class="card-text"><strong>Manifesto: </strong><?php echo $candidate['manifesto']; ?></p>
+                                                <p class="card-text"><strong>Manifesto Link: </strong><a href="<?php echo $candidate['links']; ?>"><?php echo $candidate['links']; ?></a></p>
+                                            </div>
+                                        </div>
+                                        <a href="candidateEdit.php?studentId=<?php echo $_SESSION['student_id']; ?>" class="btn btn-primary mt-3 float-right">Edit Manifesto</a>
+                                    <?php endif; ?>
                                 <?php else: ?>
-                                        <!-- Show the application form here -->
                                         <div class="col-12 text-center mb-4">
                                             <img src="<?php echo $imagePath; ?>" class="img-profile rounded-circle border-secondary img-fluid border p-3 bg-light" title="profile images" style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">    
                                         </div>
@@ -326,10 +352,6 @@
                                                 <label for="manifesto">Manifesto</label>
                                                 <textarea class="form-control" id="manifesto" name="manifesto"  placeholder="Enter your manifesto" required></textarea>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="link">Manifesto Link</label>
-                                                <input type="text" class="form-control" id="link" name="link" placeholder="Enter your link">
-                                            </div>
                                             <button class="btn btn-danger" onclick="window.location.href='index.php'" title="cancel" type="button">Cancel</button>
                                             <button type="submit" class="btn btn-primary">Submit Application</button>
                                         </form>
@@ -381,7 +403,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-danger" href="login.html">Logout</a>
+                    <a class="btn btn-danger" href="login.php">Logout</a>
                 </div>
             </div>
         </div>

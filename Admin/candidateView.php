@@ -37,10 +37,6 @@
         while ($candidate = $result->fetch_assoc()) {
             $candidates[] = $candidate;
         }
-    } else {
-        // If no candidate details are found, display an error message and exit the script
-        echo "No candidates found";
-        exit();
     }
 ?>
 
