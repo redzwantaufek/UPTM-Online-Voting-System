@@ -244,7 +244,20 @@
                                         <div class="col mr-2">
                                             <div class="text-md font-weight-bold text-success text-uppercase mb-1">
                                                 Election Result</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Latest Election Result</div>
+                                            <?php
+                                            // Query to select the latest election result from the database
+                                            $sql = "SELECT * FROM announcement ORDER BY annId DESC LIMIT 1";
+                                            // Execute the query
+                                            $result = $conn->query($sql);
+                                            // Check if the table has any data
+                                            if ($result->num_rows > 0) {
+                                                // Fetch the data
+                                                $row = $result->fetch_assoc();
+                                                echo '<div class="h5 mb-0 font-weight-bold text-gray-800">'.$row['result'].'</div>';
+                                            } else {
+                                                echo '<div class="h5 mb-0 font-weight-bold text-gray-800">No information available</div>';
+                                            }
+                                            ?>
                                         </div>
                                     </div>
                                 </div>
