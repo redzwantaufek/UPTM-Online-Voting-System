@@ -288,6 +288,7 @@
                                                 <img src="<?php echo $candidate['candidatePic']; ?>" class="img-profile img-fluid" title="profile images" 
                                                 style="max-width: 200px; margin-bottom:10px; border-radius: 5px; " onerror="this.onerror=null; this.src='../img/no_profile.webp'">
                                                 <p class="card-text"><strong>Name: </strong><?php echo $candidate['candidateName']; ?></p>
+                                                <p class="card-text"><strong>Candidate No: </strong><?php echo $candidate['candNo']; ?></p>
                                                 <p class="card-text"><strong>Email: </strong><?php echo $candidate['email']; ?></p>
                                                 <p class="card-text"><strong>Contact: </strong><?php echo $candidate['contact']; ?></p>
                                                 <p class="card-text"><strong>Course: </strong><?php echo $candidate['courseName']; ?></p>
@@ -297,6 +298,25 @@
                                             </div>
                                         </div>
                                         <a href="candidateEdit.php?studentId=<?php echo $_SESSION['student_id']; ?>" class="btn btn-primary mt-3 float-right">Edit Manifesto</a>
+                                    <?php endif; ?>
+                                    <?php if ($application['status'] == 'Reject'): ?>
+                                    <div style="margin-top: 20px;"></div>
+                                        <h5 class="font-weight-bold">Your application has been rejected. Here are your application details:</h5>
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Application Info</h5>
+                                                <img src="<?php echo $application['applyPic']; ?>" class="img-profile img-fluid" title="profile images" 
+                                                style="max-width: 200px; margin-bottom:10px; border-radius: 5px; " onerror="this.onerror=null; this.src='../img/no_profile.webp'">
+                                                <p class="card-text"><strong>Name: </strong><?php echo $application['name']; ?></p>
+                                                <p class="card-text"><strong>Email: </strong><?php echo $application['email']; ?></p>
+                                                <p class="card-text"><strong>Contact: </strong><?php echo $application['contact']; ?></p>
+                                                <p class="card-text"><strong>Course: </strong><?php echo $application['course']; ?></p>
+                                                <p class="card-text"><strong>Faculty: </strong><?php echo $application['faculty']; ?></p>
+                                                <p class="card-text"><strong>Semester: </strong><?php echo $application['semester']; ?></p>
+                                                <p class="card-text"><strong>Manifesto: </strong><?php echo $application['manifesto']; ?></p>
+                                                <p class="card-text"><strong>Status: </strong><?php echo $application['status']; ?></p>
+                                            </div>
+                                        </div>
                                     <?php endif; ?>
                                 <?php else: ?>
                                         <div class="col-12 text-center mb-4">
