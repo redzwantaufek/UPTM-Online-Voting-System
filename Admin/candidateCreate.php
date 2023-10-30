@@ -39,11 +39,18 @@
         }
     }
 
-    // Check if the status parameter is set in the URL
     if (isset($_GET['status']) && isset($_GET['id'])) {
-        // Update the status of the application in the database
-        $sql = "UPDATE apply SET status = '".$_GET['status']."' WHERE id = '".$_GET['id']."'";
-        $conn->query($sql);
+        $status = $_GET['status'];
+        $id = $_GET['id'];
+    
+        $stmt = $conn->prepare("UPDATE apply SET status = ? WHERE applyId = ?");
+        $stmt->bind_param("si", $status, $id);
+    
+        if ($stmt->execute()) {
+            echo "Record updated successfully";
+        } else {
+            echo "Error updating record: " . $stmt->error;
+        }
     }
 
     // Close the database connection
@@ -269,6 +276,7 @@
 
                         <!-- Candidate Profile Card -->
                         <?php foreach ($applications as $application): ?>
+                        <?php if ($application['status'] == 'Review'): ?>
                         <div class="col-xl-12 col-md-12 mb-4">
                             <div class="card border-0 shadow h-100 py-2 rounded-lg">
                                 <div class="card-body">
@@ -293,6 +301,7 @@
                                 </div>
                             </div>
                         </div>
+                        <?php endif; ?>
                         <?php endforeach; ?>
                         <?php foreach ($applications as $application): ?>
                         <?php if ($application['status'] == 'Accept'): ?>
