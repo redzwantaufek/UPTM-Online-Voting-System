@@ -253,16 +253,18 @@
                                                             foreach ($candidates as $candidate) {
                                                                 echo '
                                                                 <div class="col-md-4">
-                                                                    <div class="card mt-3 mb-3 mr-3 ml-3 p-3">
-                                                                        <img class="card-img-top mx-auto d-block" src="'.$candidate['candidatePic'].'" alt="Candidate '.$candidate['candidateId'].'" style="max-width: 200px;">
-                                                                        <div class="card-body">
-                                                                            <h5 class="card-title">Candidate '.$candidate['candNo'].'</h5>
-                                                                            <p class="card-text">Name: '.$candidate['candidateName'].'<br>Faculty: '.$candidate['faculty'].'<br>Course: '.$candidate['courseName'].'</p>
-                                                                            <div class="form-check">
-                                                                                <input class="form-check-input" type="checkbox" name="candidate[]" value="'.$candidate['candidateId'].'">
-                                                                                <label class="form-check-label">Vote</label>
+                                                                <div class="card" style="cursor: pointer;" onclick="toggleCheckbox('.$candidate['candidateId'].'); this.style.backgroundColor = this.style.backgroundColor === \'\' ? \'#ddd\' : \'\'">
+                                                                        <div class="card mt-3 mb-3 mr-3 ml-3 p-3" style="height: 500px;">
+                                                                            <img class="card-img-top mx-auto d-block" src="'.$candidate['candidatePic'].'" alt="Candidate '.$candidate['candidateId'].'" style="width: 200px; height: 200px; object-fit: cover;">
+                                                                            <div class="card-body">
+                                                                                <h5 class="card-title">Candidate '.$candidate['candNo'].'</h5>
+                                                                                <p class="card-text">Name: '.$candidate['candidateName'].'<br>Faculty: '.$candidate['faculty'].'<br>Course: '.$candidate['courseName'].'</p>
+                                                                                </div>
+                                                                                <div class="custom-control custom-checkbox custom-checkbox-lg">
+                                                                                    <input type="checkbox" class="custom-control-input" id="customCheck'.$candidate['candidateId'].'" name="candidate[]" value="'.$candidate['candidateId'].'">
+                                                                                    <label class="custom-control-label" for="customCheck'.$candidate['candidateId'].'">Vote</label>
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
                                                                     </div>
                                                                 </div>';
                                                             }
@@ -270,12 +272,10 @@
                                                         </div>
                                                         <div class="row mt-3">
                                                             <div class="col-md-12">
-                                                                <form>
-                                                                    <!-- Add your form elements here -->
-                                                                    <button type="submit" class="btn btn-primary btn-md float-right">Vote</button>
-                                                                </form>
+                                                                <button type="submit" class="btn btn-primary btn-md float-right" id="vote-button">Vote</button>
                                                             </div>
                                                         </div>
+                    
                                                     </form>
                                                 </div>
                                             </div>
@@ -349,6 +349,31 @@
                 }
             }
         });
+    </script>
+
+    <script>
+        document.getElementById('vote-button').addEventListener('click', function(e) {
+            e.preventDefault();
+            var form = document.getElementById('vote-form');
+            var formData = new FormData(form);
+            fetch('vote_process.php', {
+                method: 'POST',
+                body: formData
+            }).then(function(response) {
+                return response.text();
+            }).then(function(text) {
+                console.log(text);
+            }).catch(function(error) {
+                console.error(error);
+            });
+        });
+    </script>
+
+    <script>
+        function toggleCheckbox(candidateId) {
+            const checkbox = document.getElementById('customCheck' + candidateId);
+            checkbox.checked = !checkbox.checked;
+        }
     </script>
 
 
