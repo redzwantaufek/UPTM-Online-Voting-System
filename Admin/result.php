@@ -244,12 +244,58 @@
                     <h1 class="h3 mb-2 text-gray-800">Election Result</h1>
                     <p class="mb-4">2023/2024 Majlis Perwakilan Pelajar Election Result</a>.</p>
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+                        
                     </div>
 
                     <!-- Content Row -->
                     <div class="row">
+
+                    <!-- Election Result Card -->
+                    <div class="col-xl-12 col-md-12 mb-4">
+                        <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-md font-weight-bold text-primary text-uppercase mb-1">
+                                            Election Result</div>
+                                        
+                                            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm float-left mb-3"><i
+                                                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Candidate Name</th>
+                                                    <th scope="col">Candidate No</th>
+                                                    <th scope="col">Votes</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                // Query to select the election results from the database
+                                                $sql = "SELECT candidate.candidateName, candidate.candNo, COUNT(vote.candidateId) as votes FROM candidate LEFT JOIN vote ON candidate.candidateId = vote.candidateId GROUP BY candidate.candidateId";
+                                                // Execute the query
+                                                $result = $conn->query($sql);
+                                                // Check if the table has any data
+                                                if ($result->num_rows > 0) {
+                                                    // Fetch the data
+                                                    while($row = $result->fetch_assoc()) {
+                                                        echo '<tr>';
+                                                        echo '<td>'.$row['candidateName'].'</td>';
+                                                        echo '<td>'.$row['candNo'].'</td>';
+                                                        echo '<td>'.$row['votes'].'</td>';
+                                                        echo '</tr>';
+                                                    }
+                                                } else {
+                                                    echo '<tr><td colspan="3">No results available</td></tr>';
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                         <div class="col-xl-8 col-lg-7">
 
