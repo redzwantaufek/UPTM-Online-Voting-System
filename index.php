@@ -314,39 +314,19 @@
                                                 $row = $result->fetch_assoc();
                                                 echo '<p class="card-text"><strong>Election Title: </strong>'.$row['elecTitle'].'</p>';
                                                 echo '<p class="card-text"><strong>Information: </strong>'.$row['info'].'</p>';
-                                                // Query to select the winner details from the candidate table
-                                                $sql = "SELECT * FROM candidate WHERE candidateName = '".$row['candName']."'";
+                                                // Query to select all candidate names from the announcement table
+                                                $sql = "SELECT candName FROM announcement";
                                                 // Execute the query
                                                 $result = $conn->query($sql);
                                                 // Check if the table has any data
                                                 if ($result->num_rows > 0) {
                                                     // Fetch the data
-                                                    $winner = $result->fetch_assoc();
-                                                    // Display the winner data in a Bootstrap table
-                                                    echo '<table class="table table-striped">';
-                                                    echo '<thead>';
-                                                    echo '<tr>';
-                                                    echo '<th>Name</th>';
-                                                    echo '<th>Email</th>';
-                                                    echo '<th>Course</th>';
-                                                    echo '<th>Faculty</th>';
-                                                    echo '<th>Manifesto</th>';
-                                                    echo '<th>Link</th>';
-                                                    echo '</tr>';
-                                                    echo '</thead>';
-                                                    echo '<tbody>';
-                                                    echo '<tr>';
-                                                    echo '<td>'.$winner['candidateName'].'</td>';
-                                                    echo '<td>'.$winner['email'].'</td>';
-                                                    echo '<td>'.$winner['courseName'].'</td>';
-                                                    echo '<td>'.$winner['faculty'].'</td>';
-                                                    echo '<td>'.$winner['manifesto'].'</td>';
-                                                    echo '<td><a href="'.$winner['links'].'" target="_blank">View</a></td>';
-                                                    echo '</tr>';
-                                                    echo '</tbody>';
-                                                    echo '</table>';
+                                                    while($row = $result->fetch_assoc()) {
+                                                        // Display each candidate name
+                                                        echo '<p class="card-text"><strong>Candidate Name: </strong>'.$row['candName'].'</p>';
+                                                    }
                                                 } else {
-                                                    echo '<p class="card-text">No winner information available</p>';
+                                                    echo '<p class="card-text">No candidate information available</p>';
                                                 }
                                             } else {
                                                 echo '<p class="card-text">No information available</p>';
