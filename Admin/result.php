@@ -242,7 +242,15 @@
                     
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">Election Result</h1>
-                    <p class="mb-4">2023/2024 Majlis Perwakilan Pelajar Election Result</a>.</p>
+                    <?php
+                    // Query to select the latest election name from the election table
+                    $sql = "SELECT electionTitle FROM election ORDER BY electionId DESC LIMIT 1";
+                    // Execute the query
+                    $result = $conn->query($sql);
+                    // Fetch the election name
+                    $electionName = $result->fetch_assoc()['electionTitle'];
+                    ?>
+                    <p class="mb-4"><?php echo $electionName; ?> Election Result</a>.</p>
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         
                     </div>
@@ -264,6 +272,7 @@
                                         <table class="table table-striped">
                                             <thead>
                                                 <tr>
+                                                    <th scope="col">No</th>
                                                     <th scope="col">Candidate Name</th>
                                                     <th scope="col">Candidate No</th>
                                                     <th scope="col">Votes</th>
@@ -277,16 +286,21 @@
                                                 $result = $conn->query($sql);
                                                 // Check if the table has any data
                                                 if ($result->num_rows > 0) {
+                                                    // Initialize row number
+                                                    $no = 1;
                                                     // Fetch the data
                                                     while($row = $result->fetch_assoc()) {
                                                         echo '<tr>';
+                                                        echo '<td>'.$no.'</td>';
                                                         echo '<td>'.$row['candidateName'].'</td>';
                                                         echo '<td>'.$row['candNo'].'</td>';
                                                         echo '<td>'.$row['votes'].'</td>';
                                                         echo '</tr>';
+                                                        // Increment row number
+                                                        $no++;
                                                     }
                                                 } else {
-                                                    echo '<tr><td colspan="3">No results available</td></tr>';
+                                                    echo '<tr><td colspan="4">No results available</td></tr>';
                                                 }
                                                 ?>
                                             </tbody>
