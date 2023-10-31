@@ -37,12 +37,11 @@
     // Update announcement information if form is submitted
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $elecTitle = $_POST['elecTitle'];
-        $candName = $_POST['candName'];
         $info = $_POST['info'];
 
-        $sql = "UPDATE announcement SET elecTitle = ?, candName = ?, info = ? WHERE annId = ?";
+        $sql = "UPDATE announcement SET elecTitle = ?, info = ? WHERE annId = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssi", $elecTitle, $candName, $info, $annIdToEdit);
+        $stmt->bind_param("ssi", $elecTitle, $info, $annIdToEdit);
         $stmt->execute();
 
         header('Location: electionView.php');
@@ -286,10 +285,7 @@
                                                     <label for="elecTitle">Election Title</label>
                                                     <input type="text" class="form-control" id="elecTitle" name="elecTitle" value="<?php echo $announcement['elecTitle']; ?>" readonly>
                                                 </div>
-                                                <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                    <label for="candName">Candidate Name</label>
-                                                    <input type="text" class="form-control" id="candName" name="candName" value="<?php echo $announcement['candName']; ?>" readonly>
-                                                </div>
+                                                
                                                 <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                     <label for="info">Information</label>
                                                     <textarea class="form-control" id="info" name="info"><?php echo $announcement['info']; ?></textarea>

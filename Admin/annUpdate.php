@@ -12,13 +12,12 @@
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $annIdToEdit = $_POST['id'];
         $elecTitle = $_POST['elecTitle'];
-        $candName = $_POST['candName'];
         $info = $_POST['info'];
 
         // SQL query to update the announcement details
-        $sql = "UPDATE announcement SET elecTitle = ?, candName = ?, info = ? WHERE annId = ?";
+        $sql = "UPDATE announcement SET elecTitle = ?, info = ? WHERE annId = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssi", $elecTitle, $candName, $info, $annIdToEdit);
+        $stmt->bind_param("ssi", $elecTitle, $info, $annIdToEdit);
 
         if ($stmt->execute()) { // Execute the update query
             $_SESSION['message'] = "Announcement details updated successfully!";
