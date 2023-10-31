@@ -200,10 +200,16 @@
             <!-- Nav Item - Result -->
             <li class="nav-item">
                 <a class="nav-link" href="about.php">
-                    <i class="fas fa-fw fa-cog"></i>
+                    <i class="fas fa-fw fa-info-circle"></i>
                     <span>About</span></a>
             </li>
-            
+
+            <!-- Nav Item - Settings -->
+            <li class="nav-item">
+                <a class="nav-link" href="settings.php">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Settings</span></a>
+            </li>
             
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
