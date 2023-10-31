@@ -40,6 +40,33 @@
     // Execute the query
     $result = $conn->query($sql);
 
+    // If the query returns more than 0 rows, fetch the announcement
+    if ($result->num_rows > 0) {
+        $announcement = $result->fetch_assoc();
+        // Get the election title and candidate names from the database
+        $electionTitle = $announcement['elecTitle'];
+        $candidateNames = explode(",", $announcement['candName']);
+    } else {
+        // If no announcement details are found, display a message
+        echo "No announcement found";
+    }
+
+    // Query to select all candidate names from the announcement table
+    $sql = "SELECT candName FROM announcement";
+    // Execute the query
+    $result = $conn->query($sql);
+
+    // If the query returns more than 0 rows, fetch the candidate names
+    if ($result->num_rows > 0) {
+        $allCandidateNames = [];
+        while($row = $result->fetch_assoc()) {
+            array_push($allCandidateNames, $row['candName']);
+        }
+    } else {
+        // If no candidate names are found, display a message
+        echo "No candidate names found";
+    }
+
     // Check if delete button is clicked
     if (isset($_POST['delete'])) {
         // Delete election from the database
@@ -335,7 +362,14 @@
                         </div>
                         <div class="card-body">
                             <?php if (isset($announcement)): ?>
-                                <!-- Announcement details here -->
+                                <p><b>Election Title:</b> <?php echo $electionTitle; ?></p>
+                                <p><b>Winner:</b></p>
+                                <ul>
+                                <?php foreach($allCandidateNames as $candidateName): ?>
+                                    <li><?php echo $candidateName; ?></li>
+                                <?php endforeach; ?>
+                                </ul>
+                                <p><b>Info:</b>  <?php echo $announcement['info']; ?></p>
                             <?php else: ?>
                                 <p>No winner announcement data available.</p>
                             <?php endif; ?>
