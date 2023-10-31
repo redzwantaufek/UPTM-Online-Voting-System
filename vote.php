@@ -38,11 +38,11 @@
         $now = new DateTime();
         if ($now < $start || $now > $end) {
             // If the current date is not within the election period, redirect to a different page or display a message
-            echo "Election has not started yet or has already ended.";
+            // Redirect to a different page
+            header('Location: voteEnd.php');
             exit();
-        }
+    } 
     } else {
-        // Redirect to a different page
         header('Location: voteEnd.php');
         exit();
     }

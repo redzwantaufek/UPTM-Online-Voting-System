@@ -68,7 +68,7 @@
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Home -->
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="index.php">
                     <i class="fas fa-fw fa-home"></i>
                     <span>Home</span></a>
@@ -95,7 +95,7 @@
             </li>
             
             <!-- Nav Item - Vote -->
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link" href="vote.php">
                     <i class="fa-solid fa-check-to-slot"></i>
                     <span>Vote</span>
@@ -188,8 +188,8 @@
                     </div>
 
                     <!-- Success Message -->
-                    <div class="alert alert-success" role="alert">
-                        Please wait for the election to start.
+                    <div class="alert alert-danger" role="alert">
+                        Please wait for the election to start or the election has ended.
                     </div>
 
                     <!-- Home Button -->
