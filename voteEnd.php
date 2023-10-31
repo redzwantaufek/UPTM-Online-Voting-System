@@ -9,74 +9,22 @@
         exit();
     }
 
-    // Query to select the voteHistory of the logged-in student
-    $sql = "SELECT votingHistory FROM student WHERE studentId = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $_SESSION['student_id']);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        if ($row['votingHistory'] == 1) {
-            // If the student has already voted, redirect to the vote success page
-            header('Location: voteSuccess.php');
-            exit();
-        }
-    } else {
-        echo "No student found";
-        exit();
-    }
-
-    // Query to select the election start and end dates
-    date_default_timezone_set('Asia/Kuala_Lumpur');
-    $sql = "SELECT start, end FROM election ORDER BY electionId DESC LIMIT 1";
-    $result = $conn->query($sql);
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $start = new DateTime($row['start']);
-        $end = new DateTime($row['end']);
-        $now = new DateTime();
-        if ($now < $start || $now > $end) {
-            // If the current date is not within the election period, redirect to a different page or display a message
-            echo "Election has not started yet or has already ended.";
-            exit();
-        }
-    } else {
-        // Redirect to a different page
-        header('Location: voteEnd.php');
-        exit();
-    }
-
-    // Query to select the election information
-    $sql = "SELECT * FROM election ORDER BY electionId DESC LIMIT 1";
-    $result = $conn->query($sql);
-    if ($result->num_rows > 0) {
-        $election = $result->fetch_assoc();
-        $voteNo = $election['voteNo']; // Add this line
-    }
-
     // Query to select the student details from the database using the student ID from the session
     $sql = "SELECT * FROM student WHERE studentId = '".$_SESSION['student_id']."'";
+    // Execute the query
     $result = $conn->query($sql);
+
+    // If the query returns more than 0 rows, fetch the student details
     if ($result->num_rows > 0) {
         $student = $result->fetch_assoc();
+        // Get the image path from the database
         $imagePath = $student['studentPic'];
     } else {
+        // If no student details are found, display an error message and exit the script
         echo "No student found";
         exit();
     }
 
-    // Query to select all candidates
-    $sql = "SELECT * FROM candidate";
-    $result = $conn->query($sql);
-    $candidates = [];
-    if ($result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) {
-            $candidates[] = $row;
-        }
-    }
-
-    $conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -90,7 +38,7 @@
     <meta name="Uptm Voting System" content="">
     <meta name="Redzwan" content="">
 
-    <title>Vote - UPTM VOTING SYSTEM</title>
+    <title>Home - UPTM VOTING SYSTEM</title>
 
     <!-- Custom fonts-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
@@ -120,7 +68,7 @@
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Home -->
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link" href="index.php">
                     <i class="fas fa-fw fa-home"></i>
                     <span>Home</span></a>
@@ -147,7 +95,7 @@
             </li>
             
             <!-- Nav Item - Vote -->
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="vote.php">
                     <i class="fa-solid fa-check-to-slot"></i>
                     <span>Vote</span>
@@ -236,73 +184,21 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Vote</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Election Status: Not Started or Ended</h1>
                     </div>
 
-                    <!-- Content Row -->
-                    <div class="row">
+                    <!-- Success Message -->
+                    <div class="alert alert-success" role="alert">
+                        Please wait for the election to start.
+                    </div>
 
-                        <!-- Election Announcement Card -->                       <div class="col-xl-12 col-md-12 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="container-fluid">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <h3>Election Information</h3>
-                                                    <ul>
-                                                        <li><strong>Title: </strong><?php echo $election['electionTitle']; ?></li>
-                                                        <li><strong>Start: </strong><?php echo date("g:i a", strtotime($election['start'])); ?></li>
-                                                        <li><strong>End: </strong><?php echo date("g:i a", strtotime($election['end'])); ?></li>
-                                                        <li><strong>Date: </strong><?php echo date("F j, Y", strtotime($election['date'])); ?></li>
-                                                        <li><strong>Election Rules: </strong><?php echo $election['rules']; ?></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <h3>Candidates</h3>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <form id="vote-form" method="POST" action="voteSubmit.php">
-                                                        <div class="row">
-                                                            <?php
-                                                            // Fetch all candidates from the database
-                                                            foreach ($candidates as $candidate) {
-                                                                echo '
-                                                                <div class="col-md-4">
-                                                                <div class="card" style="cursor: pointer;" onclick="toggleCheckbox('.$candidate['candidateId'].'); this.style.backgroundColor = this.style.backgroundColor === \'\' ? \'#ddd\' : \'\'">
-                                                                        <div class="card mt-3 mb-3 mr-3 ml-3 p-3" style="height: 500px;">
-                                                                            <img class="card-img-top mx-auto d-block" src="'.$candidate['candidatePic'].'" alt="Candidate '.$candidate['candidateId'].'" style="width: 200px; height: 200px; object-fit: cover;">
-                                                                            <div class="card-body">
-                                                                                <h5 class="card-title">Candidate '.$candidate['candNo'].'</h5>
-                                                                                <p class="card-text">Name: '.$candidate['candidateName'].'<br>Faculty: '.$candidate['faculty'].'<br>Course: '.$candidate['courseName'].'</p>
-                                                                                </div>
-                                                                                <div class="custom-control custom-checkbox custom-checkbox-lg">
-                                                                                    <input type="checkbox" class="custom-control-input" id="customCheck'.$candidate['candidateId'].'" name="candidate[]" value="'.$candidate['candidateId'].'">
-                                                                                    <label class="custom-control-label" for="customCheck'.$candidate['candidateId'].'">Vote</label>
-                                                                                </div>
-                                                                            </div>
-                                                                    </div>
-                                                                </div>';
-                                                            }
-                                                            ?>
-                                                        </div>
-                                                        <div class="row mt-3">
-                                                            <div class="col-md-12">
-                                                                <button type="submit" class="btn btn-primary btn-md float-right" id="vote-button">Vote</button>
-                                                            </div>
-                                                        </div>
-                    
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    <!-- Home Button -->
+                    <a href="index.php" class="btn btn-primary">Go to Home Page</a>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
             <!-- End of Main Content -->
 
             <!-- Footer -->
@@ -340,45 +236,11 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.php">Logout</a>
+                    <a class="btn btn-danger" href="login.php">Logout</a>
                 </div>
             </div>
         </div>
     </div>
-
-    <script>
-        const form = document.getElementById('vote-form');
-        const checkboxes = form.querySelectorAll('input[type="checkbox"]');
-        const maxVotes = <?php echo $voteNo; ?>;
-
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
-            let selectedCandidates = 0;
-            checkboxes.forEach(function(checkbox) {
-                if (checkbox.checked) {
-                    selectedCandidates++;
-                }
-            });
-            if (selectedCandidates < maxVotes) {
-                alert(`Please select at least ${maxVotes} candidates.`);
-            } else if (selectedCandidates > maxVotes) {
-                alert(`You can only select up to ${maxVotes} candidates.`);
-            } else {
-                if (confirm('Are you sure you want to submit your vote?')) {
-                    // Submit the form
-                    form.submit();
-                }
-            }
-        });
-    </script>
-
-    <script>
-        function toggleCheckbox(candidateId) {
-            const checkbox = document.getElementById('customCheck' + candidateId);
-            checkbox.checked = !checkbox.checked;
-        }
-    </script>
-
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
