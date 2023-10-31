@@ -296,11 +296,11 @@
                                                 <hr class="sidebar-divider my-1">
                                                 <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                     Start Time</div>
-                                                <input type="time" class="form-control" id="start" name="start" value="<?php echo $election['start']; ?>">
+                                                <input type="datetime-local" class="form-control" id="start" name="start" value="<?php echo $election['start']; ?>">
                                                 <hr class="sidebar-divider my-1">
                                                 <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                     End Time</div>
-                                                <input type="time" class="form-control" id="end" name="end" value="<?php echo $election['end']; ?>">
+                                                <input type="datetime-local" class="form-control" id="end" name="end" value="<?php echo $election['end']; ?>">
                                                 <hr class="sidebar-divider my-1">
                                                 <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                     Date</div>

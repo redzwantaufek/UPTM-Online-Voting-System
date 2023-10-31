@@ -274,14 +274,14 @@
                                                 $row = $result->fetch_assoc();
                                                 $start = new DateTime($row['start']);
                                                 $end = new DateTime($row['end']);
-                                                $date = new DateTime($row['date']);
                                                 $now = new DateTime();
+                                                // Check if the current time is between the start and end time
                                                 if ($now > $start && $now < $end) {
                                                     $remaining = $now->diff($end);
                                                     echo '<div id="timeRemaining" class="h5 mb-0 font-weight-bold text-gray-800 mt-3">Time Remaining: '.$remaining->format('%H:%I:%S').'</div>';
                                                 } else if ($now < $start) {
                                                     $remaining = $now->diff($start);
-                                                    echo '<div id="timeRemaining" class="h5 mb-0 font-weight-bold text-gray-800 mt-3">Time until Election Start: '.$remaining->format('%H:%I:%S').'</div>';
+                                                    echo '<div id="timeRemaining" class="h5 mb-0 font-weight-bold text-gray-800 mt-3">Time until Election Start: '.$remaining->format('%a days %H:%I:%S').'</div>';
                                                 } else {
                                                     echo '<div class="h5 mb-0 font-weight-bold text-gray-800 mt-3">Election has ended</div>';
                                                 }

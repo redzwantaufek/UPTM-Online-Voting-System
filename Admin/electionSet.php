@@ -310,11 +310,11 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="startTime">Start Time</label>
-                                            <input type="time" class="form-control" id="startTime" name="startTime" required>
+                                            <input type="datetime-local" class="form-control" id="startTime" name="startTime" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="endTime">End Time</label>
-                                            <input type="time" class="form-control" id="endTime" name="endTime" required>
+                                            <input type="datetime-local" class="form-control" id="endTime" name="endTime" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="date">Date</label>

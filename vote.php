@@ -9,23 +9,53 @@
         exit();
     }
 
+    // Query to select the election start and end dates
+    date_default_timezone_set('Asia/Kuala_Lumpur');
+    $sql = "SELECT start, end FROM election ORDER BY electionId DESC LIMIT 1";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $start = new DateTime($row['start']);
+        $end = new DateTime($row['end']);
+        $now = new DateTime();
+        if ($now < $start || $now > $end) {
+            // If the current date is not within the election period, redirect to a different page or display a message
+            echo "Election has not started yet or has already ended.";
+            exit();
+        }
+    } else {
+        echo "No election information found.";
+        exit();
+    }
+
+    // Query to select the election information
+    $sql = "SELECT * FROM election ORDER BY electionId DESC LIMIT 1";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        $election = $result->fetch_assoc();
+    }
+
     // Query to select the student details from the database using the student ID from the session
     $sql = "SELECT * FROM student WHERE studentId = '".$_SESSION['student_id']."'";
-    // Execute the query
     $result = $conn->query($sql);
-
-    // If the query returns more than 0 rows, fetch the student details
     if ($result->num_rows > 0) {
         $student = $result->fetch_assoc();
-        // Get the image path from the database
         $imagePath = $student['studentPic'];
     } else {
-        // If no student details are found, display an error message and exit the script
         echo "No student found";
         exit();
     }
 
-    // Close the database connection
+    // Query to select all candidates
+    $sql = "SELECT * FROM candidate";
+    $result = $conn->query($sql);
+    $candidates = [];
+    if ($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            $candidates[] = $row;
+        }
+    }
+
     $conn->close();
 ?>
 
@@ -196,14 +226,16 @@
                             <div class="card border-left-primary shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
-                                        <!-- FILEPATH: /c:/xampp/htdocs/Final Year Project/UPTM Online Voting System/vote.php -->
                                         <div class="container-fluid">
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <h3>Rules for Voting</h3>
+                                                    <h3>Election Information</h3>
                                                     <ul>
-                                                        <li>You can vote for up to 12 candidates out of 20.</li>
-                                                        <li>Once you have submitted your vote, you cannot change it.</li>
+                                                        <li><strong>Title: </strong><?php echo $election['electionTitle']; ?></li>
+                                                        <li><strong>Start: </strong><?php echo date("g:i a", strtotime($election['start'])); ?></li>
+                                                        <li><strong>End: </strong><?php echo date("g:i a", strtotime($election['end'])); ?></li>
+                                                        <li><strong>Date: </strong><?php echo date("F j, Y", strtotime($election['date'])); ?></li>
+                                                        <li><strong>Election Rules: </strong><?php echo $election['rules']; ?></li>
                                                     </ul>
                                                 </div>
                                             </div>
@@ -216,202 +248,25 @@
                                                 <div class="col-md-12">
                                                     <form id="vote-form">
                                                         <div class="row">
-                                                            <div class="col-md-4">
-                                                                <div class="card mt-3 mb-3 mr-3 ml-3 p-3">
-                                                                    <img class="card-img-top mx-auto d-block" src="img/undraw_profile.svg" alt="Candidate 1" style="max-width: 200px;">
-                                                                    <div class="card-body">
-                                                                        <h5 class="card-title">Candidate 1</h5>
-                                                                        <p class="card-text">Name: John Doe<br>Faculty: Faculty 1<br>Course: Course 1</p>
-                                                                        <div class="form-check">
-                                                                            <input class="form-check-input" type="checkbox" name="candidate[]" value="1">
-                                                                            <label class="form-check-label">Vote</label>
+                                                            <?php
+                                                            // Fetch all candidates from the database
+                                                            foreach ($candidates as $candidate) {
+                                                                echo '
+                                                                <div class="col-md-4">
+                                                                    <div class="card mt-3 mb-3 mr-3 ml-3 p-3">
+                                                                        <img class="card-img-top mx-auto d-block" src="'.$candidate['candidatePic'].'" alt="Candidate '.$candidate['candidateId'].'" style="max-width: 200px;">
+                                                                        <div class="card-body">
+                                                                            <h5 class="card-title">Candidate '.$candidate['candNo'].'</h5>
+                                                                            <p class="card-text">Name: '.$candidate['candidateName'].'<br>Faculty: '.$candidate['faculty'].'<br>Course: '.$candidate['courseName'].'</p>
+                                                                            <div class="form-check">
+                                                                                <input class="form-check-input" type="checkbox" name="candidate[]" value="'.$candidate['candidateId'].'">
+                                                                                <label class="form-check-label">Vote</label>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="card mt-3 mb-3 mr-3 ml-3 p-3">
-                                                                    <img class="card-img-top mx-auto d-block" src="img/undraw_profile.svg" alt="Candidate 2" style="max-width: 200px;">
-                                                                    <div class="card-body">
-                                                                        <h5 class="card-title">Candidate 2</h5>
-                                                                        <p class="card-text">Name: John Doe<br>Faculty: Faculty 1<br>Course: Course 1</p>
-                                                                        <div class="form-check">
-                                                                            <input class="form-check-input" type="checkbox" name="candidate[]" value="2">
-                                                                            <label class="form-check-label">Vote</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="card mt-3 mb-3 mr-3 ml-3 p-3">
-                                                                    <img class="card-img-top mx-auto d-block" src="img/undraw_profile.svg" alt="Candidate 3" style="max-width: 200px;">
-                                                                    <div class="card-body">
-                                                                        <h5 class="card-title">Candidate 3</h5>
-                                                                        <p class="card-text">Name: John Doe<br>Faculty: Faculty 1<br>Course: Course 1</p>
-                                                                        <div class="form-check">
-                                                                            <input class="form-check-input" type="checkbox" name="candidate[]" value="3">
-                                                                            <label class="form-check-label">Vote</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="card mt-3 mb-3 mr-3 ml-3 p-3">
-                                                                    <img class="card-img-top mx-auto d-block" src="img/undraw_profile.svg" alt="Candidate 4" style="max-width: 200px;">
-                                                                    <div class="card-body">
-                                                                        <h5 class="card-title">Candidate 4</h5>
-                                                                        <p class="card-text">Name: John Doe<br>Faculty: Faculty 1<br>Course: Course 1</p>
-                                                                        <div class="form-check">
-                                                                            <input class="form-check-input" type="checkbox" name="candidate[]" value="4">
-                                                                            <label class="form-check-label">Vote</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="card mt-3 mb-3 mr-3 ml-3 p-3">
-                                                                    <img class="card-img-top mx-auto d-block" src="img/undraw_profile.svg" alt="Candidate 5" style="max-width: 200px;">
-                                                                    <div class="card-body">
-                                                                        <h5 class="card-title">Candidate 5</h5>
-                                                                        <p class="card-text">Name: John Doe<br>Faculty: Faculty 1<br>Course: Course 1</p>
-                                                                        <div class="form-check">
-                                                                            <input class="form-check-input" type="checkbox" name="candidate[]" value="5">
-                                                                            <label class="form-check-label">Vote</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="card mt-3 mb-3 mr-3 ml-3 p-3">
-                                                                    <img class="card-img-top mx-auto d-block" src="img/undraw_profile.svg" alt="Candidate 6" style="max-width: 200px;">
-                                                                    <div class="card-body">
-                                                                        <h5 class="card-title">Candidate 6</h5>
-                                                                        <p class="card-text">Name: John Doe<br>Faculty: Faculty 1<br>Course: Course 1</p>
-                                                                        <div class="form-check">
-                                                                            <input class="form-check-input" type="checkbox" name="candidate[]" value="6">
-                                                                            <label class="form-check-label">Vote</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="card mt-3 mb-3 mr-3 ml-3 p-3">
-                                                                    <img class="card-img-top mx-auto d-block" src="img/undraw_profile.svg" alt="Candidate 7" style="max-width: 200px;">
-                                                                    <div class="card-body">
-                                                                        <h5 class="card-title">Candidate 7</h5>
-                                                                        <p class="card-text">Name: John Doe<br>Faculty: Faculty 1<br>Course: Course 1</p>
-                                                                        <div class="form-check">
-                                                                            <input class="form-check-input" type="checkbox" name="candidate[]" value="7">
-                                                                            <label class="form-check-label">Vote</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="card mt-3 mb-3 mr-3 ml-3 p-3">
-                                                                    <img class="card-img-top mx-auto d-block" src="img/undraw_profile.svg" alt="Candidate 8" style="max-width: 200px;">
-                                                                    <div class="card-body">
-                                                                        <h5 class="card-title">Candidate 8</h5>
-                                                                        <p class="card-text">Name: John Doe<br>Faculty: Faculty 1<br>Course: Course 1</p>
-                                                                        <div class="form-check">
-                                                                            <input class="form-check-input" type="checkbox" name="candidate[]" value="8">
-                                                                            <label class="form-check-label">Vote</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="card mt-3 mb-3 mr-3 ml-3 p-3">
-                                                                    <img class="card-img-top mx-auto d-block" src="img/undraw_profile.svg" alt="Candidate 9" style="max-width: 200px;">
-                                                                    <div class="card-body">
-                                                                        <h5 class="card-title">Candidate 9</h5>
-                                                                        <p class="card-text">Name: John Doe<br>Faculty: Faculty 1<br>Course: Course 1</p>
-                                                                        <div class="form-check">
-                                                                            <input class="form-check-input" type="checkbox" name="candidate[]" value="9">
-                                                                            <label class="form-check-label">Vote</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="card mt-3 mb-3 mr-3 ml-3 p-3">
-                                                                    <img class="card-img-top mx-auto d-block" src="img/undraw_profile.svg" alt="Candidate 10" style="max-width: 200px;">
-                                                                    <div class="card-body">
-                                                                        <h5 class="card-title">Candidate 10</h5>
-                                                                        <p class="card-text">Name: John Doe<br>Faculty: Faculty 1<br>Course: Course 1</p>
-                                                                        <div class="form-check">
-                                                                            <input class="form-check-input" type="checkbox" name="candidate[]" value="10">
-                                                                            <label class="form-check-label">Vote</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="card mt-3 mb-3 mr-3 ml-3 p-3">
-                                                                    <img class="card-img-top mx-auto d-block" src="img/undraw_profile.svg" alt="Candidate 11" style="max-width: 200px;">
-                                                                    <div class="card-body">
-                                                                        <h5 class="card-title">Candidate 11</h5>
-                                                                        <p class="card-text">Name: John Doe<br>Faculty: Faculty 1<br>Course: Course 1</p>
-                                                                        <div class="form-check">
-                                                                            <input class="form-check-input" type="checkbox" name="candidate[]" value="11">
-                                                                            <label class="form-check-label">Vote</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="card mt-3 mb-3 mr-3 ml-3 p-3">
-                                                                    <img class="card-img-top mx-auto d-block" src="img/undraw_profile.svg" alt="Candidate 12" style="max-width: 200px;">
-                                                                    <div class="card-body">
-                                                                        <h5 class="card-title">Candidate 12</h5>
-                                                                        <p class="card-text">Name: John Doe<br>Faculty: Faculty 1<br>Course: Course 1</p>
-                                                                        <div class="form-check">
-                                                                            <input class="form-check-input" type="checkbox" name="candidate[]" value="12">
-                                                                            <label class="form-check-label">Vote</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="card mt-3 mb-3 mr-3 ml-3 p-3">
-                                                                    <img class="card-img-top mx-auto d-block" src="img/undraw_profile.svg" alt="Candidate 13" style="max-width: 200px;">
-                                                                    <div class="card-body">
-                                                                        <h5 class="card-title">Candidate 13</h5>
-                                                                        <p class="card-text">Name: John Doe<br>Faculty: Faculty 1<br>Course: Course 1</p>
-                                                                        <div class="form-check">
-                                                                            <input class="form-check-input" type="checkbox" name="candidate[]" value="13">
-                                                                            <label class="form-check-label">Vote</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="card mt-3 mb-3 mr-3 ml-3 p-3">
-                                                                    <img class="card-img-top mx-auto d-block" src="img/undraw_profile.svg" alt="Candidate 14" style="max-width: 200px;">
-                                                                    <div class="card-body">
-                                                                        <h5 class="card-title">Candidate 14</h5>
-                                                                        <p class="card-text">Name: John Doe<br>Faculty: Faculty 1<br>Course: Course 1</p>
-                                                                        <div class="form-check">
-                                                                            <input class="form-check-input" type="checkbox" name="candidate[]" value="14">
-                                                                            <label class="form-check-label">Vote</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="card mt-3 mb-3 mr-3 ml-3 p-3">
-                                                                    <img class="card-img-top mx-auto d-block" src="img/undraw_profile.svg" alt="Candidate 15" style="max-width: 200px;">
-                                                                    <div class="card-body">
-                                                                        <h5 class="card-title">Candidate 15</h5>
-                                                                        <p class="card-text">Name: John Doe<br>Faculty: Faculty 1<br>Course: Course 1</p>
-                                                                        <div class="form-check">
-                                                                            <input class="form-check-input" type="checkbox" name="candidate[]" value="15">
-                                                                            <label class="form-check-label">Vote</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <!-- Repeat the above code block for each candidate -->
+                                                                </div>';
+                                                            }
+                                                            ?>
                                                         </div>
                                                         <div class="row mt-3">
                                                             <div class="col-md-12">
@@ -421,6 +276,7 @@
                                                                 </form>
                                                             </div>
                                                         </div>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>

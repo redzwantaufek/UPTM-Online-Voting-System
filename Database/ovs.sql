@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 30, 2023 at 03:26 PM
+-- Generation Time: Oct 31, 2023 at 10:09 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -119,15 +119,16 @@ CREATE TABLE `candidate` (
   `email` varchar(255) NOT NULL,
   `manifesto` text NOT NULL,
   `links` varchar(255) NOT NULL,
-  `contact` varchar(255) NOT NULL
+  `contact` varchar(255) NOT NULL,
+  `voteNum` int(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `candidate`
 --
 
-INSERT INTO `candidate` (`candidateId`, `studentId`, `candNo`, `candidateName`, `candidatePic`, `faculty`, `courseName`, `email`, `manifesto`, `links`, `contact`) VALUES
-(4, 1, 1, 'Muhammad Redzwan', 'uploads/pic1.jpg', 'FCOM', 'CC101 - Diploma in Computer Science', 'taufekredzwan@gmail.com', 'Free Porsche For Each Students and Free Popcorn Delights', 'https://www.facebook.com/redzwan.taufek', '0194678990');
+INSERT INTO `candidate` (`candidateId`, `studentId`, `candNo`, `candidateName`, `candidatePic`, `faculty`, `courseName`, `email`, `manifesto`, `links`, `contact`, `voteNum`) VALUES
+(4, 1, 1, 'Muhammad Redzwan', 'uploads/pic1.jpg', 'FCOM', 'CC101 - Diploma in Computer Science', 'taufekredzwan@gmail.com', 'Free Porsche For Each Students and Free Popcorn Delights', 'https://www.facebook.com/redzwan.taufek', '0194678990', 0);
 
 -- --------------------------------------------------------
 
@@ -139,8 +140,8 @@ CREATE TABLE `election` (
   `electionId` int(11) NOT NULL,
   `electionTitle` varchar(255) NOT NULL,
   `voteNo` int(50) NOT NULL,
-  `start` time NOT NULL,
-  `end` time NOT NULL,
+  `start` datetime NOT NULL,
+  `end` datetime NOT NULL,
   `date` date NOT NULL,
   `rules` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -169,8 +170,8 @@ CREATE TABLE `student` (
 --
 
 INSERT INTO `student` (`studentId`, `studentPic`, `studentName`, `email`, `password`, `contact`, `votingHistory`, `course`, `faculty`, `apply`) VALUES
-(1, 'uploads/profile5m.avif', 'Muhammad Redzwan', 'taufekredzwan@gmail.com', '14250', '0194678990', 0, 'CC101 - Diploma in Computer Science', 'FCOM', 1),
-(2, 'uploads/profile6m.png', 'nur', 'nur@gmail.com', '12345', '123456789', 0, 'Nur', 'Nur', 0),
+(1, 'uploads/profile5m.avif', 'Muhammad Redzwan', 'taufekredzwan@gmail.com', '14250', '0194678990', 1, 'CC101 - Diploma in Computer Science', 'FCOM', 1),
+(2, 'uploads/profile6m.png', 'nur', 'nur@gmail.com', '12345', '123456789', 1, 'Nur', 'Nur', 0),
 (5, 'uploads/profile3f.png', 'Nur Helen', 'helen@gmail.com', '1425', '1023874659', 0, 'CC101 - Computer Science', 'FCOM', 0),
 (6, 'uploads/pic1.jpg', 'Porsche', 'porsche@gmail.com', '1425', '019345334', 0, 'CC101', 'FCOM', 0);
 
@@ -262,7 +263,7 @@ ALTER TABLE `analytic`
 -- AUTO_INCREMENT for table `announcement`
 --
 ALTER TABLE `announcement`
-  MODIFY `annId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `annId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `apply`
@@ -280,7 +281,7 @@ ALTER TABLE `candidate`
 -- AUTO_INCREMENT for table `election`
 --
 ALTER TABLE `election`
-  MODIFY `electionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `electionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `student`
