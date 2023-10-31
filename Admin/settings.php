@@ -25,8 +25,7 @@
         exit();
     }
 
-    // Close the database connection
-    $conn->close();
+   
 ?>
 
 <!DOCTYPE html>
@@ -130,6 +129,7 @@
                         <h6 class="collapse-header">MENU</h6>
                         <a class="collapse-item" href="electionView.php">Election View</a>
                         <a class="collapse-item" href="electionSet.php">Election Set Up</a>
+                        <a class="collapse-item" href="annSet.php">Election Announcement</a>
                     </div>
                 </div>
             </li>
@@ -165,19 +165,19 @@
             </li>
 
             <!-- Nav Item - Result -->
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="about.php">
                     <i class="fas fa-fw fa-info-circle"></i>
                     <span>About</span></a>
             </li>
 
             <!-- Nav Item - Settings -->
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link" href="settings.php">
                     <i class="fas fa-fw fa-cog"></i>
                     <span>Settings</span></a>
             </li>
-  
+
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 
@@ -244,56 +244,50 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">About</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Settings</h1>
                     </div>
 
-                    <!-- Content Row -->
+                    <!-- Election Reset Setting -->
                     <div class="row">
-
-                        <!-- UPTM Picture Card -->
-                        <div class="col-xl-12 col-md-12 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-md font-weight-bold text-primary text-uppercase mb-1">
-                                                Universiti Poly-Tech Malaysia (UPTM)</div>
-                                                <img src="img/uptm.jpg" alt="" class="img-fluid logo-img" style="max-width: 300px; max-height: 300px;">
-                                                <div class="col mr-2">
-                                                    <p class="mb-0 text-justify">
-                                                        <br>
-                                                        UPTM is a higher learning institute that nurtures students with moral values and humanity in every aspect of learning and human capital development, while ensuring every individual are given equal opportunity to shape their success in the professional scope through a variety of technology and knowledge. This is what UPTM is all about, offering recognised certification and transforming graduates into professionals of high standards of morality.
-                                                    </p>
-                                                </div>
-                                        </div>
-                                    </div>
+                        <div class="col-lg-12">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Election Reset</h6>
                                 </div>
-                            </div>
-                        </div>
-
-                        <!-- Information Card -->
-                        <div class="col-xl-12 col-md-12 mb-4">
-                            <div class="card border-left-info shadow h-100 py-2">
                                 <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-md font-weight-bold text-info text-uppercase mb-1">About UPTM Online Voting System
-                                            </div>
-                                            <p class="mb-0 text-justify">UPTM Online Voting System is a web application designed to facilitate the voting process for the Universiti Poly-Tech Malaysia. This system allows students to vote for their preferred candidates for the student council elections.</p>
-                                            <br>
-                                            <p class="mb-0">For any inquiries, please contact us at:</p>
-                                            <ul>
-                                                <li>Faculty: Faculty of Computing and Multimedia</li>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                    <p>This setting allows you to reset all the data related to the election. Before starting a new election, the admin needs to reset the data.</p>
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#resetModal">
+                                        Reset
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Reset Modal-->
+                    <div class="modal fade" id="resetModal" tabindex="-1" role="dialog" aria-labelledby="resetModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="resetModalLabel">Confirm Reset</h5>
+                                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">Are you sure you want to reset the election?</div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                    <button class="btn btn-primary" type="button">Confirm Reset</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        
 
                 </div>
                 <!-- /.container-fluid -->
+
             </div>
             <!-- End of Main Content -->
 
@@ -354,6 +348,26 @@
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function updateTimeRemaining() {
+            $.ajax({
+                url: 'getTime.php',
+                success: function(data) {
+                    $('#timeRemaining').text(data);
+                }
+            });
+        }
+
+        // Update the time remaining every second
+        setInterval(updateTimeRemaining, 1000);
+    </script>
+
+    <?php
+    // Close the database connection
+    $conn->close();
+    ?>
     
 
 </body>
