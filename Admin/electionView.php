@@ -35,15 +35,10 @@
         $election = $result->fetch_assoc();
     } 
 
-    // Fetch announcement information from the database
+    // Query to select the latest announcement from the database
     $sql = "SELECT * FROM announcement ORDER BY annId DESC LIMIT 1";
+    // Execute the query
     $result = $conn->query($sql);
-
-    // Check if the query returns any rows
-    if ($result->num_rows > 0) {
-        // Output data of each row
-        $announcement = $result->fetch_assoc();
-    }
 
     // Check if delete button is clicked
     if (isset($_POST['delete'])) {
@@ -340,9 +335,7 @@
                         </div>
                         <div class="card-body">
                             <?php if (isset($announcement)): ?>
-                                <p><b>Election Title:</b> <?php echo $announcement['elecTitle']; ?></p>
-                                <p><b>Winner:</b> <?php echo $announcement['candName']; ?></p>
-                                <p><b>Info:</b> <?php echo $announcement['info']; ?></p>
+                                <!-- Announcement details here -->
                             <?php else: ?>
                                 <p>No winner announcement data available.</p>
                             <?php endif; ?>

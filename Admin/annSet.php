@@ -27,17 +27,25 @@
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (isset($_POST['electionNameAnn'])) {
-            // Code to handle the election announcement form submission
             $electionNameAnn = $_POST['electionNameAnn'];
-            $candidateName = $_POST['candidateName'];
+            $candidateNames = $_POST['candidateName']; // This is an array
             $shortInfo = $_POST['shortInfo'];
-
-            // Insert these values into the database and make the announcement
-            $sql = "INSERT INTO announcement (elecTitle, candName, info) VALUES ('$electionNameAnn', '$candidateName', '$shortInfo')";
-            if ($conn->query($sql) === TRUE) {
+    
+            // Prepare the SQL statement
+            $sql = "INSERT INTO announcement (elecTitle, candName, info) VALUES (?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+    
+            // Insert a new row for each selected name
+            foreach ($candidateNames as $candidateName) {
+                $stmt->bind_param("sss", $electionNameAnn, $candidateName, $shortInfo);
+                if (!$stmt->execute()) {
+                    $_SESSION['error'] = "Error: " . $stmt->error;
+                    break;
+                }
+            }
+    
+            if (!isset($_SESSION['error'])) {
                 $_SESSION['success'] = "New announcement created successfully";
-            } else {
-                $_SESSION['error'] = "Error: " . $sql . "<br>" . $conn->error;
             }
         }
     }
@@ -337,7 +345,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="candidateName">Candidate Name</label>
-                                            <select multiple class="form-control" id="candidateName" name="candidateName" required>
+                                            <select multiple class="form-control" id="candidateName" name="candidateName[]" multiple required>
                                                 <?php foreach($candidateNames as $candidateName): ?>
                                                     <option value="<?php echo $candidateName; ?>" selected><?php echo $candidateName; ?></option>
                                                 <?php endforeach; ?>

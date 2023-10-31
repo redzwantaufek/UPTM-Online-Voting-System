@@ -25,8 +25,7 @@
         exit();
     }
 
-    // Close the database connection
-    $conn->close();
+   
 ?>
 
 <!DOCTYPE html>
@@ -241,8 +240,6 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-                        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
                     </div>
 
                     <!-- Content Row -->
@@ -256,7 +253,22 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                 Voting Percentage</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">100%</div>
+                                            <?php
+                                            // Query to select the voting history from the student table
+                                            $sql = "SELECT COUNT(*) as totalStudents, SUM(votingHistory) as totalVotes FROM student";
+                                            // Execute the query
+                                            $result = $conn->query($sql);
+                                            // Check if the table has any data
+                                            if ($result->num_rows > 0) {
+                                                // Fetch the data
+                                                $row = $result->fetch_assoc();
+                                                // Calculate the voting percentage
+                                                $votingPercentage = ($row['totalVotes'] / $row['totalStudents']) * 100;
+                                                echo '<div class="h5 mb-0 font-weight-bold text-gray-800">'.number_format($votingPercentage, 2).'%</div>';
+                                            } else {
+                                                echo '<div class="h5 mb-0 font-weight-bold text-gray-800">No information available</div>';
+                                            }
+                                            ?>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fa-solid fa-check-to-slot fa-2x text-gray-300"></i>
@@ -266,18 +278,32 @@
                             </div>
                         </div>
 
-                        <!-- Leading Card Example -->
+                        <!-- Election Date Card Example -->
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-success shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Leading</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Ali bin Abu</div>
+                                                Election Date</div>
+                                            <?php
+                                            // Query to select the election date from the election table
+                                            $sql = "SELECT date FROM election ORDER BY date DESC LIMIT 1";
+                                            // Execute the query
+                                            $result = $conn->query($sql);
+                                            // Check if the table has any data
+                                            if ($result->num_rows > 0) {
+                                                // Fetch the data
+                                                $row = $result->fetch_assoc();
+                                                // Display the election date
+                                                echo '<div class="h5 mb-0 font-weight-bold text-gray-800">'.$row['date'].'</div>';
+                                            } else {
+                                                echo '<div class="h5 mb-0 font-weight-bold text-gray-800">No information available</div>';
+                                            }
+                                            ?>
                                         </div>
                                         <div class="col-auto">
-                                            <i class="fa-solid fa-hand-fist fa-2x text-gray-300"></i>
+                                            <i class="fa-solid fa-calendar-day fa-2x text-gray-300"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -292,18 +318,33 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Election Time
                                             </div>
-                                            <div class="row no-gutters align-items-center">
-                                                <div class="col-auto">
-                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">1:00:00</div>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="progress progress-sm mr-2">
-                                                        <div class="progress-bar bg-info" role="progressbar"
-                                                            style="width: 50%" aria-valuenow="50" aria-valuemin="0"
-                                                            aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <?php
+                                            date_default_timezone_set('Asia/Kuala_Lumpur');
+                                            // Query to select the start, end time and date from the election table
+                                            $sql = "SELECT start, end, date FROM election ORDER BY electionId DESC LIMIT 1";
+                                            // Execute the query
+                                            $result = $conn->query($sql);
+                                            // Check if the table has any data
+                                            if ($result->num_rows > 0) {
+                                                // Fetch the data
+                                                $row = $result->fetch_assoc();
+                                                $start = new DateTime($row['start']);
+                                                $end = new DateTime($row['end']);
+                                                $now = new DateTime();
+                                                // Check if the current time is between the start and end time
+                                                if ($now > $start && $now < $end) {
+                                                    $remaining = $now->diff($end);
+                                                    echo '<div id="timeRemaining" class="h5 mb-0 font-weight-bold text-gray-800 mt-3">Time Remaining: '.$remaining->format('%H:%I:%S').'</div>';
+                                                } else if ($now < $start) {
+                                                    $remaining = $now->diff($start);
+                                                    echo '<div id="timeRemaining" class="h5 mb-0 font-weight-bold text-gray-800 mt-3">Time until Election Start: <br>'.$remaining->format('%a days %H:%I:%S').'</div>';
+                                                } else {
+                                                    echo '<div class="h5 mb-0 font-weight-bold text-gray-800 mt-3">Election has ended</div>';
+                                                }
+                                            } else {
+                                                echo '<div class="h5 mb-0 font-weight-bold text-gray-800 mt-3">No information available</div>';
+                                            }
+                                            ?>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fa-solid fa-clock fa-2x text-gray-300"></i>
@@ -321,7 +362,15 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                                 Total Candidates</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                                            <?php
+                                            // Query to select the total number of candidates from the candidate table
+                                            $sql = "SELECT COUNT(*) as total FROM candidate";
+                                            // Execute the query
+                                            $result = $conn->query($sql);
+                                            // Fetch the data
+                                            $row = $result->fetch_assoc();
+                                            echo '<div class="h5 mb-0 font-weight-bold text-gray-800">'.$row['total'].'</div>';
+                                            ?>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fa-solid fa-user-group fa-2x text-gray-300"></i>
@@ -405,26 +454,39 @@
                     <!-- Content Row -->
                     <div class="row">
 
-                        <div class="col-lg-6 mb-4">
-
-                            <!-- Illustrations -->
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Election Information</h6>
-                                </div>
+                        <!-- Election Details Card -->
+                        <div class="col-xl-12 col-md-12 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
                                 <div class="card-body">
-                                    <div class="text-center">
-                                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"
-                                            src="img/undraw_posting_photo.svg" alt="...">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-md font-weight-bold text-primary text-uppercase mb-1">
+                                                Election Details</div>
+                                            <?php
+                                            // Query to select the election details from the database
+                                            $sql = "SELECT * FROM election ORDER BY electionId DESC LIMIT 1";
+                                            // Execute the query
+                                            $result = $conn->query($sql);
+                                            // Check if the table has any data
+                                            if ($result->num_rows > 0) {
+                                                // Fetch the data
+                                                $row = $result->fetch_assoc();
+                                                echo '<div class="h5 mb-0 font-weight-bold text-gray-800">Election Title: '.$row['electionTitle'].'</div>';
+                                                echo '<div style="margin-top: 20px;"></div>';
+                                                echo '<p class="card-text"><strong>Start Time: </strong> '.date("g:i a", strtotime($row['start'])).'</p>';
+                                                echo '<p class="card-text"><strong>End Time: </strong> '.date("g:i a", strtotime($row['end'])).'</p>';
+                                                echo '<p class="card-text"><strong>Date: </strong> '.date("F j, Y", strtotime($row['date'])).'</p>';
+                                                echo '<p class="card-text"><strong>Rules: </strong> '.$row['rules'].'</p>';
+                                            } else {
+                                                echo '<div class="h5 mb-0 font-weight-bold text-gray-800">No information available</div>';
+                                            }
+                                            ?>
+                                        </div>
                                     </div>
-                                    <p>Add some quality, svg illustrations to your project courtesy of <a
-                                            target="_blank" rel="nofollow" href="https://undraw.co/">unDraw</a>, a
-                                        constantly updated collection of beautiful svg images that you can use
-                                        completely free and without attribution!</p>
                                 </div>
                             </div>
-
                         </div>
+
                     </div>
 
                 </div>
@@ -490,6 +552,26 @@
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function updateTimeRemaining() {
+            $.ajax({
+                url: 'getTime.php',
+                success: function(data) {
+                    $('#timeRemaining').text(data);
+                }
+            });
+        }
+
+        // Update the time remaining every second
+        setInterval(updateTimeRemaining, 1000);
+    </script>
+
+    <?php
+    // Close the database connection
+    $conn->close();
+    ?>
     
 
 </body>
