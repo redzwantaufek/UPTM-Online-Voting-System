@@ -52,6 +52,34 @@
         $electionNames = $result->fetch_all(MYSQLI_ASSOC);
     } 
 
+    // Query to select the electionId and voteNo from the latest election
+    $sql = "SELECT electionId, voteNo FROM election ORDER BY electionId DESC LIMIT 1";
+    $result = $conn->query($sql);
+    $row = $result->fetch_assoc();
+    $electionId = $row['electionId'];
+    $voteNo = $row['voteNo'];
+
+    // Query to select the candidate names with the highest vote numbers from the same election
+    $sql = "SELECT c.candidateName, COUNT(v.voteId) as voteCount 
+            FROM vote v 
+            JOIN candidate c ON v.candidateId = c.candidateId 
+            WHERE v.electionId = ?
+            GROUP BY v.candidateId 
+            ORDER BY voteCount DESC 
+            LIMIT ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ii", $electionId, $voteNo);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    // Fetch the candidate names
+    $candidateNames = array();
+    while ($row = $result->fetch_assoc()) {
+        $candidateNames[] = $row['candidateName'];
+    }
+
+    // Now $candidateNames contains the names of the candidates with the highest vote numbers from the same election
+
 ?>
 
 <!DOCTYPE html>
@@ -310,21 +338,9 @@
                                         <div class="form-group">
                                             <label for="candidateName">Candidate Name</label>
                                             <select multiple class="form-control" id="candidateName" name="candidateName" required>
-                                                <?php
-                                                    // Fetch candidate names from the database
-                                                    $sql = "SELECT candidateName FROM candidate";
-                                                    $result = $conn->query($sql);
-
-                                                    // Check if the query returns any rows
-                                                    if ($result->num_rows > 0) {
-                                                        // Output data of each row
-                                                        while($row = $result->fetch_assoc()) {
-                                                            echo "<option value='".$row["candidateName"]."'>".$row["candidateName"]."</option>";
-                                                        }
-                                                    } else {
-                                                        echo "No candidates found";
-                                                    }
-                                                ?>
+                                                <?php foreach($candidateNames as $candidateName): ?>
+                                                    <option value="<?php echo $candidateName; ?>" selected><?php echo $candidateName; ?></option>
+                                                <?php endforeach; ?>
                                             </select>
                                         </div>
                                         <div class="form-group">
