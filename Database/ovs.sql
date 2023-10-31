@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 31, 2023 at 10:09 AM
+-- Generation Time: Oct 31, 2023 at 12:34 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -100,7 +100,9 @@ CREATE TABLE `apply` (
 --
 
 INSERT INTO `apply` (`applyId`, `studentId`, `applyPic`, `name`, `email`, `contact`, `course`, `faculty`, `semester`, `manifesto`, `link`, `status`) VALUES
-(29, 1, 'uploads/pic1.jpg', 'Muhammad Redzwan', 'taufekredzwan@gmail.com', '0194678990', 'CC101 - Diploma in Computer Science', 'FCOM', 'Semester 6', 'Free Porsche For Each Students', '', 'Accept');
+(29, 1, 'uploads/pic1.jpg', 'Muhammad Redzwan', 'taufekredzwan@gmail.com', '0194678990', 'CC101 - Diploma in Computer Science', 'FCOM', 'Semester 6', 'Free Porsche For Each Students', '', 'Accept'),
+(30, 2, 'uploads/profile3f.png', 'nur', 'nur@gmail.com', '123456789', 'Nur', 'Nur', 'Semester 10', 'Popcorn Free', '', 'Accept'),
+(31, 5, 'uploads/profile4f.jpg', 'Nur Helen', 'helen@gmail.com', '1023874659', 'CC101 - Computer Science', 'FCOM', 'Semester 5', 'HIhi', '', 'Accept');
 
 -- --------------------------------------------------------
 
@@ -128,7 +130,9 @@ CREATE TABLE `candidate` (
 --
 
 INSERT INTO `candidate` (`candidateId`, `studentId`, `candNo`, `candidateName`, `candidatePic`, `faculty`, `courseName`, `email`, `manifesto`, `links`, `contact`, `voteNum`) VALUES
-(4, 1, 1, 'Muhammad Redzwan', 'uploads/pic1.jpg', 'FCOM', 'CC101 - Diploma in Computer Science', 'taufekredzwan@gmail.com', 'Free Porsche For Each Students and Free Popcorn Delights', 'https://www.facebook.com/redzwan.taufek', '0194678990', 0);
+(4, 1, 1, 'Muhammad Redzwan', 'uploads/pic1.jpg', 'FCOM', 'CC101 - Diploma in Computer Science', 'taufekredzwan@gmail.com', 'Free Porsche For Each Students and Free Popcorn Delights', 'https://www.facebook.com/redzwan.taufek', '0194678990', 0),
+(5, 2, 2, 'nur', 'uploads/profile3f.png', 'Nur', 'Nur', 'nur@gmail.com', 'Popcorn Free', 'popdelight.com', '123456789', 0),
+(6, 5, 3, 'Nur Helen', 'uploads/profile4f.jpg', 'FCOM', 'CC101 - Computer Science', 'helen@gmail.com', 'HIhi', '', '1023874659', 0);
 
 -- --------------------------------------------------------
 
@@ -145,6 +149,13 @@ CREATE TABLE `election` (
   `date` date NOT NULL,
   `rules` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `election`
+--
+
+INSERT INTO `election` (`electionId`, `electionTitle`, `voteNo`, `start`, `end`, `date`, `rules`) VALUES
+(18, 'Hihi General Election', 2, '2023-10-31 17:53:00', '2023-10-31 23:59:00', '2023-10-31', 'Each Student Only Can Choose Two Candidates.');
 
 -- --------------------------------------------------------
 
@@ -170,10 +181,10 @@ CREATE TABLE `student` (
 --
 
 INSERT INTO `student` (`studentId`, `studentPic`, `studentName`, `email`, `password`, `contact`, `votingHistory`, `course`, `faculty`, `apply`) VALUES
-(1, 'uploads/profile5m.avif', 'Muhammad Redzwan', 'taufekredzwan@gmail.com', '14250', '0194678990', 1, 'CC101 - Diploma in Computer Science', 'FCOM', 1),
-(2, 'uploads/profile6m.png', 'nur', 'nur@gmail.com', '12345', '123456789', 1, 'Nur', 'Nur', 0),
-(5, 'uploads/profile3f.png', 'Nur Helen', 'helen@gmail.com', '1425', '1023874659', 0, 'CC101 - Computer Science', 'FCOM', 0),
-(6, 'uploads/pic1.jpg', 'Porsche', 'porsche@gmail.com', '1425', '019345334', 0, 'CC101', 'FCOM', 0);
+(1, 'uploads/profile5m.avif', 'Muhammad Redzwan', 'taufekredzwan@gmail.com', '14250', '0194678990', 0, 'CC101 - Diploma in Computer Science', 'FCOM', 1),
+(2, 'uploads/profile6m.png', 'nur', 'nur@gmail.com', '12345', '123456789', 0, 'Nur', 'Nur', 1),
+(5, 'uploads/profile3f.png', 'Nur Helen', 'helen@gmail.com', '12345', '1023874659', 0, 'CC101 - Computer Science', 'FCOM', 1),
+(6, 'uploads/pic1.jpg', 'Porsche', 'porsche@gmail.com', '12345', '019345334', 0, 'CC101', 'FCOM', 0);
 
 -- --------------------------------------------------------
 
@@ -241,7 +252,8 @@ ALTER TABLE `student`
 --
 ALTER TABLE `vote`
   ADD KEY `studentId` (`studentId`),
-  ADD KEY `candidateId` (`candidateId`);
+  ADD KEY `candidateId` (`candidateId`),
+  ADD KEY `vote_ibfk_3` (`electionId`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -269,19 +281,19 @@ ALTER TABLE `announcement`
 -- AUTO_INCREMENT for table `apply`
 --
 ALTER TABLE `apply`
-  MODIFY `applyId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `applyId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `candidate`
 --
 ALTER TABLE `candidate`
-  MODIFY `candidateId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `candidateId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `election`
 --
 ALTER TABLE `election`
-  MODIFY `electionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `electionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `student`
@@ -305,7 +317,7 @@ ALTER TABLE `candidate`
 ALTER TABLE `vote`
   ADD CONSTRAINT `vote_ibfk_1` FOREIGN KEY (`studentId`) REFERENCES `student` (`studentId`),
   ADD CONSTRAINT `vote_ibfk_2` FOREIGN KEY (`candidateId`) REFERENCES `candidate` (`candidateId`),
-  ADD CONSTRAINT `vote_ibfk_3` FOREIGN KEY (`candidateId`) REFERENCES `election` (`electionId`);
+  ADD CONSTRAINT `vote_ibfk_3` FOREIGN KEY (`electionId`) REFERENCES `election` (`electionId`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

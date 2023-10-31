@@ -33,6 +33,7 @@
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
         $election = $result->fetch_assoc();
+        $voteNo = $election['voteNo']; // Add this line
     }
 
     // Query to select the student details from the database using the student ID from the session
@@ -246,7 +247,7 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <form id="vote-form">
+                                                    <form id="vote-form" method="POST" action="voteSubmit.php">
                                                         <div class="row">
                                                             <?php
                                                             // Fetch all candidates from the database
@@ -329,7 +330,7 @@
     <script>
         const form = document.getElementById('vote-form');
         const checkboxes = form.querySelectorAll('input[type="checkbox"]');
-        const maxVotes = 12;
+        const maxVotes = <?php echo $voteNo; ?>;
 
         form.addEventListener('submit', function(event) {
             event.preventDefault();
@@ -345,27 +346,10 @@
                 alert(`You can only select up to ${maxVotes} candidates.`);
             } else {
                 if (confirm('Are you sure you want to submit your vote?')) {
-                    window.location.href = 'voteSuccess.php';
+                    // Submit the form
+                    form.submit();
                 }
             }
-        });
-    </script>
-
-    <script>
-        document.getElementById('vote-button').addEventListener('click', function(e) {
-            e.preventDefault();
-            var form = document.getElementById('vote-form');
-            var formData = new FormData(form);
-            fetch('vote_process.php', {
-                method: 'POST',
-                body: formData
-            }).then(function(response) {
-                return response.text();
-            }).then(function(text) {
-                console.log(text);
-            }).catch(function(error) {
-                console.error(error);
-            });
         });
     </script>
 
