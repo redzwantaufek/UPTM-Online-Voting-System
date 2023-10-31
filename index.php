@@ -34,6 +34,38 @@
         }
     }
 
+    // Query to select the latest announcement from the database
+    $sql = "SELECT * FROM announcement ORDER BY annId DESC LIMIT 1";
+    // Execute the query
+    $result = $conn->query($sql);
+
+    // If the query returns more than 0 rows, fetch the announcement
+    if ($result->num_rows > 0) {
+        $announcement = $result->fetch_assoc();
+        // Get the election title and candidate names from the database
+        $electionTitle = $announcement['elecTitle'];
+        $candidateNames = explode(",", $announcement['candName']);
+    } else {
+        // If no announcement details are found, display a message
+        echo "No announcement found";
+    }
+
+    // Query to select all candidate names from the announcement table
+    $sql = "SELECT candName FROM announcement";
+    // Execute the query
+    $result = $conn->query($sql);
+
+    // If the query returns more than 0 rows, fetch the candidate names
+    if ($result->num_rows > 0) {
+        $allCandidateNames = [];
+        while($row = $result->fetch_assoc()) {
+            array_push($allCandidateNames, $row['candName']);
+        }
+    } else {
+        // If no candidate names are found, display a message
+        echo "No candidate names found";
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -303,35 +335,21 @@
                                         <div class="col mr-2">
                                             <div class="text-md font-weight-bold text-success text-uppercase mb-1">
                                                 Election Result</div>
-                                            <?php
-                                            // Query to select the latest announcement details from the database
-                                            $sql = "SELECT * FROM announcement ORDER BY annId DESC LIMIT 1";
-                                            // Execute the query
-                                            $result = $conn->query($sql);
-                                            // Check if the table has any data
-                                            if ($result->num_rows > 0) {
-                                                // Fetch the data
-                                                $row = $result->fetch_assoc();
-                                                echo '<p class="card-text"><strong>Election Title: </strong>'.$row['elecTitle'].'</p>';
-                                                echo '<p class="card-text"><strong>Information: </strong>'.$row['info'].'</p>';
-                                                // Query to select all candidate names from the announcement table
-                                                $sql = "SELECT candName FROM announcement";
-                                                // Execute the query
-                                                $result = $conn->query($sql);
-                                                // Check if the table has any data
-                                                if ($result->num_rows > 0) {
-                                                    // Fetch the data
-                                                    while($row = $result->fetch_assoc()) {
-                                                        // Display each candidate name
-                                                        echo '<p class="card-text"><strong>Candidate Name: </strong>'.$row['candName'].'</p>';
-                                                    }
-                                                } else {
-                                                    echo '<p class="card-text">No candidate information available</p>';
-                                                }
-                                            } else {
-                                                echo '<p class="card-text">No information available</p>';
-                                            }
-                                            ?>
+                                                <div class="card-body">
+                                                    <?php if (isset($announcement)): ?>
+                                                        <div class="h5 mb-0 font-weight-bold text-gray-800">Election Title: <?php echo $electionTitle; ?></div>
+                                                        <p><b>Winner:</b></p>
+                                                        <ul>
+                                                        <?php foreach($allCandidateNames as $candidateName): ?>
+                                                            <li><?php echo $candidateName; ?></li>
+                                                        <?php endforeach; ?>
+                                                        </ul>
+                                                        <p><b>Info:</b>  <?php echo $announcement['info']; ?></p>
+                                                    <?php else: ?>
+                                                        <p>No winner announcement data available.</p>
+                                                    <?php endif; ?>
+                                                
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
