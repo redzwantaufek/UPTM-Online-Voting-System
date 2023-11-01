@@ -431,11 +431,11 @@
                     <div class="row">
                         <!-- Pie Chart -->
                         <div class="col-xl-4 col-lg-5 d-flex ">
-                            <div class="card border-left-primary shadow mb-4 flex-fill">
+                            <div class="card border-left-warning shadow mb-4 flex-fill">
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Election Data</h6>
+                                    <h6 class="m-0 font-weight-bold text-warning">Election Live Data</h6>
                                 </div>
                                 <!-- Card Body -->
                                 <div class="card-body">
@@ -455,7 +455,7 @@
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Candidates Data</h6>
+                                    <h6 class="m-0 font-weight-bold text-info">Candidates Live Data</h6>
                                 </div>
                                 <!-- Card Body -->
                                 <div class="card-body">

@@ -50,6 +50,9 @@
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 </head>
 
 <body id="page-top">
@@ -317,65 +320,45 @@
                         </div>
                     </div>
 
-                        <div class="col-xl-8 col-lg-7">
-
-                            <!-- Bar Chart -->
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Election Result</h6>
-                                    <div class="dropdown no-arrow">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Election Year:</div>
-                                            <a class="dropdown-item" href="#">2023/2024</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">2022/2023</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">2021/2022</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="card-body">
-                                    <div class="chart-bar">
-                                        <canvas id="myBarChart"></canvas>
-                                    </div>
-                                    
-                                </div>
-                            </div>
-
-                        </div>
 
                         <!-- Pie Chart -->
-                        <div class="col-xl-4 col-lg-5">
-                            
-                            <div class="card shadow mb-4">
+                        <div class="col-xl-4 col-lg-5 d-flex ">
+                            <div class="card border-left-warning shadow mb-4 flex-fill">
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Voting Percentage</h6>
+                                    <h6 class="m-0 font-weight-bold text-warning">Election Live Data</h6>
                                 </div>
                                 <!-- Card Body -->
                                 <div class="card-body">
                                     <div class="chart-pie pt-4 pb-2">
                                         <canvas id="myPieChart"></canvas>
                                     </div>
-                                    <div class="mt-4 text-center small">
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-primary"></i> Voted
-                                        </span>
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-success"></i> Not Vote
-                                        </span>
+                                    <!-- Add Bootstrap classes for typography and spacing -->
+                                    <div id="pieChartData" class="mt-4 text-center">
+                                        <!-- Data will be inserted here by jQuery -->
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <!-- Progress Bars -->
+                        <div class="col-xl-8 col-lg-7 d-flex">
+                            <div class="card border-left-info shadow mb-4 flex-fill">
+                                <!-- Card Header - Dropdown -->
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-info">Candidates Live Data</h6>
+                                </div>
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    <p class="text-left font-weight-bold text-secondary">Candidates Name</p>
+                                    <div id="progressBars" class="pt-4 pb-2">
+                                        <!-- Progress bars will be inserted here by jQuery -->
+                                    </div>
+                                    <p class="text-center font-weight-bold text-secondary">Votes Number</p>
+                                </div>
+                            </div>
+                        </div>
 
                 </div>
                 <!-- /.container-fluid -->
@@ -434,13 +417,118 @@
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
 
-    <!-- Page level plugins -->
-    <script src="vendor/chart.js/Chart.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function updateTimeRemaining() {
+            $.ajax({
+                url: 'getTime.php',
+                success: function(data) {
+                    $('#timeRemaining').text(data);
+                }
+            });
+        }
 
-    <!-- Page level custom scripts -->
-    <script src="js/demo/chart-area-demo.js"></script>
-    <script src="js/demo/chart-pie-demo.js"></script>
-    <script src="js/demo/chart-bar-demo.js"></script>
+        // Update the time remaining every second
+        setInterval(updateTimeRemaining, 1000);
+    </script>
+
+    <script>
+    var ctxPie = document.getElementById('myPieChart').getContext('2d');
+    var myPieChart = new Chart(ctxPie, {
+        type: 'pie',
+        data: {
+            datasets: [{
+                data: [], // Initially empty
+                backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
+            }],
+            labels: ['Voted', 'Not Voted'],
+        },
+        options: {
+        maintainAspectRatio: false,
+        // other options
+    }
+    });
+
+   
+    </script>
+    
+    <script>
+        function updateCharts() {
+            $.ajax({
+                url: 'getVotingData.php',
+                success: function(data) {
+                    myPieChart.data.datasets[0].data = [data.voted, data.notVoted];
+                    myPieChart.update();
+
+                    // Format the data with HTML tags and Bootstrap classes
+                    var content = '<p class="font-weight-bold">Voting Statistics:</p>' +
+                    '<p><span class="font-weight-bold text-primary">Voted:</span> ' + data.voted + '</p>' +
+                    '<p><span class="font-weight-bold text-success">Not Voted:</span> ' + data.notVoted + '</p>';
+                    var votedPercentage = Math.round((data.voted / data.totalStudents) * 100);
+
+                    content += '<p><span class="font-weight-bold text-info">Voted Percentage:</span> ' + votedPercentage + '%</p>';
+
+                    // Update the content of the div with the formatted data
+                    $('#pieChartData').html(content);
+                }
+            });
+        }
+
+        // Update the charts every 5 seconds
+        setInterval(updateCharts, 5000);
+    </script>
+
+    <script>
+        function updateProgressBars() {
+            $.ajax({
+                url: 'getCandidatesData.php',
+                success: function(data) {
+                    // If data is a string, parse it into a JavaScript object
+                    if (typeof data === 'string') {
+                        data = JSON.parse(data);
+                    }
+
+                    // Clear the existing progress bars
+                    $('#progressBars').empty();
+
+                    // Get the total number of students
+                    var totalStudents = data.totalStudents;
+
+                    // Create a progress bar for each candidate
+                    for (var i = 0; i < data.candidates.length; i++) {
+                        var candidate = data.candidates[i];
+                        var votes = data.votes[i];
+
+                        // Calculate the vote percentage
+                        var votePercentage = (votes / totalStudents) * 100;
+
+                        // Create the progress bar
+                        var progressBar = '<div class="mb-3">' +
+                            '<span class="font-weight-bold px-2">' + candidate + '</span>' +
+                            '<div class="progress rounded">' +
+                            '<div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" style="width: ' + votePercentage + '%; font-weight: bold;" aria-valuenow="' + votes + '" aria-valuemin="0" aria-valuemax="' + totalStudents + '">' +
+                            votes +
+                            '</div>' +
+                            '</div>' +
+                            '</div>';
+
+                        // Add the progress bar to the page
+                        $('#progressBars').append(progressBar);
+                    }
+                }
+            });
+        }
+
+    // Update the progress bars every 5 seconds
+    setInterval(updateProgressBars, 5000);
+
+    </script>
+
+    <?php
+        // Close the database connection
+        $conn->close();
+    ?>
+
 
 </body>
 
