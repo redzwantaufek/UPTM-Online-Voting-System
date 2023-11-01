@@ -25,6 +25,12 @@
         exit();
     }
 
+    // Before the HTML
+    if (isset($_SESSION['reset_success'])) {
+        $reset_success = $_SESSION['reset_success'];
+        unset($_SESSION['reset_success']); // Unset the session variable so the message doesn't persist on refresh
+    }
+
    
 ?>
 
@@ -242,6 +248,12 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
+                <?php if (isset($reset_success)): ?>
+                    <div class="alert alert-success">
+                        <?php echo $reset_success; ?>
+                    </div>
+                <?php endif; ?>
+
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Settings</h1>
@@ -256,8 +268,7 @@
                                 </div>
                                 <div class="card-body">
                                     <p>This setting allows you to reset all the data related to the election. Before starting a new election, the admin needs to reset the data.</p>
-                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#resetModal"></button>
-                                        Reset              
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#resetModal">Reset</button>   
                                 </div>
                             </div>
                         </div>
@@ -278,7 +289,7 @@
                                 <div class="modal-footer">
                                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                                     <form action="reset.php" method="post">
-                                        <button type="submit" class="btn btn-primary" name="reset">Confirm Reset</button>
+                                        <button type="submit" class="btn btn-danger" name="reset">Confirm Reset</button>
                                     </form>
                                 </div>
                             </div>
