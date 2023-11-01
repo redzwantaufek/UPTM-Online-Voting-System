@@ -459,10 +459,11 @@
                                 </div>
                                 <!-- Card Body -->
                                 <div class="card-body">
+                                    <p class="text-left font-weight-bold text-secondary">Candidates Name</p>
                                     <div class="chart-bar pt-4 pb-2">
                                         <canvas id="myBarChart"></canvas>
                                     </div>
-                                    <div id="myBarChart"></div>
+                                    <p class="text-center font-weight-bold text-secondary">Votes Number</p>
                                 </div>
                             </div>
                         </div>
@@ -576,20 +577,35 @@
         maintainAspectRatio: false,
         scales: {
             x: {
-                beginAtZero: true,
+                grid: {
+                    color: 'rgba(0, 0, 0, 0)', // This will remove grid lines
+                },
                 ticks: {
-                    // Include a dollar sign in the ticks
                     callback: function(value, index, values) {
-                        if (value % 1 === 0) {
-                            return value;
-                        }
+                        return Number.isInteger(value) ? value : '';
                     }
+                }
+            },
+            y: {
+                grid: {
+                    color: 'rgba(0, 0, 0, 0)', // This will remove grid lines
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                labels: {
+                    font: {
+                        size: 14,
+                        family: 'Arial',
+                    },
+                    color: '#333',
                 }
             }
         }
         // other options
     }
-    });
+});
     </script>
 
     <?php
@@ -621,7 +637,13 @@
             $.ajax({
                 url: 'getCandidatesData.php',
                 success: function(data) {
+
+                    // If data is a string, parse it into a JavaScript object
+                    if (typeof data === 'string') {
+                        data = JSON.parse(data);
+                    }
                     
+                    console.log(data);
                     myBarChart.data.labels = data.candidates;
                     myBarChart.data.datasets[0].data = data.votes;
                     myBarChart.update();
