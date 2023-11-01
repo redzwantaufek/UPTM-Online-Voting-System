@@ -593,8 +593,7 @@
                     var content = '<p class="font-weight-bold">Voting Statistics:</p>' +
                     '<p><span class="font-weight-bold text-primary">Voted:</span> ' + data.voted + '</p>' +
                     '<p><span class="font-weight-bold text-success">Not Voted:</span> ' + data.notVoted + '</p>';
-                    var totalVotes = data.voted + data.notVoted;
-                    var votedPercentage = Math.round((data.voted / totalVotes) * 100);
+                    var votedPercentage = Math.round((data.voted / data.totalStudents) * 100);
 
                     content += '<p><span class="font-weight-bold text-info">Voted Percentage:</span> ' + votedPercentage + '%</p>';
 
