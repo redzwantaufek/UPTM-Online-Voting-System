@@ -47,6 +47,9 @@
     <!-- Custom styles-->
     <link href="css/sb-admin-2.css" rel="stylesheet">
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 </head>
 
 <body id="page-top">
@@ -387,74 +390,46 @@
                     </div>
 
                     <!-- Content Row -->
-
                     <div class="row">
-                        <div class="col-xl-8 col-lg-7">
-                            <!-- Project Card Example -->
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Candidates</h6>
-                                </div>
-                                <div class="card-body">
-                                    <h4 class="small font-weight-bold">Ali bin Abu <span
-                                            class="float-right">100</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 100%"
-                                            aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Azri bin Alif <span
-                                            class="float-right">80</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 80%"
-                                            aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Arif bin Hasni <span
-                                            class="float-right">60</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar" role="progressbar" style="width: 60%"
-                                            aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Siti binti Fatimah <span
-                                            class="float-right">40</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-info" role="progressbar" style="width: 40%"
-                                            aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Maisarah binti Fatimah <span
-                                            class="float-right">20</span></h4>
-                                    <div class="progress">
-                                        <div class="progress-bar bg-success" role="progressbar" style="width: 20%"
-                                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                         <!-- Pie Chart -->
-                        <div class="col-xl-4 col-lg-5">
-                            <div class="card shadow mb-4">
+                        <div class="col-xl-4 col-lg-5 d-flex">
+                            <div class="card shadow mb-4 flex-fill">
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Voting Percentage</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Election Data</h6>
                                 </div>
                                 <!-- Card Body -->
                                 <div class="card-body">
                                     <div class="chart-pie pt-4 pb-2">
                                         <canvas id="myPieChart"></canvas>
                                     </div>
-                                    <div class="mt-4 text-center small">
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-primary"></i> Voted
-                                        </span>
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-success"></i> Not Vote
-                                        </span>
+                                    <!-- Add Bootstrap classes for typography and spacing -->
+                                    <div id="pieChartData" class="mt-4 text-center">
+                                        <!-- Data will be inserted here by jQuery -->
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <!-- Bar Chart -->
+                        <div class="col-xl-8 col-lg-7 d-flex">
+                            <div class="card shadow mb-4 flex-fill">
+                                <!-- Card Header - Dropdown -->
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Candidates Data</h6>
+                                </div>
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    <div class="chart-bar pt-4 pb-2">
+                                        <canvas id="myBarChart"></canvas>
+                                    </div>
+                                    <div id="myBarChart"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    
 
                     <!-- Content Row -->
                     <div class="row">
@@ -551,12 +526,6 @@
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
 
-    <!-- Page level plugins -->
-    <script src="vendor/chart.js/Chart.min.js"></script>
-
-    <!-- Page level custom scripts -->
-    <script src="js/demo/chart-area-demo.js"></script>
-    <script src="js/demo/chart-pie-demo.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
@@ -573,11 +542,80 @@
         setInterval(updateTimeRemaining, 1000);
     </script>
 
+    <script>
+    var ctxPie = document.getElementById('myPieChart').getContext('2d');
+    var myPieChart = new Chart(ctxPie, {
+        type: 'pie',
+        data: {
+            datasets: [{
+                data: [], // Initially empty
+                backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
+            }],
+            labels: ['Voted', 'Not Voted'],
+        },
+        options: {
+        maintainAspectRatio: false,
+        // other options
+    }
+    });
+
+    var ctxBar = document.getElementById('myBarChart').getContext('2d');
+    var myBarChart = new Chart(ctxBar, {
+        type: 'horizontalBar',
+        data: {
+            datasets: [{
+                data: [], // Initially empty
+                backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
+            }],
+            labels: ['votes'], // Initially empty
+        },
+        options: {
+        maintainAspectRatio: false,
+        // other options
+    }
+    });
+    </script>
+
     <?php
     // Close the database connection
     $conn->close();
     ?>
     
+    <script>
+        function updateCharts() {
+            $.ajax({
+                url: 'getVotingData.php',
+                success: function(data) {
+                    myPieChart.data.datasets[0].data = [data.voted, data.notVoted];
+                    myPieChart.update();
+
+                    // Format the data with HTML tags and Bootstrap classes
+                    var content = '<p class="font-weight-bold">Voting Statistics:</p>' +
+                    '<p><span class="font-weight-bold text-primary">Voted:</span> ' + data.voted + '</p>' +
+                    '<p><span class="font-weight-bold text-success">Not Voted:</span> ' + data.notVoted + '</p>';
+                    var totalVotes = data.voted + data.notVoted;
+                    var votedPercentage = ((data.voted / totalVotes) * 100).toFixed(2);
+
+                    content += '<p><span class="font-weight-bold text-info">Voted Percentage:</span> ' + votedPercentage + '%</p>';
+
+                    // Update the content of the div with the formatted data
+                    $('#pieChartData').html(content);
+                }
+            });
+
+            $.ajax({
+                url: 'getCandidatesData.php',
+                success: function(data) {
+                    myBarChart.data.labels = data.candidates;
+                    myBarChart.data.datasets[0].data = data.votes;
+                    myBarChart.update();
+                }
+            });
+        }
+
+        // Update the charts every 5 seconds
+        setInterval(updateCharts, 5000);
+    </script>
 
 </body>
 
