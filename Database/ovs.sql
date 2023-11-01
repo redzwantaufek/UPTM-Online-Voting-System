@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 31, 2023 at 12:34 PM
+-- Generation Time: Nov 01, 2023 at 01:35 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -70,9 +70,17 @@ CREATE TABLE `analytic` (
 CREATE TABLE `announcement` (
   `annId` int(11) NOT NULL,
   `elecTitle` varchar(255) NOT NULL,
-  `candName` varchar(255) NOT NULL,
+  `candName` text NOT NULL,
   `info` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `announcement`
+--
+
+INSERT INTO `announcement` (`annId`, `elecTitle`, `candName`, `info`) VALUES
+(23, 'Hihi General Election', 'Muhammad Redzwan', 'huhu'),
+(24, 'Hihi General Election', 'nur', 'lapo ngantok');
 
 -- --------------------------------------------------------
 
@@ -155,7 +163,7 @@ CREATE TABLE `election` (
 --
 
 INSERT INTO `election` (`electionId`, `electionTitle`, `voteNo`, `start`, `end`, `date`, `rules`) VALUES
-(18, 'Hihi General Election', 2, '2023-10-31 17:53:00', '2023-10-31 23:59:00', '2023-10-31', 'Each Student Only Can Choose Two Candidates.');
+(18, 'Hihi General Election', 2, '2023-11-01 17:53:00', '2023-11-01 23:59:00', '2023-11-01', 'Each Student Only Can Choose Two Candidates.');
 
 -- --------------------------------------------------------
 
@@ -182,9 +190,9 @@ CREATE TABLE `student` (
 
 INSERT INTO `student` (`studentId`, `studentPic`, `studentName`, `email`, `password`, `contact`, `votingHistory`, `course`, `faculty`, `apply`) VALUES
 (1, 'uploads/profile5m.avif', 'Muhammad Redzwan', 'taufekredzwan@gmail.com', '14250', '0194678990', 0, 'CC101 - Diploma in Computer Science', 'FCOM', 1),
-(2, 'uploads/profile6m.png', 'nur', 'nur@gmail.com', '12345', '123456789', 0, 'Nur', 'Nur', 1),
-(5, 'uploads/profile3f.png', 'Nur Helen', 'helen@gmail.com', '12345', '1023874659', 0, 'CC101 - Computer Science', 'FCOM', 1),
-(6, 'uploads/pic1.jpg', 'Porsche', 'porsche@gmail.com', '12345', '019345334', 0, 'CC101', 'FCOM', 0);
+(2, 'uploads/profile6m.png', 'nur', 'nur@gmail.com', '12345', '123456789', 1, 'Nur', 'Nur', 1),
+(5, 'uploads/profile3f.png', 'Nur Helen', 'helen@gmail.com', '12345', '1023874659', 1, 'CC101 - Computer Science', 'FCOM', 1),
+(6, 'uploads/pic1.jpg', 'Porsche', 'porsche@gmail.com', '12345', '019345334', 1, 'CC101', 'FCOM', 0);
 
 -- --------------------------------------------------------
 
@@ -199,6 +207,16 @@ CREATE TABLE `vote` (
   `candidateId` int(11) NOT NULL,
   `electionId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `vote`
+--
+
+INSERT INTO `vote` (`voteId`, `time`, `studentId`, `candidateId`, `electionId`) VALUES
+(3, '2023-10-31 11:42:20', 5, 4, 18),
+(4, '2023-10-31 11:42:20', 5, 5, 18),
+(7, '2023-10-31 11:55:09', 6, 4, 18),
+(8, '2023-10-31 11:55:09', 6, 6, 18);
 
 --
 -- Indexes for dumped tables
@@ -251,6 +269,7 @@ ALTER TABLE `student`
 -- Indexes for table `vote`
 --
 ALTER TABLE `vote`
+  ADD PRIMARY KEY (`voteId`),
   ADD KEY `studentId` (`studentId`),
   ADD KEY `candidateId` (`candidateId`),
   ADD KEY `vote_ibfk_3` (`electionId`);
@@ -275,7 +294,7 @@ ALTER TABLE `analytic`
 -- AUTO_INCREMENT for table `announcement`
 --
 ALTER TABLE `announcement`
-  MODIFY `annId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `annId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `apply`
@@ -300,6 +319,12 @@ ALTER TABLE `election`
 --
 ALTER TABLE `student`
   MODIFY `studentId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `vote`
+--
+ALTER TABLE `vote`
+  MODIFY `voteId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Constraints for dumped tables
