@@ -576,30 +576,20 @@
         maintainAspectRatio: false,
         scales: {
             x: {
-                grid: {
-                    color: 'rgba(0, 0, 0, 0)', // This will remove grid lines
-                }
-            },
-            y: {
-                grid: {
-                    color: 'rgba(0, 0, 0, 0)', // This will remove grid lines
-                }
-            }
-        },
-        plugins: {
-            legend: {
-                labels: {
-                    font: {
-                        size: 14,
-                        family: 'Arial',
-                    },
-                    color: '#333',
+                beginAtZero: true,
+                ticks: {
+                    // Include a dollar sign in the ticks
+                    callback: function(value, index, values) {
+                        if (value % 1 === 0) {
+                            return value;
+                        }
+                    }
                 }
             }
         }
         // other options
     }
-});
+    });
     </script>
 
     <?php
@@ -628,7 +618,7 @@
                 }
             });
 
-                        $.ajax({
+            $.ajax({
                 url: 'getCandidatesData.php',
                 success: function(data) {
                     
