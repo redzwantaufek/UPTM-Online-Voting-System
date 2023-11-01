@@ -256,8 +256,14 @@
                     $sql = "SELECT electionTitle FROM election ORDER BY electionId DESC LIMIT 1";
                     // Execute the query
                     $result = $conn->query($sql);
-                    // Fetch the election name
-                    $electionName = $result->fetch_assoc()['electionTitle'];
+                    // Check if the table has any data
+                    if ($result->num_rows > 0) {
+                        // Fetch the election name
+                        $electionName = $result->fetch_assoc()['electionTitle'];
+                    } else {
+                        // If no data is available, set a default message
+                        $electionName = "No information available";
+                    }
                     ?>
                     <p class="mb-4"><?php echo $electionName; ?> Election Result</a>.</p>
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">

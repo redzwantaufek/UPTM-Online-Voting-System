@@ -45,10 +45,7 @@
         // Get the election title and candidate names from the database
         $electionTitle = $announcement['elecTitle'];
         $candidateNames = explode(",", $announcement['candName']);
-    } else {
-        // If no announcement details are found, display a message
-        echo "No announcement found";
-    }
+    } 
 
     // Query to select all candidate names from the announcement table
     $sql = "SELECT candName FROM announcement";
@@ -61,10 +58,7 @@
         while($row = $result->fetch_assoc()) {
             array_push($allCandidateNames, $row['candName']);
         }
-    } else {
-        // If no candidate names are found, display a message
-        echo "No candidate names found";
-    }
+    } 
 
 ?>
 

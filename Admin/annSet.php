@@ -63,9 +63,13 @@
     // Query to select the electionId and voteNo from the latest election
     $sql = "SELECT electionId, voteNo FROM election ORDER BY electionId DESC LIMIT 1";
     $result = $conn->query($sql);
-    $row = $result->fetch_assoc();
-    $electionId = $row['electionId'];
-    $voteNo = $row['voteNo'];
+
+    // If the query returns more than 0 rows, fetch the electionId and voteNo
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $electionId = $row['electionId'];
+        $voteNo = $row['voteNo'];
+    }
 
     // Query to select the candidate names with the highest vote numbers from the same election
     $sql = "SELECT c.candidateName, COUNT(v.voteId) as voteCount 
