@@ -564,11 +564,6 @@
 
    
     </script>
-
-    <?php
-    // Close the database connection
-    $conn->close();
-    ?>
     
     <script>
         function updateCharts() {
@@ -622,9 +617,9 @@
 
                     // Create the progress bar
                     var progressBar = '<div class="mb-3">' +
-                        '<span class="font-weight-bold">' + candidate + '</span>' +
-                        '<div class="progress">' +
-                        '<div class="progress-bar" role="progressbar" style="width: ' + votePercentage + '%;" aria-valuenow="' + votes + '" aria-valuemin="0" aria-valuemax="' + totalStudents + '">' +
+                        '<span class="font-weight-bold px-2">' + candidate + '</span>' +
+                        '<div class="progress rounded">' +
+                        '<div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" style="width: ' + votePercentage + '%; font-weight: bold;" aria-valuenow="' + votes + '" aria-valuemin="0" aria-valuemax="' + totalStudents + '">' +
                         votes +
                         '</div>' +
                         '</div>' +
@@ -641,6 +636,11 @@
     setInterval(updateProgressBars, 5000);
 
     </script>
+
+    <?php
+        // Close the database connection
+        $conn->close();
+    ?>
 
 </body>
 
