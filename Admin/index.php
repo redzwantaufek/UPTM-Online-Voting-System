@@ -449,7 +449,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Bar Chart -->
+                        <!-- Progress Bars -->
                         <div class="col-xl-8 col-lg-7 d-flex">
                             <div class="card border-left-info shadow mb-4 flex-fill">
                                 <!-- Card Header - Dropdown -->
@@ -460,8 +460,8 @@
                                 <!-- Card Body -->
                                 <div class="card-body">
                                     <p class="text-left font-weight-bold text-secondary">Candidates Name</p>
-                                    <div class="chart-bar pt-4 pb-2">
-                                        <canvas id="myBarChart"></canvas>
+                                    <div id="progressBars" class="pt-4 pb-2">
+                                        <!-- Progress bars will be inserted here by jQuery -->
                                     </div>
                                     <p class="text-center font-weight-bold text-secondary">Votes Number</p>
                                 </div>
@@ -562,50 +562,7 @@
     }
     });
 
-    var ctxBar = document.getElementById('myBarChart').getContext('2d');
-    var myBarChart = new Chart(ctxBar, {
-    type: 'bar',
-    data: {
-        datasets: [{
-            data: [], // Initially empty
-            backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
-        }],
-        labels: [], // Initially empty
-    },
-    options: {
-        indexAxis: 'y', // This makes the bar chart horizontal
-        maintainAspectRatio: false,
-        scales: {
-            x: {
-                grid: {
-                    color: 'rgba(0, 0, 0, 0)', // This will remove grid lines
-                },
-                ticks: {
-                    callback: function(value, index, values) {
-                        return Number.isInteger(value) ? value : '';
-                    }
-                }
-            },
-            y: {
-                grid: {
-                    color: 'rgba(0, 0, 0, 0)', // This will remove grid lines
-                }
-            }
-        },
-        plugins: {
-            legend: {
-                labels: {
-                    font: {
-                        size: 14,
-                        family: 'Arial',
-                    },
-                    color: '#333',
-                }
-            }
-        }
-        // other options
-    }
-});
+   
     </script>
 
     <?php
@@ -633,22 +590,56 @@
                     $('#pieChartData').html(content);
                 }
             });
-
-            $.ajax({
-                url: 'getCandidatesData.php',
-                success: function(data) {
-
-                    
-                    console.log(data);
-                    myBarChart.data.labels = data.candidates;
-                    myBarChart.data.datasets[0].data = data.votes;
-                    myBarChart.update();
-                }
-            });
         }
 
         // Update the charts every 5 seconds
         setInterval(updateCharts, 5000);
+    </script>
+
+    <script>
+        function updateProgressBars() {
+        $.ajax({
+            url: 'getCandidatesData.php',
+            success: function(data) {
+                // If data is a string, parse it into a JavaScript object
+                if (typeof data === 'string') {
+                    data = JSON.parse(data);
+                }
+
+                // Clear the existing progress bars
+                $('#progressBars').empty();
+
+                // Get the total number of students
+                var totalStudents = data.totalStudents;
+
+                // Create a progress bar for each candidate
+                for (var i = 0; i < data.candidates.length; i++) {
+                    var candidate = data.candidates[i];
+                    var votes = data.votes[i];
+
+                    // Calculate the vote percentage
+                    var votePercentage = (votes / totalStudents) * 100;
+
+                    // Create the progress bar
+                    var progressBar = '<div class="mb-3">' +
+                        '<span class="font-weight-bold">' + candidate + '</span>' +
+                        '<div class="progress">' +
+                        '<div class="progress-bar" role="progressbar" style="width: ' + votePercentage + '%;" aria-valuenow="' + votes + '" aria-valuemin="0" aria-valuemax="' + totalStudents + '">' +
+                        votes +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
+
+                    // Add the progress bar to the page
+                    $('#progressBars').append(progressBar);
+                }
+            }
+        });
+    }
+
+    // Update the progress bars every 5 seconds
+    setInterval(updateProgressBars, 5000);
+
     </script>
 
 </body>
