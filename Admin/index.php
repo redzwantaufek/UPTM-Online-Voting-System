@@ -392,8 +392,8 @@
                     <!-- Content Row -->
                     <div class="row">
                         <!-- Pie Chart -->
-                        <div class="col-xl-4 col-lg-5 d-flex">
-                            <div class="card shadow mb-4 flex-fill">
+                        <div class="col-xl-4 col-lg-5 d-flex ">
+                            <div class="card border-left-primary shadow mb-4 flex-fill">
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -413,7 +413,7 @@
                         </div>
                         <!-- Bar Chart -->
                         <div class="col-xl-8 col-lg-7 d-flex">
-                            <div class="card shadow mb-4 flex-fill">
+                            <div class="card border-left-info shadow mb-4 flex-fill">
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -594,7 +594,7 @@
                     '<p><span class="font-weight-bold text-primary">Voted:</span> ' + data.voted + '</p>' +
                     '<p><span class="font-weight-bold text-success">Not Voted:</span> ' + data.notVoted + '</p>';
                     var totalVotes = data.voted + data.notVoted;
-                    var votedPercentage = ((data.voted / totalVotes) * 100).toFixed(2);
+                    var votedPercentage = Math.round((data.voted / totalVotes) * 100);
 
                     content += '<p><span class="font-weight-bold text-info">Voted Percentage:</span> ' + votedPercentage + '%</p>';
 
