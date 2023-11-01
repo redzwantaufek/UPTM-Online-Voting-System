@@ -569,11 +569,34 @@
             data: [], // Initially empty
             backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
         }],
-        labels: ['votes'], // Initially empty
+        labels: [], // Initially empty
     },
     options: {
         indexAxis: 'y', // This makes the bar chart horizontal
         maintainAspectRatio: false,
+        scales: {
+            x: {
+                grid: {
+                    color: 'rgba(0, 0, 0, 0)', // This will remove grid lines
+                }
+            },
+            y: {
+                grid: {
+                    color: 'rgba(0, 0, 0, 0)', // This will remove grid lines
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                labels: {
+                    font: {
+                        size: 14,
+                        family: 'Arial',
+                    },
+                    color: '#333',
+                }
+            }
+        }
         // other options
     }
 });
@@ -605,10 +628,10 @@
                 }
             });
 
-            $.ajax({
+                        $.ajax({
                 url: 'getCandidatesData.php',
                 success: function(data) {
-                    console.log(data); // Log data to console
+                    
                     myBarChart.data.labels = data.candidates;
                     myBarChart.data.datasets[0].data = data.votes;
                     myBarChart.update();
