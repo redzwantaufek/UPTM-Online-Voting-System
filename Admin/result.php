@@ -282,8 +282,8 @@
                                         <div class="text-md font-weight-bold text-primary text-uppercase mb-1">
                                             Election Result</div>
                                         
-                                            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm float-left mb-3"><i
-                                                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+                                            <!--<a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm float-left mb-3"><i
+                                                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>-->
                                         <table class="table table-striped">
                                             <thead>
                                                 <tr>
