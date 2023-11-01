@@ -638,10 +638,6 @@
                 url: 'getCandidatesData.php',
                 success: function(data) {
 
-                    // If data is a string, parse it into a JavaScript object
-                    if (typeof data === 'string') {
-                        data = JSON.parse(data);
-                    }
                     
                     console.log(data);
                     myBarChart.data.labels = data.candidates;
