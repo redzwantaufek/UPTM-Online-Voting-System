@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 01, 2023 at 01:35 PM
+-- Generation Time: Nov 01, 2023 at 03:31 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -43,10 +43,10 @@ CREATE TABLE `admin` (
 
 INSERT INTO `admin` (`adminID`, `adminName`, `email`, `password`, `contact`, `position`, `pic`) VALUES
 (1, 'Muhammad Redzwan Bin Md Taufek', 'redzwantaufek2@gmail.com', '14250', '0194678990', 'System Admin', 'uploads/profile 1.jpg'),
-(8, 'Ahmad Bin Najmi', 'ahmad@gmail.com', '14250', '0193438449', 'Staff HEP', 'uploads/pic1.jpg'),
-(9, 'Abu bin Bakar', 'abu@gmail.com', '1425', '0194583764', 'Staff HEP', 'uploads/profile6m.png'),
-(17, 'Zul bin Arif', 'zul@gmail.com', '1425', '0194683645', 'Staff HEP', 'uploads/profile5m.avif'),
-(20, 'Nur Helena binti Zakariah', 'helenaNur@gmail.com', '14250', '0198493857', 'Staff HEP', 'uploads/profile3f.png');
+(27, 'Ali bin Abu Bakar', 'ali@gmail.com', '12345', '012-879 0180', 'HEP Staff', 'uploads/profile2.png'),
+(28, 'Amir bin Muhammad', 'amir@gmail.com', '12345', '012-500 4526', 'HEP Staff', 'uploads/profile6m.png'),
+(29, 'Ain bin Aisyah', 'ain@gmail.com', '12345', '03-5129 4723', 'HEP Staff', 'uploads/profile3f.png'),
+(30, 'Aisyah Binti Ahmad', 'aisyah@gmail.com', '12345', '03-6265 6136', 'Staff HEP', 'uploads/profile4f.jpg');
 
 -- --------------------------------------------------------
 
@@ -74,14 +74,6 @@ CREATE TABLE `announcement` (
   `info` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `announcement`
---
-
-INSERT INTO `announcement` (`annId`, `elecTitle`, `candName`, `info`) VALUES
-(23, 'Hihi General Election', 'Muhammad Redzwan', 'huhu'),
-(24, 'Hihi General Election', 'nur', 'lapo ngantok');
-
 -- --------------------------------------------------------
 
 --
@@ -102,15 +94,6 @@ CREATE TABLE `apply` (
   `link` varchar(255) NOT NULL,
   `status` varchar(50) NOT NULL DEFAULT 'Review'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `apply`
---
-
-INSERT INTO `apply` (`applyId`, `studentId`, `applyPic`, `name`, `email`, `contact`, `course`, `faculty`, `semester`, `manifesto`, `link`, `status`) VALUES
-(29, 1, 'uploads/pic1.jpg', 'Muhammad Redzwan', 'taufekredzwan@gmail.com', '0194678990', 'CC101 - Diploma in Computer Science', 'FCOM', 'Semester 6', 'Free Porsche For Each Students', '', 'Accept'),
-(30, 2, 'uploads/profile3f.png', 'nur', 'nur@gmail.com', '123456789', 'Nur', 'Nur', 'Semester 10', 'Popcorn Free', '', 'Accept'),
-(31, 5, 'uploads/profile4f.jpg', 'Nur Helen', 'helen@gmail.com', '1023874659', 'CC101 - Computer Science', 'FCOM', 'Semester 5', 'HIhi', '', 'Accept');
 
 -- --------------------------------------------------------
 
@@ -133,15 +116,6 @@ CREATE TABLE `candidate` (
   `voteNum` int(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `candidate`
---
-
-INSERT INTO `candidate` (`candidateId`, `studentId`, `candNo`, `candidateName`, `candidatePic`, `faculty`, `courseName`, `email`, `manifesto`, `links`, `contact`, `voteNum`) VALUES
-(4, 1, 1, 'Muhammad Redzwan', 'uploads/pic1.jpg', 'FCOM', 'CC101 - Diploma in Computer Science', 'taufekredzwan@gmail.com', 'Free Porsche For Each Students and Free Popcorn Delights', 'https://www.facebook.com/redzwan.taufek', '0194678990', 0),
-(5, 2, 2, 'nur', 'uploads/profile3f.png', 'Nur', 'Nur', 'nur@gmail.com', 'Popcorn Free', 'popdelight.com', '123456789', 0),
-(6, 5, 3, 'Nur Helen', 'uploads/profile4f.jpg', 'FCOM', 'CC101 - Computer Science', 'helen@gmail.com', 'HIhi', '', '1023874659', 0);
-
 -- --------------------------------------------------------
 
 --
@@ -157,13 +131,6 @@ CREATE TABLE `election` (
   `date` date NOT NULL,
   `rules` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `election`
---
-
-INSERT INTO `election` (`electionId`, `electionTitle`, `voteNo`, `start`, `end`, `date`, `rules`) VALUES
-(18, 'Hihi General Election', 2, '2023-11-01 17:53:00', '2023-11-01 23:59:00', '2023-11-01', 'Each Student Only Can Choose Two Candidates.');
 
 -- --------------------------------------------------------
 
@@ -189,10 +156,13 @@ CREATE TABLE `student` (
 --
 
 INSERT INTO `student` (`studentId`, `studentPic`, `studentName`, `email`, `password`, `contact`, `votingHistory`, `course`, `faculty`, `apply`) VALUES
-(1, 'uploads/profile5m.avif', 'Muhammad Redzwan', 'taufekredzwan@gmail.com', '14250', '0194678990', 0, 'CC101 - Diploma in Computer Science', 'FCOM', 1),
-(2, 'uploads/profile6m.png', 'nur', 'nur@gmail.com', '12345', '123456789', 1, 'Nur', 'Nur', 1),
-(5, 'uploads/profile3f.png', 'Nur Helen', 'helen@gmail.com', '12345', '1023874659', 1, 'CC101 - Computer Science', 'FCOM', 1),
-(6, 'uploads/pic1.jpg', 'Porsche', 'porsche@gmail.com', '12345', '019345334', 1, 'CC101', 'FCOM', 0);
+(1, 'uploads/profile5m.avif', 'Muhammad Redzwan', 'taufekredzwan@gmail.com', '14250', '0194678990', 0, 'CC101 - Diploma in Computer Science', 'FCOM', 0),
+(7, 'uploads/profile 9.jpg', 'Azlan bin Shah', 'azlan@gmail.com', '12345', '012-345 6789', 0, 'AA103-Diploma of Accountancy', 'FBASS', 0),
+(8, 'uploads/profile10.jpeg', 'Hazirah binti Abdul Rahim', 'hazirah@gmail.com', '12345', '03-7953 7252', 0, 'BK101-Diploma in Corporate Communication', 'FEHA', 0),
+(9, 'uploads/profile 7.png', 'Hafiz bin Jamaluddin', 'hafiz@gmail.com', '12345', '03-5832 3553', 0, 'Bachelor of Information Technology in Cyber Security', 'FCOM', 0),
+(10, 'uploads/profile4f.jpg', 'Izzati binti Idris', 'izzati@gmail.com', '12345', '013-245 4740', 0, 'Bachelor of Bussiness Administration', 'FBASS', 0),
+(11, 'uploads/profile2.png', 'Iqbal Bin Ismail', 'iqbal@gmail.com', '12345', '013-819 1677', 0, 'CT203-Bachelor of Information Technology in Bussiness Computing', 'FCOM', 0),
+(12, 'uploads/profile5m.avif', 'Izara binti Kamarulzaman', 'izara@gmail.com', '12345', '03-2153 1539', 0, 'BE203-Bachelor of Education in Teaching English As A Second Language', 'FEHA', 0);
 
 -- --------------------------------------------------------
 
@@ -207,16 +177,6 @@ CREATE TABLE `vote` (
   `candidateId` int(11) NOT NULL,
   `electionId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `vote`
---
-
-INSERT INTO `vote` (`voteId`, `time`, `studentId`, `candidateId`, `electionId`) VALUES
-(3, '2023-10-31 11:42:20', 5, 4, 18),
-(4, '2023-10-31 11:42:20', 5, 5, 18),
-(7, '2023-10-31 11:55:09', 6, 4, 18),
-(8, '2023-10-31 11:55:09', 6, 6, 18);
 
 --
 -- Indexes for dumped tables
@@ -282,7 +242,7 @@ ALTER TABLE `vote`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `adminID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `adminID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `analytic`
@@ -318,7 +278,7 @@ ALTER TABLE `election`
 -- AUTO_INCREMENT for table `student`
 --
 ALTER TABLE `student`
-  MODIFY `studentId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `studentId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `vote`
