@@ -209,8 +209,8 @@
                     <!-- UPTM Logo -->
                         <div class="navbar-brand" href="#">
                             <img src="img/uptm.jpg" alt="" class="img-fluid logo-img" style="max-width: 100px; max-height: 100px;">
-                        </div>            
-
+                        </div>   
+                    
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
                         
@@ -425,7 +425,7 @@
                         </div>
                     </div>
 
-                    </div>
+                </div>
 
                     <!-- Content Row -->
                     <div class="row">
@@ -563,19 +563,20 @@
 
     var ctxBar = document.getElementById('myBarChart').getContext('2d');
     var myBarChart = new Chart(ctxBar, {
-        type: 'horizontalBar',
-        data: {
-            datasets: [{
-                data: [], // Initially empty
-                backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
-            }],
-            labels: ['votes'], // Initially empty
-        },
-        options: {
+    type: 'bar',
+    data: {
+        datasets: [{
+            data: [], // Initially empty
+            backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
+        }],
+        labels: ['votes'], // Initially empty
+    },
+    options: {
+        indexAxis: 'y', // This makes the bar chart horizontal
         maintainAspectRatio: false,
         // other options
     }
-    });
+});
     </script>
 
     <?php
@@ -607,6 +608,7 @@
             $.ajax({
                 url: 'getCandidatesData.php',
                 success: function(data) {
+                    console.log(data); // Log data to console
                     myBarChart.data.labels = data.candidates;
                     myBarChart.data.datasets[0].data = data.votes;
                     myBarChart.update();
