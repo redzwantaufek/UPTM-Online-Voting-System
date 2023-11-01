@@ -391,6 +391,44 @@
 
                     <!-- Content Row -->
                     <div class="row">
+
+                    <!-- Election Details Card -->
+                    <div class="col-xl-12 col-md-12 mb-4">
+                        <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-md font-weight-bold text-primary text-uppercase mb-1">
+                                            Election Details</div>
+                                        <?php
+                                        // Query to select the election details from the database
+                                        $sql = "SELECT * FROM election ORDER BY electionId DESC LIMIT 1";
+                                        // Execute the query
+                                        $result = $conn->query($sql);
+                                        // Check if the table has any data
+                                        if ($result->num_rows > 0) {
+                                            // Fetch the data
+                                            $row = $result->fetch_assoc();
+                                            echo '<div class="h5 mb-0 font-weight-bold text-gray-800">Election Title: '.$row['electionTitle'].'</div>';
+                                            echo '<div style="margin-top: 20px;"></div>';
+                                            echo '<p class="card-text"><strong>Start Time: </strong> '.date("g:i a", strtotime($row['start'])).'</p>';
+                                            echo '<p class="card-text"><strong>End Time: </strong> '.date("g:i a", strtotime($row['end'])).'</p>';
+                                            echo '<p class="card-text"><strong>Date: </strong> '.date("F j, Y", strtotime($row['date'])).'</p>';
+                                            echo '<p class="card-text"><strong>Rules: </strong> '.$row['rules'].'</p>';
+                                        } else {
+                                            echo '<div class="h5 mb-0 font-weight-bold text-gray-800">No information available</div>';
+                                        }
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    </div>
+
+                    <!-- Content Row -->
+                    <div class="row">
                         <!-- Pie Chart -->
                         <div class="col-xl-4 col-lg-5 d-flex ">
                             <div class="card border-left-primary shadow mb-4 flex-fill">
@@ -431,43 +469,7 @@
                     </div>
                     
 
-                    <!-- Content Row -->
-                    <div class="row">
 
-                        <!-- Election Details Card -->
-                        <div class="col-xl-12 col-md-12 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-md font-weight-bold text-primary text-uppercase mb-1">
-                                                Election Details</div>
-                                            <?php
-                                            // Query to select the election details from the database
-                                            $sql = "SELECT * FROM election ORDER BY electionId DESC LIMIT 1";
-                                            // Execute the query
-                                            $result = $conn->query($sql);
-                                            // Check if the table has any data
-                                            if ($result->num_rows > 0) {
-                                                // Fetch the data
-                                                $row = $result->fetch_assoc();
-                                                echo '<div class="h5 mb-0 font-weight-bold text-gray-800">Election Title: '.$row['electionTitle'].'</div>';
-                                                echo '<div style="margin-top: 20px;"></div>';
-                                                echo '<p class="card-text"><strong>Start Time: </strong> '.date("g:i a", strtotime($row['start'])).'</p>';
-                                                echo '<p class="card-text"><strong>End Time: </strong> '.date("g:i a", strtotime($row['end'])).'</p>';
-                                                echo '<p class="card-text"><strong>Date: </strong> '.date("F j, Y", strtotime($row['date'])).'</p>';
-                                                echo '<p class="card-text"><strong>Rules: </strong> '.$row['rules'].'</p>';
-                                            } else {
-                                                echo '<div class="h5 mb-0 font-weight-bold text-gray-800">No information available</div>';
-                                            }
-                                            ?>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
 
                 </div>
                 <!-- /.container-fluid -->
