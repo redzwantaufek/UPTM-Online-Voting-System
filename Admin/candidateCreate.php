@@ -283,7 +283,7 @@
                     <div class="row">
 
                         <!-- Candidate Profile Card -->
-                        <?php if (!empty($applications)): ?>
+                        <?php if (empty($applications)): ?>
                             <?php foreach ($applications as $application): ?>
                             <?php if ($application['status'] == 'Review'): ?>
                             <div class="col-xl-12 col-md-12 mb-4">
@@ -310,6 +310,8 @@
                                     </div>
                                 </div>
                             </div>
+
+                            
                             <?php endif; ?>
                             <?php endforeach; ?>
                         <?php else: ?>
