@@ -283,6 +283,10 @@
 
                     <!-- Page Heading -->
                     <h1 class="h3 mb-0 text-gray-800">Admin List</h1>
+                    <!-- Print Button -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-3">
+                        <button id="printButton" class="btn btn-primary" onclick="window.print();">Print</button>
+                    </div>
                     <div class="input-group mb-3 mt-3">
                         <input type="text" class="form-control" placeholder="Search by name" id="searchAdmin">
                         <div class="input-group-append">

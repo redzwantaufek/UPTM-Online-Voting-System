@@ -262,6 +262,10 @@
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">Student Attendance</h1>
                     <p class="mb-4">The list of student who vote and not vote.</p>
+                    <!-- Print Button -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <button id="printButton" class="btn btn-primary" onclick="window.print();">Print</button>
+                    </div>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">

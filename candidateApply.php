@@ -325,7 +325,7 @@
                                         <form action="candidateApply.php" method="post" enctype="multipart/form-data">
                                             <div class="input-group mb-3">
                                                 <div class="custom-file">
-                                                    <input type="file" class="custom-file-input" id="profilePicture" name="pic" onchange="updateFileName(this)" required>
+                                                    <input type="file" class="custom-file-input" id="profilePicture" name="pic" onchange="updateFileName(this)" accept=".png, .jpg, .jpeg" required>
                                                     <label class="custom-file-label" for="profilePicture">Choose Candidate Profile Picture</label>
                                                 </div>
                                             </div>

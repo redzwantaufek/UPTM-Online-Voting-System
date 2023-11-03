@@ -267,7 +267,10 @@
                     ?>
                     <p class="mb-4"><?php echo $electionName; ?> Election Result</a>.</p>
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        
+                        <!-- Print Button -->
+                        <div class="d-sm-flex align-items-center justify-content-between mb-1">
+                            <button id="printButton" class="btn btn-primary" onclick="window.print();">Print</button>
+                        </div> 
                     </div>
 
                     <!-- Content Row -->

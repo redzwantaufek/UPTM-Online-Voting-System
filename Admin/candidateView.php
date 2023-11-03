@@ -268,7 +268,12 @@
                                 <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold text-primary">Candidates List</h6>
                                 </div>
+                               
                                 <div class="card-body">
+                                    <!-- Print Button -->
+                                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                                        <button id="printButton" class="btn btn-primary" onclick="window.print();">Print</button>
+                                    </div>
                                     <div class="input-group mb-3 mt-3">
                                         <input type="text" class="form-control" placeholder="Search by name" id="searchCandidate">
                                             <div class="input-group-append">
@@ -280,6 +285,7 @@
                                                 </button>
                                             </div>
                                     </div>
+                                     
                                     <div class="table-responsive">
                                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                             <thead>

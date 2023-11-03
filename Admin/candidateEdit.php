@@ -312,7 +312,7 @@
                                                 <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                     <label for="profilePicture">Profile Picture</label>
                                                     <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="profilePicture" name="pic" onchange="updateFileName(this)">
+                                                        <input type="file" class="custom-file-input" id="profilePicture" name="pic" onchange="updateFileName(this)" accept=".png, .jpg, .jpeg">
                                                         <label class="custom-file-label" for="profilePicture">Choose file</label>
                                                     </div>
                                                 </div>
