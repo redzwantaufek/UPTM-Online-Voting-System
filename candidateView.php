@@ -56,6 +56,7 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <!-- Custom styles-->
     <link href="css/sb-admin-2.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
 
 </head>
 
@@ -213,17 +214,32 @@
                                         <?php foreach ($candidates as $candidate): ?>
                                             <div class="col-lg-12 mb-4">
                                                 <div class="card">
-                                                    <img src="<?php echo $candidate['candidatePic']; ?>" class="card-img-top" alt="Candidate <?php echo $candidate['candidateId']; ?>" 
-                                                    style="max-width: 200px; height: 200px; object-fit: cover; display: block; margin: auto; padding: 10px;">
-                                                    <div class="card-body">
-                                                        <h5 class="card-title"><strong><?php echo $candidate['candidateName']; ?></strong></h5>
-                                                        <p class="card-text"><strong>Candidate No: </strong> <?php echo $candidate['candNo']; ?></p>
-                                                        <p class="card-text"><strong>Email: </strong> <?php echo $candidate['email']; ?></p>
-                                                        <p class="card-text"><strong>Contact: </strong> <?php echo $candidate['contact']; ?></p>
-                                                        <p class="card-text"><strong>Course: </strong> <?php echo $candidate['courseName']; ?></p>
-                                                        <p class="card-text"><strong>Faculty: </strong> <?php echo $candidate['faculty']; ?></p>
-                                                        <p class="card-text"><strong>Manifesto: </strong> <?php echo $candidate['manifesto']; ?></p>
-                                                        <p class="card-text"><strong>Social Link: </strong> <a href="<?php echo $candidate['links']; ?>" target="_blank">Link</a></p>
+                                                    <div class="row no-gutters">
+                                                        <!-- Candidate Picture Section -->
+                                                        <div class="col-md-2 d-flex align-items-center">
+                                                            <img src="<?php echo $candidate['candidatePic']; ?>" class="card-img-top mx-auto" alt="Candidate <?php echo $candidate['candidateId']; ?>" 
+                                                            style="max-width: 200px; height: 200px; object-fit: cover; padding: 10px;">
+                                                        </div>
+                                                        <!-- Candidate Info Section -->
+                                                        <div class="col-md-4">
+                                                            <div class="card-body">
+                                                                <h5 class="card-title"><strong><?php echo $candidate['candidateName']; ?></strong></h5>
+                                                                <p class="card-text"><strong>Candidate No: </strong> <?php echo $candidate['candNo']; ?></p>
+                                                                <p class="card-text"><strong>Email: </strong> <?php echo $candidate['email']; ?></p>
+                                                                <p class="card-text"><strong>Contact: </strong> <?php echo $candidate['contact']; ?></p>
+                                                                <p class="card-text"><strong>Course: </strong> <?php echo $candidate['courseName']; ?></p>
+                                                                <p class="card-text"><strong>Faculty: </strong> <?php echo $candidate['faculty']; ?></p>
+                                                                <p class="card-text"><strong>Manifesto: </strong> <?php echo $candidate['manifesto']; ?></p>
+                                                                <p class="card-text"><strong>Link: </strong> <a href="<?php echo $candidate['links']; ?>" target="_blank">Link</a></p>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Candidate Poster Section -->
+                                                        <div class="col-md-4">
+                                                            <a href="<?php echo $candidate['poster']; ?>" data-lightbox="poster">
+                                                                <img src="<?php echo $candidate['poster']; ?>" class="card-img-top" alt="Poster <?php echo $candidate['candidateId']; ?>" 
+                                                                style="max-width: 300px; height: 300px; object-fit: cover; display: block; margin: auto; padding: 10px;">
+                                                            </a>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -296,6 +312,8 @@
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox-plus-jquery.min.js"></script>
     
 
 </body>

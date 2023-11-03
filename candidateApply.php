@@ -252,7 +252,7 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Candidate Dashboard</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Candidate Application</h1>
                     </div>
 
                     <!-- Content Row -->
@@ -262,7 +262,7 @@
                         <div class="col-xl-12 col-md-12 mb-4">
                             <div class="card border-0 shadow h-100 py-2 rounded-lg">
                                 <div class="card-body">
-                                <?php if ($hasApplied): ?>
+                                <?php if ($application['status'] == 'Review'): ?>
                                     <h5 class="font-weight-bold">You have already applied. Here are your application details:</h5>
                                     <div class="card">
                                         <div class="card-body">                                            
@@ -279,27 +279,37 @@
                                             <p class="card-text"><strong>Status: </strong><?php echo $application['status']; ?></p>
                                         </div>
                                     </div>
-                                    <?php if ($application['status'] == 'Accept'): ?>
+                                    <?php elseif ($application['status'] == 'Accept'): ?>
                                     <div style="margin-top: 20px;"></div>
                                         <h5 class="font-weight-bold">You have already accepted. Here are your candidate details:</h5>
                                         <div class="card">
-                                            <div class="card-body">
-                                                <h5 class="card-title">Candidate Info</h5>
-                                                <img src="<?php echo $candidate['candidatePic']; ?>" class="img-profile img-fluid" title="profile images" 
-                                                style="max-width: 200px; margin-bottom:10px; border-radius: 5px; " onerror="this.onerror=null; this.src='../img/no_profile.webp'">
-                                                <p class="card-text"><strong>Name: </strong><?php echo $candidate['candidateName']; ?></p>
-                                                <p class="card-text"><strong>Candidate No: </strong><?php echo $candidate['candNo']; ?></p>
-                                                <p class="card-text"><strong>Email: </strong><?php echo $candidate['email']; ?></p>
-                                                <p class="card-text"><strong>Contact: </strong><?php echo $candidate['contact']; ?></p>
-                                                <p class="card-text"><strong>Course: </strong><?php echo $candidate['courseName']; ?></p>
-                                                <p class="card-text"><strong>Faculty: </strong><?php echo $candidate['faculty']; ?></p>
-                                                <p class="card-text"><strong>Manifesto: </strong><?php echo $candidate['manifesto']; ?></p>
-                                                <p class="card-text"><strong>Manifesto Link: </strong><a href="<?php echo $candidate['links']; ?>"><?php echo $candidate['links']; ?></a></p>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Candidate Info</h5>
+                                                        <img src="<?php echo $candidate['candidatePic']; ?>" class="img-profile img-fluid" title="profile images" 
+                                                        style="max-width: 200px; margin-bottom:10px; border-radius: 5px; " onerror="this.onerror=null; this.src='../img/no_profile.webp'">
+                                                        <p class="card-text"><strong>Name: </strong><?php echo $candidate['candidateName']; ?></p>
+                                                        <p class="card-text"><strong>Status: </strong><?php echo $application['status']; ?></p>
+                                                        <p class="card-text"><strong>Candidate No: </strong><?php echo $candidate['candNo']; ?></p>
+                                                        <p class="card-text"><strong>Email: </strong><?php echo $candidate['email']; ?></p>
+                                                        <p class="card-text"><strong>Contact: </strong><?php echo $candidate['contact']; ?></p>
+                                                        <p class="card-text"><strong>Course: </strong><?php echo $candidate['courseName']; ?></p>
+                                                        <p class="card-text"><strong>Faculty: </strong><?php echo $candidate['faculty']; ?></p>
+                                                        <p class="card-text"><strong>Manifesto: </strong><?php echo $candidate['manifesto']; ?></p>
+                                                        <p class="card-text"><strong>Link: </strong><a href="<?php echo $candidate['links']; ?>"><?php echo $candidate['links']; ?></a></p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <a href="<?php echo $candidate['poster']; ?>" data-lightbox="poster">
+                                                        <img src="<?php echo $candidate['poster']; ?>" class="card-img-top" alt="Poster <?php echo $candidate['candidateId']; ?>" 
+                                                        style="width: 100%; height: auto; object-fit: cover; display: block; margin: auto; padding: 10px;">
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
                                         <a href="candidateEdit.php?studentId=<?php echo $_SESSION['student_id']; ?>" class="btn btn-primary mt-3 float-right">Edit Manifesto</a>
-                                    <?php endif; ?>
-                                    <?php if ($application['status'] == 'Reject'): ?>
+                                    <?php elseif ($application['status'] == 'Reject'): ?>
                                     <div style="margin-top: 20px;"></div>
                                         <h5 class="font-weight-bold">Your application has been rejected. Here are your application details:</h5>
                                         <div class="card">
@@ -317,7 +327,6 @@
                                                 <p class="card-text"><strong>Status: </strong><?php echo $application['status']; ?></p>
                                             </div>
                                         </div>
-                                    <?php endif; ?>
                                 <?php else: ?>
                                         <div class="col-12 text-center mb-4">
                                             <img src="<?php echo $imagePath; ?>" class="img-profile rounded-circle border-secondary img-fluid border p-3 bg-light" title="profile images" style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">    
