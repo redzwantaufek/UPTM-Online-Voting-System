@@ -370,7 +370,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="manifesto">Manifesto</label>
-                                                <textarea class="form-control" id="manifesto" name="manifesto"  placeholder="Enter your manifesto" required></textarea>
+                                                <textarea class="form-control" id="manifesto" name="manifesto"  placeholder="Enter your manifesto *not mandatory" required></textarea>
                                             </div>
                                             <button class="btn btn-danger" onclick="window.location.href='index.php'" title="cancel" type="button">Cancel</button>
                                             <button type="submit" class="btn btn-primary">Submit Application</button>
