@@ -160,6 +160,7 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
                         <a class="collapse-item" href="candidateCreate.html">Verify Candidates</a>
+                        <a class="collapse-item" href="candidatesApplication.php">Candidates Status</a>
                         <a class="collapse-item" href="candidateView.html">View Candidates</a>
                     </div>
                 </div>
