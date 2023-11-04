@@ -30,17 +30,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
         }
         $pic = $target_file;
-
-        // SQL query to update the candidate details, candidate no and profile picture
-        $sql = "UPDATE candidate SET candidateName = ?, candNo = ?, candidatePic = ?, email = ?, contact = ?, faculty = ?, courseName = ?, manifesto = ?, links = ? WHERE candidateId = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssssssssi", $candidateName, $candNo, $pic, $email, $contact, $faculty, $courseName, $manifesto, $links, $candidateIdToEdit);
-    } else {
-        // SQL query to update the candidate details and candidate no without changing the profile picture
-        $sql = "UPDATE candidate SET candidateName = ?, candNo = ?, email = ?, contact = ?, faculty = ?, courseName = ?, manifesto = ?, links = ? WHERE candidateId = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssssssi", $candidateName, $candNo, $email, $contact, $faculty, $courseName, $manifesto, $links, $candidateIdToEdit);
     }
+
+    // Check if a new poster has been uploaded
+    if (isset($_FILES['poster']) && $_FILES['poster']['error'] === UPLOAD_ERR_OK) {
+        $target_dir = "uploads/";
+        $target_file = $target_dir . basename($_FILES["poster"]["name"]);
+
+        if (!move_uploaded_file($_FILES["poster"]["tmp_name"], $target_file)) {
+            echo "Sorry, there was an error uploading your file.";
+            exit();
+        }
+        $poster = $target_file;
+    }
+
+    // SQL query to update the candidate details, candidate no, profile picture and poster
+    $sql = "UPDATE candidate SET candidateName = ?, candNo = ?, candidatePic = ?, poster = ?, email = ?, contact = ?, faculty = ?, courseName = ?, manifesto = ?, links = ? WHERE candidateId = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssssssssssi", $candidateName, $candNo, $pic, $poster, $email, $contact, $faculty, $courseName, $manifesto, $links, $candidateIdToEdit);
 
     if ($stmt->execute()) { // Execute the update query
         $_SESSION['message'] = "Candidate details updated successfully!";

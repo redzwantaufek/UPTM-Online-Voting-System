@@ -58,6 +58,8 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <!-- Custom styles-->
     <link href="css/sb-admin-2.css" rel="stylesheet">
+    <!-- Light box-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
 
 </head>
 
@@ -315,6 +317,7 @@
                                                         <td><?php echo $candidate['courseName']; ?></td>
                                                         <td><?php echo $candidate['faculty']; ?></td>
                                                         <td><?php echo $candidate['manifesto']; ?></td>
+                                                        <td><a href="<?php echo $candidate['poster']; ?>" data-lightbox="poster"><img src="<?php echo $candidate['poster']; ?>" alt="Poster" class="img-fluid" style="max-width: 100px;"></a></td>
                                                         <td><a href="<?php echo $candidate['links']; ?>" target="_blank">Link</a></td>
                                                         <td>
                                                             <a href="candidateEdit.php?id=<?php echo $candidate['candidateId']; ?>" class="btn btn-primary btn-sm mr-2">Edit</a>
@@ -392,6 +395,8 @@
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox-plus-jquery.min.js"></script>
 
     <script>
     // Get all delete buttons
