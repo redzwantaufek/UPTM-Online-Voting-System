@@ -47,39 +47,6 @@
         exit();
     }
 
-    // Update candidate information and profile picture if form is submitted
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $candidateName = $_POST['candidateName'];
-        $candNo = $_POST['candNo'];
-        $email = $_POST['email'];
-        $contact = $_POST['contact'];
-        $faculty = $_POST['faculty'];
-        $courseName = $_POST['courseName'];
-        $manifesto = $_POST['manifesto'];
-        $links = $_POST['links'];
-
-        // Check if a new profile picture has been uploaded
-        if (isset($_FILES['candidatePic']) && $_FILES['candidatePic']['error'] === UPLOAD_ERR_OK) {
-            $target_dir = "uploads/";
-            $target_file = $target_dir . basename($_FILES["candidatePic"]["name"]);
-
-            if (!move_uploaded_file($_FILES["candidatePic"]["tmp_name"], $target_file)) {
-                echo "Sorry, there was an error uploading your file.";
-                exit();
-            }
-            $candidatePic = $target_file;
-        } else {
-            $candidatePic = $editedCandidatePic;
-        }
-
-        $sql = "UPDATE candidate SET candidateName = ?, email = ?, contact = ?, faculty = ?, courseName = ?, manifesto = ?, links = ?, candidatePic = ? WHERE candidateId = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssssssi", $candidateName, $email, $contact, $faculty, $courseName, $manifesto, $links, $candidatePic, $candidateIdToEdit);
-        $stmt->execute();
-
-        header('Location: candidateList.php');
-        exit();
-    }
     $conn->close();
 ?>
 
@@ -290,6 +257,14 @@
                                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                     Links</div>
                                                 <input type="text" class="form-control" id="links" name="links" value="<?php echo $candidate['links']; ?>">
+                                                <hr class="sidebar-divider my-1">
+                                                <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                    <label for="posterImage">Poster Image</label>
+                                                    <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="posterImage" name="poster" onchange="updateFileName(this)" accept=".png, .jpg, .jpeg">
+                                                        <label class="custom-file-label" for="posterImage">Choose file</label>
+                                                    </div>
+                                                </div>
                                                 <button type="submit" class="btn btn-primary mt-3 rounded-pill" title="save">Save</button>
                                                 <button class="btn btn-danger mt-3 rounded-pill" onclick="window.location.href='candidateApply.php'" title="cancel" type="button">Cancel</button>
                                             </form>
