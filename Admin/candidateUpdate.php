@@ -8,7 +8,6 @@ if (!isset($_SESSION['admin_id'])) {
     exit();
 }
 
-// Check if form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $candidateIdToEdit = $_POST['id'];
     $candidateName = $_POST['candidateName'];
@@ -45,15 +44,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // SQL query to update the candidate details, candidate no, profile picture and poster
-    $sql = "UPDATE candidate SET candidateName = ?, candNo = ?, candidatePic = ?, poster = ?, email = ?, contact = ?, faculty = ?, courseName = ?, manifesto = ?, links = ? WHERE candidateId = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssssssssi", $candidateName, $candNo, $pic, $poster, $email, $contact, $faculty, $courseName, $manifesto, $links, $candidateIdToEdit);
+    $sql = "UPDATE candidate SET candidateName = ?, candNo = ?, email = ?, contact = ?, faculty = ?, courseName = ?, manifesto = ?, links = ? WHERE candidateId = ?";
+    $params = array($candidateName, $candNo, $email, $contact, $faculty, $courseName, $manifesto, $links, $candidateIdToEdit);
 
-    if ($stmt->execute()) { // Execute the update query
-        $_SESSION['message'] = "Candidate details updated successfully!";
-    } else {
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param(str_repeat('s', count($params)), ...$params);
+
+    if (!$stmt->execute()) { // Execute the update query
         $_SESSION['message'] = "Error updating candidate details.";
     }
+
+    if (isset($pic)) {
+        $sql = "UPDATE candidate SET candidatePic = ? WHERE candidateId = ?";
+        $params = array($pic, $candidateIdToEdit);
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('ss', ...$params);
+
+        if (!$stmt->execute()) { // Execute the update query
+            $_SESSION['message'] = "Error updating candidate picture.";
+        }
+    }
+
+    if (isset($poster)) {
+        $sql = "UPDATE candidate SET poster = ? WHERE candidateId = ?";
+        $params = array($poster, $candidateIdToEdit);
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('ss', ...$params);
+
+        if (!$stmt->execute()) { // Execute the update query
+            $_SESSION['message'] = "Error updating candidate poster.";
+        }
+    }
+
+    $_SESSION['message'] = "Candidate details updated successfully!";
 }
 
 // Close the database connection

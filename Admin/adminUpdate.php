@@ -59,6 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Close the database connection
 $conn->close();
 
-//header('Location: adminList.php');
+header('Location: adminList.php');
 exit();
 ?>
