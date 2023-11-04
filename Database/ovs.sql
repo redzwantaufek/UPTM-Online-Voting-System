@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 03, 2023 at 06:50 PM
+-- Generation Time: Nov 04, 2023 at 08:37 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -108,12 +108,13 @@ CREATE TABLE `apply` (
 --
 
 INSERT INTO `apply` (`applyId`, `studentId`, `applyPic`, `name`, `email`, `contact`, `course`, `faculty`, `semester`, `manifesto`, `link`, `status`) VALUES
-(33, 1, 'uploads/profile6m.png', 'Muhammad Redzwan', 'taufekredzwan@gmail.com', '0194678990', 'CC101 - Diploma in Computer Science', 'FCOM', 'Semester 6', 'abc', '', 'Reject'),
+(33, 1, 'uploads/profile6m.png', 'Muhammad Redzwan', 'taufekredzwan@gmail.com', '0194678990', 'CC101 - Diploma in Computer Science', 'FCOM', 'Semester 6', 'abc', '', 'Accept'),
 (34, 7, 'uploads/profile 9.jpg', 'Azlan bin Shah', 'azlan@gmail.com', '012-345 6789', 'AA103-Diploma of Accountancy', 'FBASS', 'Semester 6', 'def', '', 'Reject'),
 (35, 8, 'uploads/profile10.jpeg', 'Hazirah binti Abdul Rahim', 'hazirah@gmail.com', '03-7953 7252', 'BK101-Diploma in Corporate Communication', 'FEHA', 'Semester 5', 'fgh', '', 'Accept'),
 (36, 9, 'uploads/profile 7.png', 'Hafiz bin Jamaluddin', 'hafiz@gmail.com', '03-5832 3553', 'Bachelor of Information Technology in Cyber Security', 'FCOM', 'Semester 4', 'hfhd', '', 'Accept'),
 (37, 10, 'uploads/profile4f.jpg', 'Izzati binti Idris', 'izzati@gmail.com', '013-245 4740', 'Bachelor of Bussiness Administration', 'FBASS', 'Semester 7', 'fdbdfvb', '', 'Accept'),
-(38, 15, 'uploads/profile 9.jpg', 'Faris', 'faris@gmail.com', '123456677', 'CC101', 'FCOM', 'Semester 6', 'gdfgdfgfd', '', 'Accept');
+(38, 15, 'uploads/profile 9.jpg', 'Faris', 'faris@gmail.com', '123456677', 'CC101', 'FCOM', 'Semester 6', 'gdfgdfgfd', '', 'Accept'),
+(39, 11, 'uploads/profile 9.jpg', 'Iqbal Bin Ismail', 'iqbal@gmail.com', '013-819 1677', 'CT203-Bachelor of Information Technology in Bussiness Computing', 'FCOM', 'Semester 3', '', '', 'Accept');
 
 -- --------------------------------------------------------
 
@@ -133,19 +134,22 @@ CREATE TABLE `candidate` (
   `manifesto` text NOT NULL,
   `links` varchar(255) NOT NULL,
   `contact` varchar(255) NOT NULL,
-  `voteNum` int(255) NOT NULL
+  `voteNum` int(255) NOT NULL,
+  `poster` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `candidate`
 --
 
-INSERT INTO `candidate` (`candidateId`, `studentId`, `candNo`, `candidateName`, `candidatePic`, `faculty`, `courseName`, `email`, `manifesto`, `links`, `contact`, `voteNum`) VALUES
-(8, 1, 1, 'Muhammad Redzwan', 'uploads/profile6m.png', 'FCOM', 'CC101 - Diploma in Computer Science', 'taufekredzwan@gmail.com', 'abc', '', '0194678990', 0),
-(9, 8, 2, 'Hazirah binti Abdul Rahim', 'uploads/profile10.jpeg', 'FEHA', 'BK101-Diploma in Corporate Communication', 'hazirah@gmail.com', 'fgh', '', '03-7953 7252', 0),
-(10, 9, 3, 'Hafiz bin Jamaluddin', 'uploads/profile 7.png', 'FCOM', 'Bachelor of Information Technology in Cyber Security', 'hafiz@gmail.com', 'hfhd', '', '03-5832 3553', 0),
-(11, 10, 4, 'Izzati binti Idris', 'uploads/profile4f.jpg', 'FBASS', 'Bachelor of Bussiness Administration', 'izzati@gmail.com', 'fdbdfvb', '', '013-245 4740', 0),
-(12, 15, 5, 'Faris', 'uploads/profile 9.jpg', 'FCOM', 'CC101', 'faris@gmail.com', 'gdfgdfgfd', '', '123456677', 0);
+INSERT INTO `candidate` (`candidateId`, `studentId`, `candNo`, `candidateName`, `candidatePic`, `faculty`, `courseName`, `email`, `manifesto`, `links`, `contact`, `voteNum`, `poster`) VALUES
+(8, 1, 1, 'Muhammad Redzwan', 'uploads/profile 7.png', 'FCOM', 'CC101 - Diploma in Computer Science', 'taufekredzwan@gmail.com', 'abcdefg', 'https://www.youtube.com/watch?v=JoATBgC9Z0E&list=WL&index=12&t=22s', '0194678990', 0, 'uploads/poster6.jpeg'),
+(9, 8, 2, 'Hazirah binti Abdul Rahim', 'uploads/profile10.jpeg', 'FEHA', 'BK101-Diploma in Corporate Communication', 'hazirah@gmail.com', 'fgh', '', '03-7953 7252', 0, 'uploads/poster2.jpg'),
+(10, 9, 3, 'Hafiz bin Jamaluddin', 'uploads/profile 7.png', 'FCOM', 'Bachelor of Information Technology in Cyber Security', 'hafiz@gmail.com', 'hfhd', '', '03-5832 3553', 0, 'uploads/poster3.jpg'),
+(11, 10, 4, 'Izzati binti Idris', 'uploads/profile4f.jpg', 'FBASS', 'Bachelor of Bussiness Administration', 'izzati@gmail.com', 'fdbdfvb', '', '013-245 4740', 0, 'uploads/poster4.png'),
+(12, 15, 5, 'Faris', 'uploads/profile 9.jpg', 'FCOM', 'CC101', 'faris@gmail.com', 'gdfgdfgfd', '', '123456677', 0, 'uploads/poster5.jpg'),
+(15, 11, 6, 'Iqbal Bin Ismail', 'uploads/profile 9.jpg', 'FCOM', 'CT203-Bachelor of Information Technology in Bussiness Computing', 'iqbal@gmail.com', '', '', '013-819 1677', 0, ''),
+(16, 11, 7, 'Iqbal Bin Ismail', 'uploads/profile 9.jpg', 'FCOM', 'CT203-Bachelor of Information Technology in Bussiness Computing', 'iqbal@gmail.com', '', '', '013-819 1677', 0, '');
 
 -- --------------------------------------------------------
 
@@ -199,7 +203,7 @@ INSERT INTO `student` (`studentId`, `studentPic`, `studentName`, `email`, `passw
 (8, 'uploads/profile10.jpeg', 'Hazirah binti Abdul Rahim', 'hazirah@gmail.com', '12345', '03-7953 7252', 0, 'BK101-Diploma in Corporate Communication', 'FEHA', 1),
 (9, 'uploads/profile 7.png', 'Hafiz bin Jamaluddin', 'hafiz@gmail.com', '12345', '03-5832 3553', 0, 'Bachelor of Information Technology in Cyber Security', 'FCOM', 1),
 (10, 'uploads/profile4f.jpg', 'Izzati binti Idris', 'izzati@gmail.com', '12345', '013-245 4740', 0, 'Bachelor of Bussiness Administration', 'FBASS', 1),
-(11, 'uploads/profile2.png', 'Iqbal Bin Ismail', 'iqbal@gmail.com', '12345', '013-819 1677', 0, 'CT203-Bachelor of Information Technology in Bussiness Computing', 'FCOM', 0),
+(11, 'uploads/profile2.png', 'Iqbal Bin Ismail', 'iqbal@gmail.com', '12345', '013-819 1677', 0, 'CT203-Bachelor of Information Technology in Bussiness Computing', 'FCOM', 1),
 (12, 'uploads/profile5m.avif', 'Izara binti Kamarulzaman', 'izara@gmail.com', '12345', '03-2153 1539', 0, 'BE203-Bachelor of Education in Teaching English As A Second Language', 'FEHA', 0),
 (13, 'uploads/pic1.jpg', 'Porsche', 'prosche@gmail.com', '12345', '0194678990', 0, 'CC101 - Computer Science', 'FCOM', 0),
 (14, 'uploads/profile3f.png', 'siti', 'siti@gmail.com', '12345', '019234567', 0, 'CC101', 'FCOM', 0),
@@ -309,13 +313,13 @@ ALTER TABLE `announcement`
 -- AUTO_INCREMENT for table `apply`
 --
 ALTER TABLE `apply`
-  MODIFY `applyId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `applyId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `candidate`
 --
 ALTER TABLE `candidate`
-  MODIFY `candidateId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `candidateId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `election`
