@@ -23,7 +23,7 @@
 
         // Check if a new poster has been uploaded
         if (isset($_FILES['poster']) && $_FILES['poster']['error'] === UPLOAD_ERR_OK) {
-            $target_dir = "poster/";
+            $target_dir = "uploads/";
             $target_file = $target_dir . basename($_FILES["poster"]["name"]);
 
             if (!move_uploaded_file($_FILES["poster"]["tmp_name"], $target_file)) {

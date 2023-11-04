@@ -28,6 +28,7 @@
     }
 
     // If the student has applied, fetch the application details
+    $application = array('status' => null);
     if ($hasApplied) {
         $sql = "SELECT * FROM apply WHERE studentId = '".$_SESSION['student_id']."'";
         $result = $conn->query($sql);
@@ -379,7 +380,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="manifesto">Manifesto</label>
-                                                <textarea class="form-control" id="manifesto" name="manifesto"  placeholder="Enter your manifesto *not mandatory" required></textarea>
+                                                <textarea class="form-control" id="manifesto" name="manifesto"  placeholder="Enter your manifesto *not mandatory"></textarea>
                                             </div>
                                             <button class="btn btn-danger" onclick="window.location.href='index.php'" title="cancel" type="button">Cancel</button>
                                             <button type="submit" class="btn btn-primary">Submit Application</button>

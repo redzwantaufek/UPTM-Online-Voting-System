@@ -213,15 +213,15 @@
                                         <!-- Candidate Card 1 -->
                                         <?php foreach ($candidates as $candidate): ?>
                                             <div class="col-lg-12 mb-4">
-                                                <div class="card">
+                                                <div class="card" style="border: 2px solid #6c757d; border-radius: 10px;">
                                                     <div class="row no-gutters">
                                                         <!-- Candidate Picture Section -->
-                                                        <div class="col-md-2 d-flex align-items-center">
+                                                        <div class="col-md-2 d-flex align-items-center" style="border-right: 1px solid #6c757d;">
                                                             <img src="<?php echo $candidate['candidatePic']; ?>" class="card-img-top mx-auto" alt="Candidate <?php echo $candidate['candidateId']; ?>" 
                                                             style="max-width: 200px; height: 200px; object-fit: cover; padding: 10px;">
                                                         </div>
                                                         <!-- Candidate Info Section -->
-                                                        <div class="col-md-4">
+                                                        <div class="col-md-4" style="border-right: 1px solid #6c757d;">
                                                             <div class="card-body">
                                                                 <h5 class="card-title"><strong><?php echo $candidate['candidateName']; ?></strong></h5>
                                                                 <p class="card-text"><strong>Candidate No: </strong> <?php echo $candidate['candNo']; ?></p>
