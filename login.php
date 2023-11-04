@@ -29,19 +29,19 @@
         <!-- Outer Row -->
         <div class="row justify-content-center">
 
-            <div class="col-xl-10 col-lg-12 col-md-9">
+            <div class="col-xl-8 col-lg-12 col-md-9">
 
                 <div class="card o-hidden border-0 shadow-lg my-5">
                     <div class="card-body p-0">
                         <!-- Nested Row within Card Body -->
                         <div class="row">
-                            <div class="col-lg-6 d-flex justify-content-center align-items-center">
-                                <img src="img/uptm.jpg" alt="UPTM" class="img-fluid text-center mx-auto p-4" >
+                            <div class="col-lg-12 d-flex justify-content-center align-items-center">
+                                <img src="img/UPTM_OVS_LOGO4.png" alt="UPTM" class="img-fluid text-center mx-auto p-4" >
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-12">
                                 <div class="p-5">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">UPTM ONLINE VOTING SYSTEM</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">Login</h1>
                                     </div>
                                     <form class="user" method="POST" action="login.php">
                                         <div class="form-group">
