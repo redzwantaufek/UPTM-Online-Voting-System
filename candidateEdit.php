@@ -70,6 +70,7 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <!-- Custom styles-->
     <link href="css/sb-admin-2.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
 
 </head>
 
@@ -220,8 +221,15 @@
                             <div class="card border-0 shadow h-100 py-2 rounded-lg">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
-                                        <div class="col-12 text-center mb-4">
+                                        <div class="col-6 text-center mb-4">
+                                            <label for="profilePicture">Profile Picture</label><br>
                                             <img src="<?php echo $editedCandidatePic; ?>" class="img-profile rounded-circle border-secondary img-fluid border p-3 bg-light" title="profile images" style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">    
+                                        </div>
+                                        <div class="col-6 text-center mb-4">
+                                            <label for="poster">Poster</label><br>
+                                            <a href="<?php echo $candidate['poster']; ?>" data-lightbox="poster">
+                                                <img src="<?php echo $candidate['poster']; ?>" class="img-fluid" alt="Poster" style="max-width: 200px;">
+                                            </a>
                                         </div>
                                         <div class="col-12">
                                             <form action="candidateUpdate.php" method="post" enctype="multipart/form-data">
@@ -339,6 +347,8 @@
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox-plus-jquery.min.js"></script>
 
     <!-- This script updates the file name when a new file is selected -->
     <script>

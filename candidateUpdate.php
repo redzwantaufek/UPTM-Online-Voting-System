@@ -34,9 +34,15 @@
         }
 
         // SQL query to update the candidate details, candidate no, profile picture and poster
-        $sql = "UPDATE candidate SET candidateName = ?, candNo = ?, email = ?, contact = ?, faculty = ?, courseName = ?, manifesto = ?, links = ?, poster = ? WHERE candidateId = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssssssssi", $candidateName, $candNo, $email, $contact, $faculty, $courseName, $manifesto, $links, $poster, $candidateIdToEdit);
+        if (isset($poster)) {
+            $sql = "UPDATE candidate SET candidateName = ?, candNo = ?, email = ?, contact = ?, faculty = ?, courseName = ?, manifesto = ?, links = ?, poster = ? WHERE candidateId = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("sssssssssi", $candidateName, $candNo, $email, $contact, $faculty, $courseName, $manifesto, $links, $poster, $candidateIdToEdit);
+        } else {
+            $sql = "UPDATE candidate SET candidateName = ?, candNo = ?, email = ?, contact = ?, faculty = ?, courseName = ?, manifesto = ?, links = ? WHERE candidateId = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("ssssssssi", $candidateName, $candNo, $email, $contact, $faculty, $courseName, $manifesto, $links, $candidateIdToEdit);
+        }
 
         if ($stmt->execute()) { // Execute the update query
             $_SESSION['message'] = "Candidate details updated successfully!";
