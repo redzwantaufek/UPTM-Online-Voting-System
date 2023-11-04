@@ -221,7 +221,7 @@
                                                             style="max-width: 200px; height: 200px; object-fit: cover; padding: 10px;">
                                                         </div>
                                                         <!-- Candidate Info Section -->
-                                                        <div class="col-md-4" style="border-right: 1px solid #6c757d;">
+                                                        <div class="col-md-6" style="border-right: 1px solid #6c757d;">
                                                             <div class="card-body">
                                                                 <h5 class="card-title"><strong><?php echo $candidate['candidateName']; ?></strong></h5>
                                                                 <p class="card-text"><strong>Candidate No: </strong> <?php echo $candidate['candNo']; ?></p>
@@ -234,10 +234,10 @@
                                                             </div>
                                                         </div>
                                                         <!-- Candidate Poster Section -->
-                                                        <div class="col-md-4">
-                                                            <a href="<?php echo $candidate['poster']; ?>" data-lightbox="poster">
-                                                                <img src="<?php echo $candidate['poster']; ?>" class="card-img-top" alt="Poster <?php echo $candidate['candidateId']; ?>" 
-                                                                style="max-width: 300px; height: 300px; object-fit: cover; display: block; margin: auto; padding: 10px;">
+                                                        <div class="col-md-2 d-flex align-items-center">
+                                                            <a href="<?php echo $candidate['poster']; ?>" data-lightbox="poster" class="d-flex align-items-center">
+                                                                <img src="<?php echo $candidate['poster']; ?>" class="card-img-top mx-auto" alt="Poster <?php echo $candidate['candidateId']; ?>" 
+                                                                style="max-width: 300px; height: 300px; object-fit: cover; padding: 10px;">
                                                             </a>
                                                         </div>
                                                     </div>
