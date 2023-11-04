@@ -141,6 +141,7 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
                         <a class="collapse-item" href="candidateCreate.php">Verify Candidates</a>
+                        <a class="collapse-item" href="candidatesApplication.php">Candidates Status</a>
                         <a class="collapse-item" href="candidateView.php">View Candidates</a>
                     </div>
                 </div>
@@ -159,6 +160,7 @@
                         <a class="collapse-item" href="electionView.php">Election View</a>
                         <a class="collapse-item" href="electionSet.php">Election Set Up</a>
                         <a class="collapse-item" href="annSet.php">Election Announcement</a>
+                        <a class="collapse-item" href="annSet.php">Election Winner</a>
                     </div>
                 </div>
             </li>
@@ -275,94 +277,68 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Candidates</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Candidate Verification</h1>
                     </div>
 
                     <!-- Content Row -->
                     <div class="row">
 
                         <!-- Candidate Profile Card -->
-                        <?php foreach ($applications as $application): ?>
-                        <?php if ($application['status'] == 'Review'): ?>
-                        <div class="col-xl-12 col-md-12 mb-4">
-                            <div class="card border-0 shadow h-100 py-2 rounded-lg">
-                                <div class="card-body">
-                                    <h5 class="font-weight-bold">Application details:</h5>
-                                    <div class="card">
-                                        <div class="card-body">                                            
-                                            <h5 class="card-title">Application Info</h5>
-                                            <img src="<?php echo $application['applyPic']; ?>" class="img-profile img-fluid" title="profile images" 
-                                            style="max-width: 200px; margin-bottom:10px; border-radius: 5px; " onerror="this.onerror=null; this.src='../img/no_profile.webp'">
-                                            <p class="card-text"><strong>Name: </strong><?php echo $application['name']; ?></p>
-                                            <p class="card-text"><strong>Email: </strong><?php echo $application['email']; ?></p>
-                                            <p class="card-text"><strong>Contact: </strong><?php echo $application['contact']; ?></p>
-                                            <p class="card-text"><strong>Course: </strong><?php echo $application['course']; ?></p>
-                                            <p class="card-text"><strong>Faculty: </strong><?php echo $application['faculty']; ?></p>
-                                            <p class="card-text"><strong>Semester: </strong><?php echo $application['semester']; ?></p>
-                                            <p class="card-text"><strong>Manifesto: </strong><?php echo $application['manifesto']; ?></p>
-                                            <p class="card-text"><strong>Status: </strong><?php echo $application['status']; ?></p>
-                                            <button type="button" class="btn btn-success" onclick="updateStatus('Accept', '<?php echo $application['applyId']; ?>')">Accept</button>
-                                            <button type="button" class="btn btn-danger" onclick="updateStatus('Reject', '<?php echo $application['applyId']; ?>')">Reject</button>    
+                    <?php 
+                    $reviewExists = false;
+                    if (!empty($applications)): 
+                        foreach ($applications as $application): 
+                            if ($application['status'] == 'Review'): 
+                                $reviewExists = true;
+                    ?>
+                                <div class="col-xl-12 col-md-12 mb-4">
+                                    <div class="card border-0 shadow h-100 py-2 rounded-lg">
+                                        <div class="card-body">
+                                            <h5 class="font-weight-bold">Application details:</h5>
+                                            <div class="card">
+                                                <div class="card-body">                                            
+                                                    <h5 class="card-title">Application Info</h5>
+                                                    <img src="<?php echo $application['applyPic']; ?>" class="img-profile img-fluid" title="profile images" 
+                                                    style="max-width: 200px; margin-bottom:10px; border-radius: 5px; " onerror="this.onerror=null; this.src='../img/no_profile.webp'">
+                                                    <p class="card-text"><strong>Name: </strong><?php echo $application['name']; ?></p>
+                                                    <p class="card-text"><strong>Email: </strong><?php echo $application['email']; ?></p>
+                                                    <p class="card-text"><strong>Contact: </strong><?php echo $application['contact']; ?></p>
+                                                    <p class="card-text"><strong>Course: </strong><?php echo $application['course']; ?></p>
+                                                    <p class="card-text"><strong>Faculty: </strong><?php echo $application['faculty']; ?></p>
+                                                    <p class="card-text"><strong>Semester: </strong><?php echo $application['semester']; ?></p>
+                                                    <p class="card-text"><strong>Manifesto: </strong><?php echo $application['manifesto']; ?></p>
+                                                    <p class="card-text"><strong>Status: </strong><?php echo $application['status']; ?></p>
+                                                    <button type="button" class="btn btn-success" onclick="updateStatus('Accept', '<?php echo $application['applyId']; ?>')">Accept</button>
+                                                    <button type="button" class="btn btn-danger" onclick="updateStatus('Reject', '<?php echo $application['applyId']; ?>')">Reject</button>    
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <?php endif; ?>
-                        <?php endforeach; ?>
-                        <?php foreach ($applications as $application): ?>
-                        <?php if ($application['status'] == 'Accept'): ?>
-                        <div class="col-xl-12 col-md-12 mb-4">
-                            <div class="card border-0 shadow h-100 py-2 rounded-lg">
-                                <div class="card-body">
-                                    <h5 class="font-weight-bold">Accepted Application details:</h5>
-                                    <div class="card">
-                                        <div class="card-body">                                            
-                                            <h5 class="card-title">Application Info</h5>
-                                            <img src="<?php echo $application['applyPic']; ?>" class="img-profile img-fluid" title="profile images" 
-                                            style="max-width: 200px; margin-bottom:10px; border-radius: 5px; " onerror="this.onerror=null; this.src='../img/no_profile.webp'">
-                                            <p class="card-text"><strong>Name: </strong><?php echo $application['name']; ?></p>
-                                            <p class="card-text"><strong>Email: </strong><?php echo $application['email']; ?></p>
-                                            <p class="card-text"><strong>Contact: </strong><?php echo $application['contact']; ?></p>
-                                            <p class="card-text"><strong>Course: </strong><?php echo $application['course']; ?></p>
-                                            <p class="card-text"><strong>Faculty: </strong><?php echo $application['faculty']; ?></p>
-                                            <p class="card-text"><strong>Semester: </strong><?php echo $application['semester']; ?></p>
-                                            <p class="card-text"><strong>Manifesto: </strong><?php echo $application['manifesto']; ?></p>
-                                            <p class="card-text"><strong>Status: </strong><?php echo $application['status']; ?></p>
-                                        </div>
+                    <?php 
+                            endif; 
+                        endforeach; 
+                        if (!$reviewExists):
+                    ?>
+                            <div class="col-xl-12 col-md-12 mb-4">
+                                <div class="card border-0 shadow h-100 py-2 rounded-lg">
+                                    <div class="card-body">
+                                        <h5 class="font-weight-bold">No applications</h5>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <?php endif; ?>
-                        <?php endforeach; ?>
-                        <?php foreach ($applications as $application): ?>
-                        <?php if ($application['status'] == 'Reject'): ?>
+                    <?php 
+                        endif;
+                    else: 
+                    ?>
                         <div class="col-xl-12 col-md-12 mb-4">
                             <div class="card border-0 shadow h-100 py-2 rounded-lg">
                                 <div class="card-body">
-                                    <h5 class="font-weight-bold">Rejected Application details:</h5>
-                                    <div class="card">
-                                        <div class="card-body">                                            
-                                            <h5 class="card-title">Application Info</h5>
-                                            <img src="<?php echo $application['applyPic']; ?>" class="img-profile img-fluid" title="profile images" 
-                                            style="max-width: 200px; margin-bottom:10px; border-radius: 5px; " onerror="this.onerror=null; this.src='../img/no_profile.webp'">
-                                            <p class="card-text"><strong>Name: </strong><?php echo $application['name']; ?></p>
-                                            <p class="card-text"><strong>Email: </strong><?php echo $application['email']; ?></p>
-                                            <p class="card-text"><strong>Contact: </strong><?php echo $application['contact']; ?></p>
-                                            <p class="card-text"><strong>Course: </strong><?php echo $application['course']; ?></p>
-                                            <p class="card-text"><strong>Faculty: </strong><?php echo $application['faculty']; ?></p>
-                                            <p class="card-text"><strong>Semester: </strong><?php echo $application['semester']; ?></p>
-                                            <p class="card-text"><strong>Manifesto: </strong><?php echo $application['manifesto']; ?></p>
-                                            <p class="card-text"><strong>Status: </strong><?php echo $application['status']; ?></p>
-                                        </div>
-                                    </div>
+                                    <h5 class="font-weight-bold">No information available</h5>
                                 </div>
                             </div>
                         </div>
-                        <?php endif; ?>
-                        <?php endforeach; ?>
-                    </div>
+                    <?php endif; ?>
 
                 </div>
                 <!-- /.container-fluid -->

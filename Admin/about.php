@@ -113,6 +113,7 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
                         <a class="collapse-item" href="candidateCreate.php">Verify Candidates</a>
+                        <a class="collapse-item" href="candidatesApplication.php">Candidates Status</a>
                         <a class="collapse-item" href="candidateView.php">View Candidates</a>
                     </div>
                 </div>
@@ -130,6 +131,8 @@
                         <h6 class="collapse-header">MENU</h6>
                         <a class="collapse-item" href="electionView.php">Election View</a>
                         <a class="collapse-item" href="electionSet.php">Election Set Up</a>
+                        <a class="collapse-item" href="annSet.php">Election Announcement</a>
+                        <a class="collapse-item" href="annSet.php">Election Winner</a>
                     </div>
                 </div>
             </li>
@@ -284,6 +287,23 @@
                                             <p class="mb-0">For any inquiries, please contact us at:</p>
                                             <ul>
                                                 <li>Faculty: Faculty of Computing and Multimedia</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Manual Card -->
+                        <div class="col-xl-12 col-md-12 mb-4">
+                            <div class="card border-left-info shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-md font-weight-bold text-info text-uppercase mb-1">User Manual
+                                            </div>
+                                            <p class="mb-0 text-justify">Please download user manual.</p>
+                                            <a href="uploads/user_manual.pdf" download class="btn btn-info">Download User Manual</a>
                                             </ul>
                                         </div>
                                     </div>

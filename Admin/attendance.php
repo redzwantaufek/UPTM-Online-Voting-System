@@ -127,6 +127,7 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
                         <a class="collapse-item" href="candidateCreate.php">Verify Candidates</a>
+                        <a class="collapse-item" href="candidatesApplication.php">Candidates Status</a>
                         <a class="collapse-item" href="candidateView.php">View Candidates</a>
                     </div>
                 </div>
@@ -145,6 +146,7 @@
                         <a class="collapse-item" href="electionView.php">Election View</a>
                         <a class="collapse-item" href="electionSet.php">Election Set Up</a>
                         <a class="collapse-item" href="annSet.php">Election Announcement</a>
+                        <a class="collapse-item" href="annSet.php">Election Winner</a>
                     </div>
                 </div>
             </li>
@@ -262,6 +264,10 @@
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">Student Attendance</h1>
                     <p class="mb-4">The list of student who vote and not vote.</p>
+                    <!-- Print Button -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <button id="printButton" class="btn btn-primary" onclick="window.print();">Print</button>
+                    </div>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">

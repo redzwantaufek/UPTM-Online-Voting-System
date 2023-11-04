@@ -123,6 +123,7 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
                         <a class="collapse-item" href="candidateCreate.php">Verify Candidates</a>
+                        <a class="collapse-item" href="candidatesApplication.php">Candidates Status</a>
                         <a class="collapse-item" href="candidateView.php">View Candidates</a>
                     </div>
                 </div>
@@ -141,6 +142,7 @@
                         <a class="collapse-item" href="electionView.php">Election View</a>
                         <a class="collapse-item" href="electionSet.php">Election Set Up</a>
                         <a class="collapse-item" href="annSet.php">Election Announcement</a>
+                        <a class="collapse-item" href="annSet.php">Election Winner</a>
                     </div>
                 </div>
             </li>
@@ -268,6 +270,10 @@
                                     <h6 class="m-0 font-weight-bold text-primary">Student List</h6>
                                 </div>
                                 <div class="card-body">
+                                    <!-- Print Button -->
+                                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                                        <button id="printButton" class="btn btn-primary" onclick="window.print();">Print</button>
+                                    </div>
                                     <div class="input-group mb-3 mt-3">
                                         <input type="text" class="form-control" placeholder="Search by name" id="searchStudent">
                                             <div class="input-group-append">

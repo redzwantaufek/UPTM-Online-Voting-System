@@ -58,6 +58,8 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <!-- Custom styles-->
     <link href="css/sb-admin-2.css" rel="stylesheet">
+    <!-- Light box-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
 
 </head>
 
@@ -124,6 +126,7 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
                         <a class="collapse-item" href="candidateCreate.php">Verify Candidates</a>
+                        <a class="collapse-item" href="candidatesApplication.php">Candidates Status</a>
                         <a class="collapse-item" href="candidateView.php">View Candidates</a>
                     </div>
                 </div>
@@ -142,6 +145,7 @@
                         <a class="collapse-item" href="electionView.php">Election View</a>
                         <a class="collapse-item" href="electionSet.php">Election Set Up</a>
                         <a class="collapse-item" href="annSet.php">Election Announcement</a>
+                        <a class="collapse-item" href="annSet.php">Election Winner</a>
                     </div>
                 </div>
             </li>
@@ -268,7 +272,12 @@
                                 <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold text-primary">Candidates List</h6>
                                 </div>
+                               
                                 <div class="card-body">
+                                    <!-- Print Button -->
+                                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                                        <button id="printButton" class="btn btn-primary" onclick="window.print();">Print</button>
+                                    </div>
                                     <div class="input-group mb-3 mt-3">
                                         <input type="text" class="form-control" placeholder="Search by name" id="searchCandidate">
                                             <div class="input-group-append">
@@ -280,6 +289,7 @@
                                                 </button>
                                             </div>
                                     </div>
+                                     
                                     <div class="table-responsive">
                                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                             <thead>
@@ -307,6 +317,7 @@
                                                         <td><?php echo $candidate['courseName']; ?></td>
                                                         <td><?php echo $candidate['faculty']; ?></td>
                                                         <td><?php echo $candidate['manifesto']; ?></td>
+                                                        <td><a href="<?php echo $candidate['poster']; ?>" data-lightbox="poster"><img src="<?php echo $candidate['poster']; ?>" alt="Poster" class="img-fluid" style="max-width: 100px;"></a></td>
                                                         <td><a href="<?php echo $candidate['links']; ?>" target="_blank">Link</a></td>
                                                         <td>
                                                             <a href="candidateEdit.php?id=<?php echo $candidate['candidateId']; ?>" class="btn btn-primary btn-sm mr-2">Edit</a>
@@ -384,6 +395,8 @@
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox-plus-jquery.min.js"></script>
 
     <script>
     // Get all delete buttons

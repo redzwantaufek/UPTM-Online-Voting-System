@@ -44,6 +44,14 @@
 
         // Check if a new profile picture has been uploaded
         if (isset($_FILES['pic']) && $_FILES['pic']['error'] === UPLOAD_ERR_OK) {
+            $fileType = pathinfo($_FILES["pic"]["name"], PATHINFO_EXTENSION);
+
+            // Check if the file is a jpg
+            if (!in_array($fileType, ["jpg", "jpeg", "png"])) {
+                echo "Sorry, only JPG, JPEG, and PNG files are allowed.";
+                exit();
+            }
+
             $target_dir = "uploads/";
             $target_file = $target_dir . basename($_FILES["pic"]["name"]);
 
@@ -61,7 +69,12 @@
         $stmt->bind_param("sssssi", $adminName, $email, $contact, $position, $pic, $adminIdToEdit);
         $stmt->execute();
 
-        header('Location: adminList.php');
+        if (isset($_SESSION['uploadError'])) {
+            echo $_SESSION['uploadError'];
+            unset($_SESSION['uploadError']);  // clear the message for future requests
+        }
+
+        //header('Location: adminList.php');
         exit();
     }
 
@@ -151,6 +164,7 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">MENU</h6>
                         <a class="collapse-item" href="candidateCreate.php">Verify Candidates</a>
+                        <a class="collapse-item" href="candidatesApplication.php">Candidates Status</a>
                         <a class="collapse-item" href="candidateView.php">View Candidates</a>
                     </div>
                 </div>
@@ -169,6 +183,7 @@
                         <a class="collapse-item" href="electionView.php">Election View</a>
                         <a class="collapse-item" href="electionSet.php">Election Set Up</a>
                         <a class="collapse-item" href="annSet.php">Election Announcement</a>
+                        <a class="collapse-item" href="annSet.php">Election Winner</a>
                     </div>
                 </div>
             </li>
@@ -305,7 +320,7 @@
                                                 <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                     <label for="profilePicture">Profile Picture</label>
                                                     <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="profilePicture" name="pic" onchange="updateFileName(this)">
+                                                        <input type="file" class="custom-file-input" id="profilePicture" name="pic" onchange="updateFileName(this)" accept=".png, .jpg, .jpeg">
                                                         <label class="custom-file-label" for="profilePicture">Choose file</label>
                                                     </div>
                                                 </div>

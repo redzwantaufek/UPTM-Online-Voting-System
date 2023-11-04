@@ -14,11 +14,6 @@
     // Execute the query
     $result = $conn->query($sql);
 
-    // Query to select all elections from the database
-    $sql = "SELECT * FROM election";
-    // Execute the query
-    $allElection = $conn->query($sql);
-
     // If the query returns more than 0 rows, fetch the admin details
     if ($result->num_rows > 0) {
         $admin = $result->fetch_assoc();
@@ -30,63 +25,31 @@
         exit();
     }
 
-    // Query to select the latest election from the database
-    $sql = "SELECT * FROM election ORDER BY electionId DESC LIMIT 1";
-    // Execute the query
+    // Query to select all candidates from the database
+    $sql = "SELECT * FROM apply";
     $result = $conn->query($sql);
 
-    // If the query returns more than 0 rows, fetch the election
+    // Create an array to store all candidates
+    $applications = [];
+
+    // If the query returns more than 0 rows, fetch all candidates
     if ($result->num_rows > 0) {
-        $election = $result->fetch_assoc();
-    } 
-
-    // Query to select the latest announcement from the database
-    $sql = "SELECT * FROM announcement ORDER BY annId DESC LIMIT 1";
-    // Execute the query
-    $result = $conn->query($sql);
-
-    // If the query returns more than 0 rows, fetch the announcement
-    if ($result->num_rows > 0) {
-        $announcement = $result->fetch_assoc();
-        // Get the election title and candidate names from the database
-        $electionTitle = $announcement['elecTitle'];
-        $candidateNames = explode(",", $announcement['candName']);
-    } 
-
-    // Query to select all candidate names from the announcement table
-    $sql = "SELECT candName FROM announcement";
-    // Execute the query
-    $result = $conn->query($sql);
-
-    // If the query returns more than 0 rows, fetch the candidate names
-    if ($result->num_rows > 0) {
-        $allCandidateNames = [];
-        while($row = $result->fetch_assoc()) {
-            array_push($allCandidateNames, $row['candName']);
-        }
-    } 
-
-    // Check if delete button is clicked
-    if (isset($_POST['delete'])) {
-        // Delete election from the database
-        $sql = "DELETE FROM election WHERE electionId = '".$_POST['delete_id']."'";
-        // Execute the query
-        if ($conn->query($sql) === TRUE) {
-            echo "Election deleted successfully";
-        } else {
-            echo "Error deleting election: " . $conn->error;
+        while ($application = $result->fetch_assoc()) {
+            $applications[] = $application;
         }
     }
 
-    // Check if delete_announcement button is clicked
-    if (isset($_POST['delete_announcement'])) {
-        // Delete announcement from the database
-        $sql = "DELETE FROM announcement WHERE announcementId = '".$_POST['delete_announcement_id']."'";
-        // Execute the query
-        if ($conn->query($sql) === TRUE) {
-            echo "Announcement deleted successfully";
+    if (isset($_GET['status']) && isset($_GET['id'])) {
+        $status = $_GET['status'];
+        $id = $_GET['id'];
+    
+        $stmt = $conn->prepare("UPDATE apply SET status = ? WHERE applyId = ?");
+        $stmt->bind_param("si", $status, $id);
+    
+        if ($stmt->execute()) {
+            echo "Record updated successfully";
         } else {
-            echo "Error deleting announcement: " . $conn->error;
+            echo "Error updating record: " . $stmt->error;
         }
     }
 
@@ -105,7 +68,7 @@
     <meta name="Uptm Voting System" content="">
     <meta name="Redzwan" content="">
 
-    <title>Election - UPTM VOTING SYSTEM</title>
+    <title>Candidate - UPTM VOTING SYSTEM</title>
 
     <!-- Custom fonts-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
@@ -167,7 +130,7 @@
             </li>
 
             <!-- Nav Item - Candidates Collapse Menu -->
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
                     aria-expanded="true" aria-controls="collapseUtilities">
                     <i class="fa-solid fa-users"></i>
@@ -185,7 +148,7 @@
             </li>
 
             <!-- Nav Item - Election Collapse Menu -->
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                     aria-expanded="true" aria-controls="collapsePages">
                     <i class="fa-solid fa-check-to-slot"></i>
@@ -245,6 +208,8 @@
                     <i class="fas fa-fw fa-cog"></i>
                     <span>Settings</span></a>
             </li>
+
+            
             
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -307,88 +272,95 @@
                 </nav>
                 <!-- _______________________________________End of Topbar__________________________________________________________ -->
 
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
-
-                <?php if (isset($_SESSION['message'])): ?>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <?php 
-                        echo $_SESSION['message']; 
-                        unset($_SESSION['message']);
-                        ?>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                <?php endif; ?>
+                 <!-- Begin Page Content -->
+                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-0 text-gray-800 mb-4">Election Details</h1>
-                     <!-- Print Button -->
-                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Candidates Application Status</h1>
+                    </div>
+                    <!-- Print Button -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <button id="printButton" class="btn btn-primary" onclick="window.print();">Print</button>
                     </div>
 
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Election Information</h6>
-                            <?php if (isset($election)): ?>
-                                <form id="deleteForm" method="POST" action="electionDelete.php">
-                                    <input type="hidden" name="delete_id" value="<?php echo $election['electionId']; ?>">
-                                    <button id="deleteBtn" type="button" class="btn btn-danger float-right" data-toggle="modal" data-target="#confirmDeleteModal">Delete</button>
-                                </form>
-                                <form method="GET" action="electionEdit.php">
-                                    <input type="hidden" name="id" value="<?php echo $election['electionId']; ?>">
-                                    <button type="submit" class="btn btn-primary float-right mr-2" name="edit">Edit</button>
-                                </form>
-                            <?php endif; ?>
-                        </div>
-                        <div class="card-body">
-                            <?php if (isset($election)): ?>
-                                <p><b>Election Title:</b> <?php echo $election['electionTitle']; ?></p>
-                                <p><b>Number of Votes per Student:</b> <?php echo $election['voteNo']; ?></p>
-                                <p><b>Start Time:</b> <?php echo $election['start']; ?></p>
-                                <p><b>End Time:</b> <?php echo $election['end']; ?></p>
-                                <p><b>Date:</b> <?php echo $election['date']; ?></p>
-                                <p><b>Rules:</b> <?php echo $election['rules']; ?></p>
-                            <?php else: ?>
-                                <p>No election data available.</p>
-                            <?php endif; ?>
-                        </div>
-                    </div>
+                    <!-- Content Row -->
+                    <div class="row">
 
-                   
-
-                    <div class="card shadow mb-4">
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4" style="width: 100%;">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Election List</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Accepted</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTableVoted" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>No</th>
-                                            <th>Election Title</th>
-                                            <th>Number of Votes</th>
-                                            <th>Start</th>
-                                            <th>End</th>
-                                            <th>Date</th>
-                                            <th>Rules</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Contact</th>
+                                            <th>Course</th>
+                                            <th>Faculty</th>
+                                            <th>Semester</th>
+                                            <th>Manifesto</th>
+                                            <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php $no = 1; while($row = $allElection->fetch_assoc()): ?>
-                                            <tr>
-                                                <td><?php echo $no++; ?></td>
-                                                <td><?php echo $row['electionTitle']; ?></td>
-                                                <td><?php echo $row['voteNo']; ?></td>
-                                                <td><?php echo $row['start']; ?></td>
-                                                <td><?php echo $row['end']; ?></td>
-                                                <td><?php echo $row['date']; ?></td>
-                                                <td><?php echo $row['rules']; ?></td>
-                                            </tr>
-                                        <?php endwhile; ?>
+                                    <?php foreach ($applications as $application): ?>
+                                    <?php if ($application['status'] == 'Accept'): ?>
+                                    <tr>
+                                        <td><?php echo $application['name']; ?></td>
+                                        <td><?php echo $application['email']; ?></td>
+                                        <td><?php echo $application['contact']; ?></td>
+                                        <td><?php echo $application['course']; ?></td>
+                                        <td><?php echo $application['faculty']; ?></td>
+                                        <td><?php echo $application['semester']; ?></td>
+                                        <td><?php echo $application['manifesto']; ?></td>
+                                        <td><?php echo $application['status']; ?></td>
+                                    </tr>
+                                    <?php endif; ?>
+                                    <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card shadow mb-4" style="width: 100%;">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Rejected</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTableNotVoted" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Contact</th>
+                                            <th>Course</th>
+                                            <th>Faculty</th>
+                                            <th>Semester</th>
+                                            <th>Manifesto</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($applications as $application): ?>
+                                        <?php if ($application['status'] == 'Reject'): ?>
+                                        <tr>
+                                            <td><?php echo $application['name']; ?></td>
+                                            <td><?php echo $application['email']; ?></td>
+                                            <td><?php echo $application['contact']; ?></td>
+                                            <td><?php echo $application['course']; ?></td>
+                                            <td><?php echo $application['faculty']; ?></td>
+                                            <td><?php echo $application['semester']; ?></td>
+                                            <td><?php echo $application['manifesto']; ?></td>
+                                            <td><?php echo $application['status']; ?></td>
+                                        </tr>
+                                        <?php endif; ?>
+                                        <?php endforeach; ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -396,10 +368,13 @@
                     </div>
 
                 </div>
+
+                </div>
                 <!-- /.container-fluid -->
 
             </div>
             <!-- End of Main Content -->
+
 
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
@@ -422,44 +397,6 @@
         <i class="fas fa-angle-up"></i>
     </a>
 
-    <!-- Delete Election Modal -->
-    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            Are you sure you want to delete.?
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <button id="confirmDelete" class="btn btn-danger">Delete</button>
-        </div>
-        </div>
-    </div>
-    </div>
-
-    <!-- Delete Announcement Modal-->
-    <div class="modal fade" id="confirmDeleteAnnouncementModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Are you sure?</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-            </button>
-        </div>
-        <div class="modal-body">Select "Delete" below if you are ready to delete the announcement.</div>
-        <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <button id="confirmDeleteAnnouncement" class="btn btn-danger">Delete</button>
-        </div>
-        </div>
-    </div>
-    </div>
-
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -474,7 +411,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.php">Logout</a>
+                    <a class="btn btn-danger" href="login.php">Logout</a>
                 </div>
             </div>
         </div>
@@ -497,22 +434,28 @@
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
 
+    <!-- This script updates the file name when a new file is selected -->
     <script>
-        // When the user confirms the deletion
-        document.getElementById('confirmDelete').addEventListener('click', function() {
-            // Submit the form
-            document.getElementById('deleteForm').submit();
-        });
+        function updateFileName(inputElement) {
+            var fileName = inputElement.files[0].name; inputElement.nextElementSibling.textContent = fileName;
+        }
     </script>
 
     <script>
-        // When the user confirms the deletion
-        document.getElementById('confirmDeleteAnnouncement').addEventListener('click', function() {
-            // Submit the form
-            document.getElementById('deleteAnnouncementForm').submit();
+    function updateStatus(status, id) {
+        fetch('applyUpdate.php?status=' + status + '&id=' + id)
+        .then(response => response.text())
+        .then(data => {
+            console.log(data);  // Log the response data to the console
+            if (data.trim() === 'success') {  // Use trim() to remove any extra whitespace
+                alert('Status updated successfully');
+                location.reload();
+            } else {
+                alert('Error updating status');
+            }
         });
+    }
     </script>
-
 </body>
 
 </html>

@@ -18,6 +18,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Check if a new profile picture has been uploaded
     if (isset($_FILES['pic']) && $_FILES['pic']['error'] === UPLOAD_ERR_OK) {
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime = finfo_file($finfo, $_FILES["pic"]["tmp_name"]);
+        finfo_close($finfo);
+
+        // Check if the file is a jpg, jpeg, or png
+        if (!in_array($mime, ["image/jpeg", "image/png"])) {
+            echo "Sorry, only JPG, JPEG, and PNG files are allowed.";
+            echo "Uploaded file type: " . $mime; // Debugging information
+            exit();
+        }
+
         $target_dir = "uploads/";
         $target_file = $target_dir . basename($_FILES["pic"]["name"]);
 

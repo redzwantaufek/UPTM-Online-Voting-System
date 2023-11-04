@@ -323,75 +323,40 @@
                 <?php endif; ?>
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-0 text-gray-800 mb-4">Election Details</h1>
+                    <h1 class="h3 mb-0 text-gray-800 mb-4">Election Winner</h1>
                      <!-- Print Button -->
                      <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <button id="printButton" class="btn btn-primary" onclick="window.print();">Print</button>
                     </div>
 
+                    <!-- Winner Announcement Section -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Election Information</h6>
-                            <?php if (isset($election)): ?>
-                                <form id="deleteForm" method="POST" action="electionDelete.php">
-                                    <input type="hidden" name="delete_id" value="<?php echo $election['electionId']; ?>">
-                                    <button id="deleteBtn" type="button" class="btn btn-danger float-right" data-toggle="modal" data-target="#confirmDeleteModal">Delete</button>
+                            <h6 class="m-0 font-weight-bold text-primary">Winner Announcement</h6>
+                            <?php if (isset($announcement)): ?>
+                                <form id="deleteAnnouncementForm" method="POST" action="annDelete.php">
+                                    <input type="hidden" name="delete_id" value="<?php echo $announcement['annId']; ?>">
+                                    <button id="deleteAnnouncementBtn" type="button" class="btn btn-danger float-right" data-toggle="modal" data-target="#confirmDeleteAnnouncementModal">Delete</button>
                                 </form>
-                                <form method="GET" action="electionEdit.php">
-                                    <input type="hidden" name="id" value="<?php echo $election['electionId']; ?>">
+                                <form method="GET" action="annEdit.php">
+                                    <input type="hidden" name="id" value="<?php echo $announcement['annId']; ?>">
                                     <button type="submit" class="btn btn-primary float-right mr-2" name="edit">Edit</button>
                                 </form>
                             <?php endif; ?>
                         </div>
                         <div class="card-body">
-                            <?php if (isset($election)): ?>
-                                <p><b>Election Title:</b> <?php echo $election['electionTitle']; ?></p>
-                                <p><b>Number of Votes per Student:</b> <?php echo $election['voteNo']; ?></p>
-                                <p><b>Start Time:</b> <?php echo $election['start']; ?></p>
-                                <p><b>End Time:</b> <?php echo $election['end']; ?></p>
-                                <p><b>Date:</b> <?php echo $election['date']; ?></p>
-                                <p><b>Rules:</b> <?php echo $election['rules']; ?></p>
+                            <?php if (isset($announcement)): ?>
+                                <p><b>Election Title:</b> <?php echo $electionTitle; ?></p>
+                                <p><b>Winner:</b></p>
+                                <ul>
+                                <?php foreach($allCandidateNames as $candidateName): ?>
+                                    <li><?php echo $candidateName; ?></li>
+                                <?php endforeach; ?>
+                                </ul>
+                                <p><b>Info:</b>  <?php echo $announcement['info']; ?></p>
                             <?php else: ?>
-                                <p>No election data available.</p>
+                                <p>No winner announcement data available.</p>
                             <?php endif; ?>
-                        </div>
-                    </div>
-
-                   
-
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Election List</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTableVoted" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Election Title</th>
-                                            <th>Number of Votes</th>
-                                            <th>Start</th>
-                                            <th>End</th>
-                                            <th>Date</th>
-                                            <th>Rules</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php $no = 1; while($row = $allElection->fetch_assoc()): ?>
-                                            <tr>
-                                                <td><?php echo $no++; ?></td>
-                                                <td><?php echo $row['electionTitle']; ?></td>
-                                                <td><?php echo $row['voteNo']; ?></td>
-                                                <td><?php echo $row['start']; ?></td>
-                                                <td><?php echo $row['end']; ?></td>
-                                                <td><?php echo $row['date']; ?></td>
-                                                <td><?php echo $row['rules']; ?></td>
-                                            </tr>
-                                        <?php endwhile; ?>
-                                    </tbody>
-                                </table>
-                            </div>
                         </div>
                     </div>
 

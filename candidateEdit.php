@@ -47,39 +47,6 @@
         exit();
     }
 
-    // Update candidate information and profile picture if form is submitted
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $candidateName = $_POST['candidateName'];
-        $candNo = $_POST['candNo'];
-        $email = $_POST['email'];
-        $contact = $_POST['contact'];
-        $faculty = $_POST['faculty'];
-        $courseName = $_POST['courseName'];
-        $manifesto = $_POST['manifesto'];
-        $links = $_POST['links'];
-
-        // Check if a new profile picture has been uploaded
-        if (isset($_FILES['candidatePic']) && $_FILES['candidatePic']['error'] === UPLOAD_ERR_OK) {
-            $target_dir = "uploads/";
-            $target_file = $target_dir . basename($_FILES["candidatePic"]["name"]);
-
-            if (!move_uploaded_file($_FILES["candidatePic"]["tmp_name"], $target_file)) {
-                echo "Sorry, there was an error uploading your file.";
-                exit();
-            }
-            $candidatePic = $target_file;
-        } else {
-            $candidatePic = $editedCandidatePic;
-        }
-
-        $sql = "UPDATE candidate SET candidateName = ?, email = ?, contact = ?, faculty = ?, courseName = ?, manifesto = ?, links = ?, candidatePic = ? WHERE candidateId = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssssssi", $candidateName, $email, $contact, $faculty, $courseName, $manifesto, $links, $candidatePic, $candidateIdToEdit);
-        $stmt->execute();
-
-        header('Location: candidateList.php');
-        exit();
-    }
     $conn->close();
 ?>
 
@@ -103,6 +70,7 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <!-- Custom styles-->
     <link href="css/sb-admin-2.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
 
 </head>
 
@@ -253,8 +221,15 @@
                             <div class="card border-0 shadow h-100 py-2 rounded-lg">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
-                                        <div class="col-12 text-center mb-4">
+                                        <div class="col-6 text-center mb-4">
+                                            <label for="profilePicture">Profile Picture</label><br>
                                             <img src="<?php echo $editedCandidatePic; ?>" class="img-profile rounded-circle border-secondary img-fluid border p-3 bg-light" title="profile images" style="max-width: 200px;" onerror="this.onerror=null; this.src='../img/no_profile.webp'">    
+                                        </div>
+                                        <div class="col-6 text-center mb-4">
+                                            <label for="poster">Poster</label><br>
+                                            <a href="<?php echo $candidate['poster']; ?>" data-lightbox="poster">
+                                                <img src="<?php echo $candidate['poster']; ?>" class="img-fluid" alt="Poster" style="max-width: 200px;">
+                                            </a>
                                         </div>
                                         <div class="col-12">
                                             <form action="candidateUpdate.php" method="post" enctype="multipart/form-data">
@@ -290,6 +265,14 @@
                                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                     Links</div>
                                                 <input type="text" class="form-control" id="links" name="links" value="<?php echo $candidate['links']; ?>">
+                                                <hr class="sidebar-divider my-1">
+                                                <div class="form-group text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                    <label for="posterImage">Poster Image</label>
+                                                    <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="posterImage" name="poster" onchange="updateFileName(this)" accept=".png, .jpg, .jpeg">
+                                                        <label class="custom-file-label" for="posterImage">Choose file</label>
+                                                    </div>
+                                                </div>
                                                 <button type="submit" class="btn btn-primary mt-3 rounded-pill" title="save">Save</button>
                                                 <button class="btn btn-danger mt-3 rounded-pill" onclick="window.location.href='candidateApply.php'" title="cancel" type="button">Cancel</button>
                                             </form>
@@ -364,6 +347,8 @@
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox-plus-jquery.min.js"></script>
 
     <!-- This script updates the file name when a new file is selected -->
     <script>
