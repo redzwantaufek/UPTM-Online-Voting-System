@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 04, 2023 at 08:37 AM
+-- Generation Time: Nov 11, 2023 at 10:12 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -42,11 +42,9 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`adminID`, `adminName`, `email`, `password`, `contact`, `position`, `pic`) VALUES
-(1, 'Muhammad Redzwan Bin Md Taufek', 'redzwantaufek2@gmail.com', '14250', '0194678990', 'System Admin', 'uploads/profile 1.jpg'),
-(27, 'Ali bin Abu Bakar', 'ali@gmail.com', '12345', '012-879 0180', 'HEP Staff', 'uploads/profile2.png'),
-(28, 'Amir bin Muhammad', 'amir@gmail.com', '12345', '012-500 4526', 'HEP Staff', 'uploads/profile6m.png'),
-(29, 'Ain bin Aisyah', 'ain@gmail.com', '12345', '03-5129 4723', 'HEP Staff', 'uploads/profile3f.png'),
-(30, 'Aisyah Binti Ahmad', 'aisyah@gmail.com', '12345', '03-6265 6136', 'Staff HEP', 'uploads/profile4f.jpg');
+(1, 'Muhammad Redzwan Bin Md Taufek', 'redzwantaufek2@gmail.com', '14250', '0194678990', 'System Admin', 'uploads/photo_3_2023-11-08_16-41-41.jpg'),
+(27, 'Ali bin Abu Bakar', 'ali@gmail.com', '12345', '0128790180', 'HEP Staff', 'uploads/360_F_224869519_aRaeLneqALfPNBzg0xxMZXghtvBXkfIA.jpg'),
+(28, 'Amir bin Muhammad', 'amir@gmail.com', '12345', '012-500 4526', 'HEP Staff', 'uploads/360_F_326985142_1aaKcEjMQW6ULp6oI9MYuv8lN9f8sFmj.jpg');
 
 -- --------------------------------------------------------
 
@@ -74,14 +72,6 @@ CREATE TABLE `announcement` (
   `info` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `announcement`
---
-
-INSERT INTO `announcement` (`annId`, `elecTitle`, `candName`, `info`) VALUES
-(25, 'Pilihanraya MPP Sesi 2023-2024', 'Muhammad Redzwan', 'jhjkas'),
-(26, 'Pilihanraya MPP Sesi 2023-2024', 'Hazirah binti Abdul Rahim', 'jhjkas');
-
 -- --------------------------------------------------------
 
 --
@@ -102,19 +92,6 @@ CREATE TABLE `apply` (
   `link` varchar(255) NOT NULL,
   `status` varchar(50) NOT NULL DEFAULT 'Review'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `apply`
---
-
-INSERT INTO `apply` (`applyId`, `studentId`, `applyPic`, `name`, `email`, `contact`, `course`, `faculty`, `semester`, `manifesto`, `link`, `status`) VALUES
-(33, 1, 'uploads/profile6m.png', 'Muhammad Redzwan', 'taufekredzwan@gmail.com', '0194678990', 'CC101 - Diploma in Computer Science', 'FCOM', 'Semester 6', 'abc', '', 'Accept'),
-(34, 7, 'uploads/profile 9.jpg', 'Azlan bin Shah', 'azlan@gmail.com', '012-345 6789', 'AA103-Diploma of Accountancy', 'FBASS', 'Semester 6', 'def', '', 'Reject'),
-(35, 8, 'uploads/profile10.jpeg', 'Hazirah binti Abdul Rahim', 'hazirah@gmail.com', '03-7953 7252', 'BK101-Diploma in Corporate Communication', 'FEHA', 'Semester 5', 'fgh', '', 'Accept'),
-(36, 9, 'uploads/profile 7.png', 'Hafiz bin Jamaluddin', 'hafiz@gmail.com', '03-5832 3553', 'Bachelor of Information Technology in Cyber Security', 'FCOM', 'Semester 4', 'hfhd', '', 'Accept'),
-(37, 10, 'uploads/profile4f.jpg', 'Izzati binti Idris', 'izzati@gmail.com', '013-245 4740', 'Bachelor of Bussiness Administration', 'FBASS', 'Semester 7', 'fdbdfvb', '', 'Accept'),
-(38, 15, 'uploads/profile 9.jpg', 'Faris', 'faris@gmail.com', '123456677', 'CC101', 'FCOM', 'Semester 6', 'gdfgdfgfd', '', 'Accept'),
-(39, 11, 'uploads/profile 9.jpg', 'Iqbal Bin Ismail', 'iqbal@gmail.com', '013-819 1677', 'CT203-Bachelor of Information Technology in Bussiness Computing', 'FCOM', 'Semester 3', '', '', 'Accept');
 
 -- --------------------------------------------------------
 
@@ -138,19 +115,6 @@ CREATE TABLE `candidate` (
   `poster` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `candidate`
---
-
-INSERT INTO `candidate` (`candidateId`, `studentId`, `candNo`, `candidateName`, `candidatePic`, `faculty`, `courseName`, `email`, `manifesto`, `links`, `contact`, `voteNum`, `poster`) VALUES
-(8, 1, 1, 'Muhammad Redzwan', 'uploads/profile 7.png', 'FCOM', 'CC101 - Diploma in Computer Science', 'taufekredzwan@gmail.com', 'abcdefg', 'https://www.youtube.com/watch?v=JoATBgC9Z0E&list=WL&index=12&t=22s', '0194678990', 0, 'uploads/poster6.jpeg'),
-(9, 8, 2, 'Hazirah binti Abdul Rahim', 'uploads/profile10.jpeg', 'FEHA', 'BK101-Diploma in Corporate Communication', 'hazirah@gmail.com', 'fgh', '', '03-7953 7252', 0, 'uploads/poster2.jpg'),
-(10, 9, 3, 'Hafiz bin Jamaluddin', 'uploads/profile 7.png', 'FCOM', 'Bachelor of Information Technology in Cyber Security', 'hafiz@gmail.com', 'hfhd', '', '03-5832 3553', 0, 'uploads/poster3.jpg'),
-(11, 10, 4, 'Izzati binti Idris', 'uploads/profile4f.jpg', 'FBASS', 'Bachelor of Bussiness Administration', 'izzati@gmail.com', 'fdbdfvb', '', '013-245 4740', 0, 'uploads/poster4.png'),
-(12, 15, 5, 'Faris', 'uploads/profile 9.jpg', 'FCOM', 'CC101', 'faris@gmail.com', 'gdfgdfgfd', '', '123456677', 0, 'uploads/poster5.jpg'),
-(15, 11, 6, 'Iqbal Bin Ismail', 'uploads/profile 9.jpg', 'FCOM', 'CT203-Bachelor of Information Technology in Bussiness Computing', 'iqbal@gmail.com', '', '', '013-819 1677', 0, ''),
-(16, 11, 7, 'Iqbal Bin Ismail', 'uploads/profile 9.jpg', 'FCOM', 'CT203-Bachelor of Information Technology in Bussiness Computing', 'iqbal@gmail.com', '', '', '013-819 1677', 0, '');
-
 -- --------------------------------------------------------
 
 --
@@ -166,13 +130,6 @@ CREATE TABLE `election` (
   `date` date NOT NULL,
   `rules` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `election`
---
-
-INSERT INTO `election` (`electionId`, `electionTitle`, `voteNo`, `start`, `end`, `date`, `rules`) VALUES
-(20, 'Pilihanraya MPP Sesi 2023-2024', 2, '2023-11-01 10:30:00', '2023-11-01 11:27:00', '2023-11-02', 'Each student can choose 2 candidates');
 
 -- --------------------------------------------------------
 
@@ -198,16 +155,35 @@ CREATE TABLE `student` (
 --
 
 INSERT INTO `student` (`studentId`, `studentPic`, `studentName`, `email`, `password`, `contact`, `votingHistory`, `course`, `faculty`, `apply`) VALUES
-(1, 'uploads/profile 9.jpg', 'Muhammad Redzwan', 'taufekredzwan@gmail.com', '14250', '0194678990', 1, 'CC101 - Diploma in Computer Science', 'FCOM', 1),
-(7, 'uploads/profile 9.jpg', 'Azlan bin Shah', 'azlan@gmail.com', '12345', '012-345 6789', 0, 'AA103-Diploma of Accountancy', 'FBASS', 1),
-(8, 'uploads/profile10.jpeg', 'Hazirah binti Abdul Rahim', 'hazirah@gmail.com', '12345', '03-7953 7252', 0, 'BK101-Diploma in Corporate Communication', 'FEHA', 1),
-(9, 'uploads/profile 7.png', 'Hafiz bin Jamaluddin', 'hafiz@gmail.com', '12345', '03-5832 3553', 0, 'Bachelor of Information Technology in Cyber Security', 'FCOM', 1),
-(10, 'uploads/profile4f.jpg', 'Izzati binti Idris', 'izzati@gmail.com', '12345', '013-245 4740', 0, 'Bachelor of Bussiness Administration', 'FBASS', 1),
-(11, 'uploads/profile2.png', 'Iqbal Bin Ismail', 'iqbal@gmail.com', '12345', '013-819 1677', 0, 'CT203-Bachelor of Information Technology in Bussiness Computing', 'FCOM', 1),
-(12, 'uploads/profile5m.avif', 'Izara binti Kamarulzaman', 'izara@gmail.com', '12345', '03-2153 1539', 0, 'BE203-Bachelor of Education in Teaching English As A Second Language', 'FEHA', 0),
-(13, 'uploads/pic1.jpg', 'Porsche', 'prosche@gmail.com', '12345', '0194678990', 0, 'CC101 - Computer Science', 'FCOM', 0),
-(14, 'uploads/profile3f.png', 'siti', 'siti@gmail.com', '12345', '019234567', 0, 'CC101', 'FCOM', 0),
-(15, 'uploads/profile10.jpeg', 'Faris', 'faris@gmail.com', '12345', '123456677', 0, 'CC101', 'FCOM', 1);
+(1, 'uploads/IMG-20211110-WA0001.jpg', 'Muhammad Redzwan bin Muhammad Taufek', 'taufekredzwan@gmail.com', '14250', '0194678990', 0, 'CC101 - Diploma in Computer Science', 'FCOM', 0),
+(7, 'uploads/360_F_326985142_1aaKcEjMQW6ULp6oI9MYuv8lN9f8sFmj.jpg', 'Azlan bin Shah', 'azlan@gmail.com', '12345', '0123456789', 0, 'AA103-Diploma of Accountancy', 'FBASS', 0),
+(17, 'uploads/cand1.jpg', 'Shaifullah Azzim Bin Bustaman', 'azzim@gmail.com', '12345', '016-505 3035', 0, 'CT204 - Bachelor of Information Technology in Computer Application Development', 'FCOM', 0),
+(18, 'uploads/cand2.jpg', 'Muhammad Syahmi Bin Ahmad Suhaimi', 'syahmi@gmail.com', '12345', '010-717 7458', 0, 'AB201 - Bachelor Of Business Adminstration Human Resource Management', 'FBASS', 0),
+(19, 'uploads/cand3.jpg', 'Muhammad Adib Zikri Bin Kamarul Idzham', 'adib@gmail.com', '12345', '012-212 7307', 0, 'BE101 - Diploma in Teaching English As a Second Language(TESL)', 'FEHA', 0),
+(20, 'uploads/cand4.png', 'Muhammad Amirul Fithri Bin Datuk Abdul Hafiz', 'amirul@gmail.com', '12345', '016-505 3035', 0, 'AB201 - Bachelor Of Business Administration Human Resource Management', 'FBASS', 0),
+(21, 'uploads/cand5.jpg', 'Hafiz Alfikri Bin Amri', 'hafiz@gmail.com', '12345', '010-717 7458', 0, 'BE203 - Bachelor In Teaching English As A Second Language', 'FEHA', 0),
+(22, 'uploads/cand6.jpeg', 'Nur Alia Yasmin Binti Mohammad Azlan', 'alia@gmail.com', '12345', '012-212 7307', 0, 'BE101 - Diploma In Teaching English As A Second English', 'FEHA', 0),
+(23, 'uploads/cand7.jpg', 'Muhammad Naqiuddin Bin Mohd Taha', 'naqiu@gmail.com', '12345', '016-505 3035', 0, 'BK201 - Bachelor Of Communication In Corporate Communication', 'FEHA', 0),
+(24, 'uploads/cand8.jpg', 'Muhammad Shafiq Bin Saharudin', 'shafiq@gmail.com', '12345', '016-505 3035', 0, 'CT204 - Bachelor Of Information Technology In Computer Application Development', 'FCOM', 0),
+(25, 'uploads/photo_8_2023-11-02_13-21-30.jpg', 'ABDUL MUHAIMIE AR-BAAIN BIN MASORROWEE AWAE', 'muhaimie@gmail.com', '12345', '012-212 7307', 0, 'CC101 - Diploma In Computer Science', 'FCOM', 0),
+(26, 'uploads/photo_1_2023-11-02_13-21-30.jpg', 'MOHAMMED MUQSIT BIN OSMAN', 'muqsit@gmail.com', '12345', '010-717 7458', 0, 'CC101 - Diploma In Computer Science', 'FCOM', 0),
+(27, 'uploads/photo_15_2023-11-02_13-21-30.jpg', 'MUHAMAD KAMIL BIN MUHAMAD ZAIN', 'kamil@gmail.com', '12345', '012-212 7307', 0, 'CC101 - Diploma In Computer Science', 'FCOM', 0),
+(28, 'uploads/photo_2023-11-02_13-21-37.jpg', '(MUHAMMAD IMRAN BIN MOHD HANIFAH', 'imran@gmai.com', '12345', '016-505 3035', 0, 'CC101 - Diploma In Computer Science', 'FCOM', 0),
+(29, 'uploads/photo_5_2023-11-02_13-21-30.jpg', 'MUHAMMAD IRFAN BIN MOHD RIZAL', 'irfan@gmail.com', '12345', '03-8938 7179', 0, 'CC101 - Diploma In Computer Science', 'FCOM', 0),
+(30, 'uploads/WhatsApp Image 2023-11-06 at 12.51.48 PM - MUHAMMAD SHAFIQ RASHDI BIN MOHD SAZELI _.jpeg', 'MUHAMMAD SHAFIQ RASHDI BIN MOHD SAZELI', 'rashdi@gmail.com', '12345', '011-4731 3530', 0, 'CC101 - Diploma In Computer Science', 'FCOM', 0),
+(31, 'uploads/DFE787F9-B9EB-4EFE-95FD-DAC050636148 - Muhammad Zuhair.jpeg', 'MUHAMMAD ZAFRAN BIN ZAILAN', 'zafran@gmail.com', '12345', '011-4731 3530', 0, 'CC101 - Diploma In Computer Science', 'FCOM', 0),
+(32, 'uploads/350B2684-85E5-4A25-BBD0-DA7009F3034E - MUHAMMAD ZUHAIRI BIN ZAHURIN _.jpeg', 'MUHAMMAD ZUHAIRI BIN ZAHURIN', 'hairi@gmail.com', '12345', '016-505 3035', 0, 'CC101 - Diploma In Computer Science', 'FCOM', 0),
+(33, 'uploads/IMG_9191 - NUR AIN BINTI JAMROS _.jpeg', 'NUR AIN BINTI JAMROS', 'ain@gmail.com', '12345', '011-4731 3530', 0, 'CC101 - Diploma In Computer Science', 'FCOM', 0),
+(34, 'uploads/IMG_1619 - SHAIFUL ZHARFAN BIN SHAIFUL ZAHREIN _.jpeg', 'SHAIFUL ZHARFAN BIN SHAIFUL ZAHREIN', 'zharfan@gmail.com', '12345', '010-881 0302', 0, 'CC101 - Diploma In Computer Science', 'FCOM', 0),
+(35, 'uploads/IMG_9191 - NUR AIN BINTI JAMROS _.jpeg', 'SHARIFFAH MUNIRAH BINTI SYED MUHAMMAD NASIR', 'munirah@gmail.com', '12345', '010-881 0302', 0, 'CC101 - Diploma In Computer Science', 'FCOM', 0),
+(36, 'uploads/photo_1_2023-11-02_13-21-30.jpg', 'WAN MOHD HAKIMI BIN WAN MOHAMAD BAKI', 'kimi@gmail.com', '12345', '010-881 0302', 0, 'CC101 - Diploma In Computer Science', 'FCOM', 0),
+(37, 'uploads/IMG_9715 - WAN AHMAD DANIAL BIN ZAKARIA _.png', 'WAN AHMAD DANIAL BIN ZAKARIA', 'ahmad@gmail.com', '12345', '012-212 7307', 0, 'CC101 - Diploma In Computer Science', 'FCOM', 0),
+(38, 'uploads/IMG_3345 - WAN HAIDHIR SYAQIMI BIN WAN SOFIAN _.jpeg', 'WAN HAIDHIR SYAQIMI BIN WAN SOFIAN', 'didi@gmail.com', '12345', '010-881 0302', 0, 'CC101 - Diploma In Computer Science', 'FCOM', 0),
+(39, 'uploads/photo_29_2023-11-02_13-21-30.jpg', 'MUHAMMAD ILYAS BIN MOHD ABDUL HAKIM', 'ilyas@gmail.com', '12345', '010-881 0302', 0, 'CC101 - Diploma In Computer Science', 'FCOM', 0),
+(40, 'uploads/DFE787F9-B9EB-4EFE-95FD-DAC050636148 - Muhammad Zuhair.jpeg', 'MUHAMMAD HAWARI BIN AZUWAR', 'hawari@gmail.com', '12345', '012-212 7307', 0, 'CC101 - Diploma In Computer Science', 'FCOM', 0),
+(41, 'uploads/photo_29_2023-11-02_13-21-30.jpg', 'AMIRUN AFIQ BIN IBRAHIM', 'amirun@gmail.com', '12345', '010-881 0302', 0, 'CC101 - Diploma In Computer Science', 'FCOM', 0),
+(42, 'uploads/photo_5_2023-11-02_13-21-30.jpg', 'AZIB SAFWAN BIN AHMAD SAKRI', 'azib@gmail.com', '12345', '010-881 0302', 0, 'CC101 - Diploma In Computer Science', 'FCOM', 0),
+(43, 'uploads/photo_8_2023-11-02_13-21-30.jpg', 'IBRAHIM AQIL BIN ARMAN', 'aqil@gmail.com', '12345', '011-4731 3530', 0, 'CC101 - Diploma In Computer Science', 'FCOM', 0);
 
 -- --------------------------------------------------------
 
@@ -222,14 +198,6 @@ CREATE TABLE `vote` (
   `candidateId` int(11) NOT NULL,
   `electionId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `vote`
---
-
-INSERT INTO `vote` (`voteId`, `time`, `studentId`, `candidateId`, `electionId`) VALUES
-(10, '2023-11-02 02:44:23', 1, 8, 20),
-(11, '2023-11-02 02:44:23', 1, 9, 20);
 
 --
 -- Indexes for dumped tables
@@ -295,7 +263,7 @@ ALTER TABLE `vote`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `adminID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `adminID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `analytic`
@@ -307,37 +275,37 @@ ALTER TABLE `analytic`
 -- AUTO_INCREMENT for table `announcement`
 --
 ALTER TABLE `announcement`
-  MODIFY `annId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `annId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `apply`
 --
 ALTER TABLE `apply`
-  MODIFY `applyId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `applyId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT for table `candidate`
 --
 ALTER TABLE `candidate`
-  MODIFY `candidateId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `candidateId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `election`
 --
 ALTER TABLE `election`
-  MODIFY `electionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `electionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `student`
 --
 ALTER TABLE `student`
-  MODIFY `studentId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `studentId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `vote`
 --
 ALTER TABLE `vote`
-  MODIFY `voteId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `voteId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- Constraints for dumped tables
