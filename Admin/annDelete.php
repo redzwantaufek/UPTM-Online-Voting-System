@@ -2,25 +2,21 @@
     include '../Database/connect.php';
     session_start();
 
-    // Check if user is logged in and if the id parameter is set
-    if (!isset($_SESSION['admin_id']) || !isset($_POST['delete_id'])) {
+    // Check if user is logged in
+    if (!isset($_SESSION['admin_id'])) {
         // If not, redirect to login page
         header('Location: ../login.php');
         exit();
     }
 
-    // Get the id of the announcement to delete
-    $annIdToDelete = $_POST['delete_id'];
-
-    // Prepare the SQL statement
-    $stmt = $conn->prepare("DELETE FROM announcement WHERE annId = ?");
-    $stmt->bind_param("i", $annIdToDelete);
+    // Prepare the SQL statement to delete all rows in the table
+    $stmt = $conn->prepare("DELETE FROM announcement");
 
     // Execute the statement
     if ($stmt->execute()) {
-        $_SESSION['message'] = "Announcement deleted successfully";
+        $_SESSION['message'] = "All announcements deleted successfully";
     } else {
-        $_SESSION['message'] = "Error deleting announcement";
+        $_SESSION['message'] = "Error deleting announcements";
     }
 
     // Redirect back to the election view page
