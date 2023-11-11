@@ -245,7 +245,7 @@
                                             <p class="mb-0 text-justify">Please download user manual.</p>
                                             <a href="uploads/user_manual.pdf" download class="btn btn-info">Download User Manual</a>
                                             <p class="mb-0 text-justify">Or watch the user manual video.</p>
-                                            <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" class="btn btn-info">Watch User Manual</a>
+                                            <a href="https://youtu.be/jgJXVDdcXTc?feature=shared" target="_blank" class="btn btn-info">Watch User Manual</a>
                                             </ul>
                                         </div>
                                     </div>
