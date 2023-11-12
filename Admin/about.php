@@ -303,7 +303,7 @@
                                             <div class="text-md font-weight-bold text-info text-uppercase mb-1">User Manual
                                             </div>
                                             <p class="mb-0 text-justify">Please download user manual.</p>
-                                            <a href="uploads/user_manual.pdf" download class="btn btn-info">Download User Manual</a>
+                                            <a href="../User Manual of UPTM Online Voting System.pdf" download class="btn btn-info">Download User Manual</a>
                                             <p class="mb-0 text-justify">Or watch the user manual video.</p>
                                             <a href="https://drive.google.com/file/d/1Ds8yKyvoLHu6HMnUqdVuIO13ywFggYdI/view?usp=sharing" target="_blank" class="btn btn-info">Watch User Manual</a>
                                             </ul>
